@@ -30,10 +30,10 @@ namespace BookShopApplication.Data.Configuration
             builder.Property(b => b.AuthorName)
                 .IsRequired()
                 .HasMaxLength(AuthorNameMaxLength);
-            
+
             builder.Property(b => b.Price)
                 .IsRequired()
-                .HasPrecision(2);
+                .HasColumnType("decimal(18,4)");
 
             builder.Property(b => b.PagesNumber)
                 .IsRequired();
