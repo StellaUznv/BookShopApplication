@@ -52,5 +52,24 @@ namespace BookShopApplication.GCommon.ValidationErrorMessages
             public const string DescriptionMinLength = "The {0} must be at least {1} characters.";
 
         }
+
+        public static class LocationMessages
+        {
+            //CountryName
+            public const string CountryNameRequired = "The location's country name is required.";
+            public const string CountryNameMaxLength = "The location's country name must not exceed {1} characters.";
+            public const string CountryNameMinLength = "The location's country name should be at least {1} characters.";
+
+            //CityName
+            public const string CityNameRequired = "The location's city name is required.";
+            public const string CityNameMaxLength = "The location's city name must not exceed {1} characters.";
+            public const string CityNameMinLength = "The location's city name should be at least {1} characters.";
+
+            //ZipCode
+            public const string ZipCodeRequired = "The location's ZIP Code is required.";
+            public const string ZipCodeMaxLength = "The location's ZIP Code must not exceed {1} characters.";
+            public const string ZipCodeMinLength = "The location's ZIP Code should be at least {1} characters.";
+
+        }
     }
 }

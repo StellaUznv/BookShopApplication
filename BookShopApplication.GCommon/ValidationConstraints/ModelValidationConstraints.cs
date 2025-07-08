@@ -41,5 +41,21 @@ namespace BookShopApplication.GCommon.ValidationConstraints
             public const int DescriptionMaxLength = 1000;
             public const int DescriptionMinLength = 3;
         }
+
+        public static class LocationConstraints
+        {
+            //Country Name
+            public const int CountryNameMaxLength = 150;
+            public const int CountryNameMinLength = 3;
+
+            //City Name
+            public const int CityNameMaxLength = 150;
+            public const int CityNameMinLength = 3;
+
+            //ZipCode
+
+            public const int ZipCodeMaxLength = 20;
+            public const int ZipCodeMinLength = 4;
+        }
     }
 }

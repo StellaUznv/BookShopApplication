@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -12,15 +13,15 @@ namespace BookShopApplication.Data.Models
         [Key]
         public Guid Id { get; set; }
 
-        [Required] 
+        [Comment("Name of the Country in Location entity")]
         public string CountryName { get; set; } = null!;
-        [Required]
+        [Comment("Name of the City in Location entity")]
         public string CityName { get; set; } = null!;
-        [Required]
-        public string PostalCode { get; set; } = null!;
-        [Required]
+        [Comment("PostalCode in Location entity")]
+        public string ZipCode { get; set; } = null!;
+        [Comment("Reference collection to Shop entity")]
         public ICollection<Shop> Shops { get; set; } = new List<Shop>();
-        [Required]
+        [Comment("Tells if the Location is Soft Deleted or not")]
         public bool IsDeleted { get; set; } = false;
     }
 }
