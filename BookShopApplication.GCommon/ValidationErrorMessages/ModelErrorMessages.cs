@@ -38,5 +38,19 @@ namespace BookShopApplication.GCommon.ValidationErrorMessages
             public const string PagesNotInRange = "{0} count must be a positive number.";
 
         }
+
+        public static class GenreMessages
+        {
+            //Title
+            public const string NameRequired = "The genre {0} is required.";
+            public const string NameMaxLength = "The genre {0} must not exceed {1} characters.";
+            public const string NameMinLength = "The genre {0} should be at least {1} characters.";
+
+            //Description
+            public const string DescriptionRequired = "The genre {0} is required.";
+            public const string DescriptionMaxLength = "The {0} must not exceed {1} characters.";
+            public const string DescriptionMinLength = "The {0} must be at least {1} characters.";
+
+        }
     }
 }

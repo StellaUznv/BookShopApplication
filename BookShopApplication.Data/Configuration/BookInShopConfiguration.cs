@@ -13,6 +13,8 @@ namespace BookShopApplication.Data.Configuration
     {
         public void Configure(EntityTypeBuilder<BookInShop> builder)
         {
+            builder.HasQueryFilter(bs => !bs.Book.IsDeleted);
+
             builder.HasKey(bs => new { bs.BookId, bs.ShopId });
 
 

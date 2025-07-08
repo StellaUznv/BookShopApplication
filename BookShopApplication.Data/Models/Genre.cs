@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -12,14 +13,16 @@ namespace BookShopApplication.Data.Models
         [Key]
         public Guid Id { get; set; }
 
-        [Required] 
+        [Comment("Name of the Genre entity")]
         public string Name { get; set; } = null!;
 
-        [Required] 
+        [Comment("Description of the Genre entity")]
         public string Description { get; set; } = null!;
-        [Required]
+        
+        [Comment("Reference collection to books.")]
         public ICollection<Book> Books { get; set; } = new List<Book>();
-        [Required]
+
+        [Comment("Tells if the Genre is Soft Deleted or not")]
         public bool IsDeleted { get; set; } = false;
     }
 }

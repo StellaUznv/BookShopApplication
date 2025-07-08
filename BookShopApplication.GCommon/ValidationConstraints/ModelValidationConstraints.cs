@@ -30,5 +30,16 @@ namespace BookShopApplication.GCommon.ValidationConstraints
             public const int PagesMaxValue = int.MaxValue;
             public const int PagesMinValue = 0;
         }
+
+        public static class GenreConstraints
+        {
+            //Name
+            public const int NameMaxLength = 150;
+            public const int NameMinLength = 3;
+
+            //Description
+            public const int DescriptionMaxLength = 1000;
+            public const int DescriptionMinLength = 3;
+        }
     }
 }

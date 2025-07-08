@@ -6,27 +6,30 @@ using System.Threading.Tasks;
 using BookShopApplication.Data.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using static BookShopApplication.GCommon.ValidationConstraints.ModelValidationConstraints;
+using static BookShopApplication.GCommon.ValidationConstraints.ModelValidationConstraints.BookConstraints;
 namespace BookShopApplication.Data.Configuration
 {
     public class BookConfiguration : IEntityTypeConfiguration<Book>
     {
         public void Configure(EntityTypeBuilder<Book> builder)
         {
+            builder.HasQueryFilter(b => !b.IsDeleted);
+
+
             builder.HasKey(b => b.Id);
 
             
             builder.Property(b => b.Title)
                 .IsRequired()
-                .HasMaxLength(BookConstraints.TitleMaxLength);
+                .HasMaxLength(TitleMaxLength);
             
             builder.Property(b => b.Description)
                 .IsRequired()
-                .HasMaxLength(BookConstraints.DescriptionMaxLength);
+                .HasMaxLength(DescriptionMaxLength);
             
             builder.Property(b => b.AuthorName)
                 .IsRequired()
-                .HasMaxLength(BookConstraints.AuthorNameMaxLength);
+                .HasMaxLength(AuthorNameMaxLength);
             
             builder.Property(b => b.Price)
                 .IsRequired()
