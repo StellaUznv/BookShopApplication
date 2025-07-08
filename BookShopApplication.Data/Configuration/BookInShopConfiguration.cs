@@ -15,6 +15,7 @@ namespace BookShopApplication.Data.Configuration
         {
             builder.HasKey(bs => new { bs.BookId, bs.ShopId });
 
+
             builder.HasOne(bs => bs.Book)
                 .WithMany(b => b.BookInShops)
                 .HasForeignKey(bs => bs.BookId);
@@ -24,3 +25,4 @@ namespace BookShopApplication.Data.Configuration
                 .HasForeignKey(bs => bs.ShopId);
         }
     }
+}

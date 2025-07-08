@@ -7,6 +7,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using BookShopApplication.GCommon.ValidationConstraints;
+using Microsoft.EntityFrameworkCore;
 using static BookShopApplication.GCommon.ValidationConstraints.ModelValidationConstraints;
 using static BookShopApplication.GCommon.ValidationErrorMessages.ModelErrorMessages;
 
@@ -16,41 +17,32 @@ namespace BookShopApplication.Data.Models
     {
         [Key]
         public Guid Id { get; set; }
-
-        [Required(ErrorMessage = BookMessages.TitleRequired)]
-        [StringLength(BookConstraints.TitleMaxLength, ErrorMessage = BookMessages.TitleMaxLength)]
-        [MinLength(BookConstraints.TitleMinLength, ErrorMessage = BookMessages.TitleMinLength)]
+        
+        [Comment("Title of the Book entity")]
         public string Title { get; set; } = null!;
-
-        [Required(ErrorMessage = BookMessages.DescriptionRequired)]
-        [StringLength(BookConstraints.DescriptionMaxLength,ErrorMessage = BookMessages.DescriptionMaxLength)]
-        [MinLength(BookConstraints.DescriptionMinLength, ErrorMessage = BookMessages.DescriptionMinLength)]
+        
+        [Comment("Description of the Book entity")]
         public string Description { get; set; } = null!;
-
-        [Required(ErrorMessage = BookMessages.AuthorRequired)]
-        [StringLength(BookConstraints.AuthorNameMaxLength, ErrorMessage = BookMessages.AuthorMaxLength)]
-        [MinLength(BookConstraints.AuthorNameMinLength, ErrorMessage = BookMessages.AuthorMinLength)]
+        
+        [Comment("The Author's name in the Book entity")]
         public string AuthorName { get; set; } = null!;
-        [Required(ErrorMessage = BookMessages.PriceRequired)]
-        [Range(BookConstraints.PriceMinValue
-            ,BookConstraints.PriceMaxValue,ErrorMessage = BookMessages.PriceNotInRange)]
+        
+        [Comment("Price of the Book entity")]
         public decimal Price { get; set; }
-        [Required(ErrorMessage = BookMessages.PagesRequired)]
-        [Range(BookConstraints.PagesMinValue
-            ,BookConstraints.PagesMaxValue , ErrorMessage = BookMessages.PagesNotInRange)]
+        
+        [Comment("Pages number in the Book entity")] 
         public int PagesNumber { get; set; }
-        [Required]
+
+        [Comment("Tells if the Book is Soft Deleted or not")]
         public bool IsDeleted { get; set; } = false;
 
-        
-        [Required]
-        [ForeignKey(nameof(GenreId))]
+        [Comment("Reference to the Genre entity")]
         public Genre Genre { get; set; } = null!;
-
-        [Required]
+        
+        [Comment("Foreign key of Genre entity")]
         public Guid GenreId { get; set; } 
         
-        [Required]
+        [Comment("Reference collection to the BookInShop mapping table")]
         public ICollection<BookInShop> BookInShops { get; set; } = new List<BookInShop>();
 
     }
