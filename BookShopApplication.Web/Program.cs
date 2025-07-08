@@ -1,4 +1,5 @@
 using BookShopApplication.Data;
+using BookShopApplication.Data.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -18,6 +19,13 @@ namespace BookShopApplication.Web
 
             builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddEntityFrameworkStores<ApplicationDbContext>();
+            builder.Services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
+                {
+                    //Todo: configure password, etc.
+                })
+                .AddEntityFrameworkStores<ApplicationDbContext>()
+                .AddDefaultTokenProviders();
+            
             builder.Services.AddControllersWithViews();
 
             var app = builder.Build();
