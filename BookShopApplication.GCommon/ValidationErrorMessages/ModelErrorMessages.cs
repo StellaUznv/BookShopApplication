@@ -41,7 +41,7 @@ namespace BookShopApplication.GCommon.ValidationErrorMessages
 
         public static class GenreMessages
         {
-            //Title
+            //Name
             public const string NameRequired = "The genre {0} is required.";
             public const string NameMaxLength = "The genre {0} must not exceed {1} characters.";
             public const string NameMinLength = "The genre {0} should be at least {1} characters.";
@@ -69,6 +69,20 @@ namespace BookShopApplication.GCommon.ValidationErrorMessages
             public const string ZipCodeRequired = "The location's ZIP Code is required.";
             public const string ZipCodeMaxLength = "The location's ZIP Code must not exceed {1} characters.";
             public const string ZipCodeMinLength = "The location's ZIP Code should be at least {1} characters.";
+
+        }
+
+        public static class ShopMessages
+        {
+            //Name
+            public const string NameRequired = "The shop {0} is required.";
+            public const string NameMaxLength = "The shop {0} must not exceed {1} characters.";
+            public const string NameMinLength = "The shop {0} should be at least {1} characters.";
+
+            //Description
+            public const string DescriptionRequired = "The shop {0} is required.";
+            public const string DescriptionMaxLength = "The {0} must not exceed {1} characters.";
+            public const string DescriptionMinLength = "The {0} must be at least {1} characters.";
 
         }
     }
