@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace BookShopApplication.Data.Models
 {
-    public class BookShop
+    public class BookInShop
     {
         [Required]
         public Guid BookId { get; set; }

@@ -19,7 +19,7 @@ namespace BookShopApplication.Data.Models
         [Required]
         public string PostalCode { get; set; } = null!;
         [Required]
-        public ICollection<BookShop> BookShops { get; set; } = new List<BookShop>();
+        public ICollection<Shop> Shops { get; set; } = new List<Shop>();
         [Required]
         public bool IsDeleted { get; set; } = false;
     }

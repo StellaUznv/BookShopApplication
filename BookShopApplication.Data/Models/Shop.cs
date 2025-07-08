@@ -26,6 +26,6 @@ namespace BookShopApplication.Data.Models
         [Required]
         public Guid LocationId { get; set; }
         [Required]
-        public ICollection<BookShop> BooksShops { get; set; } = new List<BookShop>();
+        public ICollection<BookInShop> BooksInShop { get; set; } = new List<BookInShop>();
     }
 }
