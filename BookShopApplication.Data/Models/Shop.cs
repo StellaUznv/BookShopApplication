@@ -27,6 +27,13 @@ namespace BookShopApplication.Data.Models
         public Location Location { get; set; } = null!;
         [Comment("Foreign key of the Location entity")]
         public Guid LocationId { get; set; }
+
+        [Comment("Latitude coordinate of the Shop")]
+        public double Latitude { get; set; }
+
+        [Comment("Longitude coordinate of the Shop")]
+        public double Longitude { get; set; }
+
         [Comment("Reference collection to the BookInShop mapping table")]
         public ICollection<BookInShop> BooksInShop { get; set; } = new List<BookInShop>();
     }

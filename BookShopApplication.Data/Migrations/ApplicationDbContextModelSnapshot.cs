@@ -186,6 +186,34 @@ namespace BookShopApplication.Data.Migrations
                     b.ToTable("BookInShops");
                 });
 
+            modelBuilder.Entity("BookShopApplication.Data.Models.CartItem", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("BookId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("UserId1")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BookId");
+
+                    b.HasIndex("UserId1");
+
+                    b.ToTable("CartItems");
+                });
+
             modelBuilder.Entity("BookShopApplication.Data.Models.Genre", b =>
                 {
                     b.Property<Guid>("Id")
@@ -262,9 +290,17 @@ namespace BookShopApplication.Data.Migrations
                         .HasColumnType("bit")
                         .HasComment("Tells if the Shop is Soft Deleted or not");
 
+                    b.Property<double>("Latitude")
+                        .HasColumnType("float")
+                        .HasComment("Latitude coordinate of the Shop");
+
                     b.Property<Guid>("LocationId")
                         .HasColumnType("uniqueidentifier")
                         .HasComment("Foreign key of the Location entity");
+
+                    b.Property<double>("Longitude")
+                        .HasColumnType("float")
+                        .HasComment("Longitude coordinate of the Shop");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -277,6 +313,31 @@ namespace BookShopApplication.Data.Migrations
                     b.HasIndex("LocationId");
 
                     b.ToTable("Shops");
+                });
+
+            modelBuilder.Entity("BookShopApplication.Data.Models.WishlistItem", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("BookId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("UserId1")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BookId");
+
+                    b.HasIndex("UserId1");
+
+                    b.ToTable("WishlistItems");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
@@ -412,6 +473,25 @@ namespace BookShopApplication.Data.Migrations
                     b.Navigation("Shop");
                 });
 
+            modelBuilder.Entity("BookShopApplication.Data.Models.CartItem", b =>
+                {
+                    b.HasOne("BookShopApplication.Data.Models.Book", "Book")
+                        .WithMany()
+                        .HasForeignKey("BookId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("BookShopApplication.Data.Models.ApplicationUser", "User")
+                        .WithMany("Cart")
+                        .HasForeignKey("UserId1")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Book");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("BookShopApplication.Data.Models.Shop", b =>
                 {
                     b.HasOne("BookShopApplication.Data.Models.Location", "Location")
@@ -421,6 +501,25 @@ namespace BookShopApplication.Data.Migrations
                         .IsRequired();
 
                     b.Navigation("Location");
+                });
+
+            modelBuilder.Entity("BookShopApplication.Data.Models.WishlistItem", b =>
+                {
+                    b.HasOne("BookShopApplication.Data.Models.Book", "Book")
+                        .WithMany()
+                        .HasForeignKey("BookId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("BookShopApplication.Data.Models.ApplicationUser", "User")
+                        .WithMany("Wishlist")
+                        .HasForeignKey("UserId1")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Book");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
@@ -472,6 +571,13 @@ namespace BookShopApplication.Data.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("BookShopApplication.Data.Models.ApplicationUser", b =>
+                {
+                    b.Navigation("Cart");
+
+                    b.Navigation("Wishlist");
                 });
 
             modelBuilder.Entity("BookShopApplication.Data.Models.Book", b =>
