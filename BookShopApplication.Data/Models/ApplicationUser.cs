@@ -11,5 +11,8 @@ namespace BookShopApplication.Data.Models
     {
         public string FirstName { get; set; } = null!;
         public string LastName { get; set; } = null!;
+
+        public ICollection<WishlistItem> Wishlist { get; set; } = new List<WishlistItem>();
+        public ICollection<CartItem> Cart { get; set; } = new List<CartItem>();
     }
 }
