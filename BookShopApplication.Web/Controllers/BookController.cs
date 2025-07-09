@@ -11,11 +11,20 @@ namespace BookShopApplication.Web.Controllers
         {
             this._service = service;
         }
+        [HttpGet]
         public async Task<IActionResult> Index()
         {
             var books = await _service.DisplayAllBooksAsync();
 
             return View(books);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Details(Guid id)
+        {
+            var book = await _service.DisplayBookDetailsByIdAsync(id);
+
+            return View(book);
         }
     }
 }

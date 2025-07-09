@@ -1,0 +1,77 @@
+﻿@model BookShopApplication.Web.ViewModels.Book.BookDetailsViewModel
+
+@{
+    ViewData["Title"] = "Book Details";
+}
+
+<div class="container-fluid mt-4 px-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="card shadow border-0">
+                <div class="row g-0">
+                    <!-- Image Section -->
+                    <div class="col-md-5">
+                        @if (!string.IsNullOrEmpty(Model.ImagePath))
+                        {
+                            <div class="overflow-hidden" style="height: 400px;">
+                                <img src="@Model.ImagePath"
+                                     class="img-fluid w-100 h-100 object-fit-cover rounded-start"
+                                     alt="@Model.Title"
+                                     style="object-fit: cover;" />
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="d-flex align-items-center justify-content-center bg-secondary text-white h-100"
+                                 style="height: 400px;">
+                                <span>No Image Available</span>
+                            </div>
+                        }
+                    </div>
+
+                    <!-- Details Section -->
+                    <div class="col-md-7">
+                        <div class="card-body">
+                            <h2 class="card-title">@Model.Title</h2>
+                            <h5 class="text-muted mb-3">By @Model.Author</h5>
+
+                            <p class="card-text"><strong>Description:</strong><br />@Model.Description</p>
+
+                            <p class="card-text"><strong>Genre:</strong> @Model.Genre</p>
+                            <p class="card-text"><strong>Pages:</strong> @Model.PagesNumber</p>
+                            <p class="card-text"><strong>Price:</strong> <span class="text-success">$@Model.Price</span></p>
+
+                            <div class="mb-3">
+                                <strong>Available In:</strong>
+                                <ul class="list-unstyled">
+                                    @foreach (var shop in Model.AvailableInShops)
+                                    {
+                                        <li>📍 @shop</li>
+                                    }
+                                </ul>
+                            </div>
+
+                            @if (User.Identity?.IsAuthenticated ?? false)
+                            {
+                                <div class="d-flex gap-2 mt-3">
+                                    <form asp-controller="Cart" asp-action="Add" method="post">
+                                        <input type="hidden" name="bookId" value="@Model.Id" />
+                                        <button type="submit" class="btn btn-success btn-sm">Add to Cart</button>
+                                    </form>
+                                    <form asp-controller="Wishlist" asp-action="Add" method="post">
+                                        <input type="hidden" name="bookId" value="@Model.Id" />
+                                        <button type="submit" class="btn btn-outline-secondary btn-sm">Add to Wishlist</button>
+                                    </form>
+                                </div>
+                            }
+                            else
+                            {
+                                <p class="text-muted mt-3">Login to add to cart or wishlist.</p>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

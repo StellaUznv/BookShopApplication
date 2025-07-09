@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using BookShopApplication.Services.Contracts;
 using BookShopApplication.Web.ViewModels.Book;
 using BookShopApplication.Data;
+using BookShopApplication.Data.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace BookShopApplication.Services
@@ -21,24 +22,51 @@ namespace BookShopApplication.Services
         {
             var books = await _context.Books.Select(b => new BookViewModel
             {
-                Id = b.Id.ToString(),
+                Id = b.Id,
                 Author = b.AuthorName,
-                AvailableInShops = b.BookInShops
-                    .Where(bs=>bs.BookId == b.Id)
-                    .Select(bs=>bs.Shop.Name)
-                    .ToList(),
-                Description = b.Description,
                 Genre = b.Genre.Name,
                 ImagePath = b.ImagePath,
-                Price = b.Price.ToString(),
+                Price = b.Price.ToString("f2"),
                 Title = b.Title
 
             }).AsNoTracking()
                 .ToListAsync();
-
+            
             return books;
         }
 
-      
+        public async Task<BookDetailsViewModel> DisplayBookDetailsByIdAsync(Guid id)
+        {
+            var book = await _context.Books
+                .Include(b => b.Genre)
+                .Include(b => b.BookInShops)
+                .ThenInclude(bs => bs.Shop)
+                .SingleOrDefaultAsync(b => b.Id == id);
+
+            if (book == null)
+            {
+                // Optional: throw or return null/empty view model
+                throw new InvalidOperationException("Book not found.");
+            }
+
+            var model = new BookDetailsViewModel
+            {
+                Id = book.Id,
+                Author = book.AuthorName,
+                Genre = book.Genre.Name,
+                ImagePath = book.ImagePath,
+                Price = book.Price.ToString("f2"),
+                Title = book.Title,
+                AvailableInShops = book.BookInShops
+                    .Select(bs => bs.Shop.Name)
+                    .ToList(),
+                Description = book.Description,
+                PagesNumber = book.PagesNumber.ToString()
+            };
+
+            return model;
+        }
+
+
     }
 }

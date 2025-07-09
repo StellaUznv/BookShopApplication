@@ -14,7 +14,7 @@
         {
             <div class="col">
                 <div class="card h-100 shadow-sm card bg-light mb-3" style="font-size: 0.85rem;">
-                    <div class=" card-header"><h6 class="card-title mb-1 text-truncate" title="@book.Title">@book.Title</h6></div>
+                    
                     @if (!string.IsNullOrEmpty(book.ImagePath))
                     {
                         <img src="@book.ImagePath"
@@ -22,18 +22,15 @@
                              alt="@book.Title"
                              style="object-fit: cover; height: 160px;" />
                     }
-                    
+                    <div class=" card-header"><h6 class="card-title mb-1 text-truncate" title="@book.Title">@book.Title</h6></div>
                     <div class="card-body p-2 d-flex flex-column">
                         
                         <small class="text-muted mb-2 text-truncate">By @book.Author</small>
-                        <p class="card-text text-truncate small" title="@book.Description">
-                            @book.Description
-                        </p>
 
                         <ul class="list-unstyled mt-auto mb-2 small">
                             <li><strong>Genre:</strong> @book.Genre</li>
                             <li><strong>Price:</strong> $@book.Price</li>
-                            <li>
+                            @* <li>
                                 <strong>Available In:</strong>
                                 <ul class="mb-0">
                                     @foreach (var shop in book.AvailableInShops)
@@ -41,7 +38,7 @@
                                         <li>@shop</li>
                                     }
                                 </ul>
-                            </li>
+                            </li> *@
                         </ul>
 
                         <div class="text-center mt-auto">
