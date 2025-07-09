@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using BookShopApplication.Data.Models;
+using BookShopApplication.Data.Seeding;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using static BookShopApplication.GCommon.ValidationConstraints.ModelValidationConstraints.BookConstraints;
@@ -49,6 +50,18 @@ namespace BookShopApplication.Data.Configuration
             builder.HasMany(b => b.BookInShops)
                 .WithOne(bs => bs.Book)
                 .HasForeignKey(bs => bs.BookId);
+
+
+            //Seeding
+            builder.HasData(
+                new Book { Id = SeedGuids.Book1, Title = "The Hobbit", Description = "A fantasy book", AuthorName = "Tolkien", Price = 15.99M, PagesNumber = 310, GenreId = SeedGuids.Fantasy },
+                new Book { Id = SeedGuids.Book2, Title = "Dune", Description = "A sci-fi classic", AuthorName = "Frank Herbert", Price = 19.99M, PagesNumber = 412, GenreId = SeedGuids.SciFi },
+                new Book { Id = SeedGuids.Book3, Title = "Sherlock Holmes", Description = "Mystery detective", AuthorName = "Arthur Conan Doyle", Price = 12.99M, PagesNumber = 230, GenreId = SeedGuids.Mystery },
+                new Book { Id = SeedGuids.Book4, Title = "Ender's Game", Description = "Sci-fi military novel", AuthorName = "Orson Scott Card", Price = 14.99M, PagesNumber = 324, GenreId = SeedGuids.SciFi },
+                new Book { Id = SeedGuids.Book5, Title = "The Name of the Wind", Description = "Fantasy epic", AuthorName = "Patrick Rothfuss", Price = 18.99M, PagesNumber = 662, GenreId = SeedGuids.Fantasy },
+                new Book { Id = SeedGuids.Book6, Title = "The Hound of the Baskervilles", Description = "A thrilling mystery novel", AuthorName = "Arthur Conan Doyle", Price = 10.99M, PagesNumber = 256, GenreId = SeedGuids.Mystery },
+                new Book { Id = SeedGuids.Book7, Title = "Foundation", Description = "Sci-fi foundation of a galactic empire", AuthorName = "Isaac Asimov", Price = 16.99M, PagesNumber = 296, GenreId = SeedGuids.SciFi }
+            );
         }
     }
 }

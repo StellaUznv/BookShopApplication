@@ -66,7 +66,7 @@ namespace BookShopApplication.GCommon.ValidationConstraints
             //ZipCode
 
             public const int ZipCodeMaxLength = 20;
-            public const int ZipCodeMinLength = 4;
+            public const int ZipCodeMinLength = 3;
         }
 
         public static class ShopConstraints
