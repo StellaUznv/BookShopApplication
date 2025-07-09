@@ -11,15 +11,16 @@ namespace BookShopApplication.Data.Models
     public class ApplicationUser : IdentityUser<Guid>
     {
         [Comment("User's first name")]
-        public string FirstName { get; set; } = null!;
-        
+        public string? FirstName { get; set; }
+
         [Comment("User's last name")]
-        public string LastName { get; set; } = null!;
+        public string? LastName { get; set; }
 
         [Comment("User's Wishlist")]
         public ICollection<WishlistItem> Wishlist { get; set; } = new List<WishlistItem>();
 
         [Comment("User's Cart")]
         public ICollection<CartItem> Cart { get; set; } = new List<CartItem>();
+
     }
 }

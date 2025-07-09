@@ -14,11 +14,9 @@ namespace BookShopApplication.Data.Configuration
         public void Configure(EntityTypeBuilder<ApplicationUser> builder)
         {
             builder.Property(u => u.FirstName)
-                .IsRequired()
                 .HasMaxLength(FirstNameMaxLength);
 
             builder.Property(u => u.LastName)
-                .IsRequired()
                 .HasMaxLength(LastNameMaxLength);
         }
     }
