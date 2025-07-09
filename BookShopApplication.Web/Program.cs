@@ -1,6 +1,8 @@
 using BookShopApplication.Data;
 using BookShopApplication.Data.Models;
 using BookShopApplication.GCommon.EmailSender;
+using BookShopApplication.Services;
+using BookShopApplication.Services.Contracts;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
@@ -32,6 +34,8 @@ namespace BookShopApplication.Web
                 .AddDefaultTokenProviders();
             
             builder.Services.AddControllersWithViews();
+
+            builder.Services.AddScoped<IBookService, BookService>();
 
             builder.Services.AddTransient<IEmailSender, EmailSender>();
 
