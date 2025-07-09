@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using BookShopApplication.Data;
@@ -56,6 +57,53 @@ namespace BookShopApplication.Services
 
             await _context.WishlistItems.AddAsync(wishlistItem);
             return await _context.SaveChangesAsync() > 0;
+        }
+
+        public async Task<bool> RemoveFromWishlistByIdAsync(Guid itemId)
+        {
+            bool isRemoved = false;
+
+            var itemToRemove = await GetWishlistItemAsync(itemId, _context);
+            if (itemToRemove != null)
+            {
+                 _context.WishlistItems.Remove(itemToRemove);
+                 
+                 return await _context.SaveChangesAsync() > 0;
+            }
+
+            return isRemoved;
+        }
+
+        public async Task<bool> RemoveFromWishlistAsync(Guid userId, Guid itemId)
+        {
+            bool isRemoved = false; 
+
+            var itemToRemove = await GetWishlistItemByIdsAsync(userId, itemId, _context);
+            if (itemToRemove != null)
+            {
+                _context.WishlistItems.Remove(itemToRemove);
+
+                return await _context.SaveChangesAsync() > 0;
+            }
+
+            return isRemoved;
+        }
+
+        private static async Task<WishlistItem?> GetWishlistItemByIdsAsync(Guid userId, Guid itemId, ApplicationDbContext context)
+        {
+            var item = await context.WishlistItems
+                .SingleOrDefaultAsync(w => w.UserId == userId && w.BookId == itemId);
+
+            return item;
+        }
+
+        private static async Task<WishlistItem?> GetWishlistItemAsync(Guid itemId, ApplicationDbContext context)
+        {
+            var item = await context.WishlistItems
+                .SingleOrDefaultAsync(w => w.Id == itemId);
+
+            return item;
+
         }
     }
 }

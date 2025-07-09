@@ -12,5 +12,9 @@ namespace BookShopApplication.Services.Contracts
         public Task<IEnumerable<WishlistItemViewModel>> DisplayWishlistItemsAsync(Guid userId);
 
         public Task<bool> AddToWishlistAsync(Guid userId,Guid bookId);
+
+        public Task<bool> RemoveFromWishlistByIdAsync(Guid itemId);
+
+        public Task<bool> RemoveFromWishlistAsync(Guid userId, Guid bookId);
     }
 }

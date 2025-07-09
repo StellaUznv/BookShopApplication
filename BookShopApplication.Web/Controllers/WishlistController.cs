@@ -31,10 +31,72 @@ namespace BookShopApplication.Web.Controllers
 
             if (isAdded)
             {
-                return RedirectToAction("Index"); 
+                TempData["SuccessMessage"] = "Successfully added book to your Wishlist!";
             }
-            //todo!!!
-            return NotFound();
+            else
+            {
+                TempData["ErrorMessage"] = "Book is already in Wishlist!";
+            }
+
+
+            var referer = Request.Headers["Referer"].ToString();
+            if (!string.IsNullOrWhiteSpace(referer))
+            {
+                return Redirect(referer);
+            }
+
+            // Fallback in case referrer is missing
+            return RedirectToAction("Index", "Book");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> RemoveById(Guid id)
+        {
+            var isRemoved = await _service.RemoveFromWishlistByIdAsync(id);
+
+            if (isRemoved)
+            {
+                TempData["SuccessMessage"] = "Successfully removed book from your Wishlist!";
+            }
+            else
+            {
+                TempData["ErrorMessage"] = "An Error occured while attempting to remove the item!";
+            }
+
+            var referer = Request.Headers["Referer"].ToString();
+            if (!string.IsNullOrWhiteSpace(referer))
+            {
+                return Redirect(referer);
+            }
+
+            // Fallback in case referrer is missing
+            return RedirectToAction("Index", "Book");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Remove(Guid bookId)
+        {
+            var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+
+            var isRemoved = await _service.RemoveFromWishlistAsync(userId, bookId);
+
+            if (isRemoved)
+            {
+                TempData["SuccessMessage"] = "Successfully removed book from your Wishlist!";
+            }
+            else
+            {
+                TempData["ErrorMessage"] = "An Error occured while attempting to remove the item!";
+            }
+
+            var referer = Request.Headers["Referer"].ToString();
+            if (!string.IsNullOrWhiteSpace(referer))
+            {
+                return Redirect(referer);
+            }
+
+            // Fallback in case referrer is missing
+            return RedirectToAction("Index", "Book");
         }
     }
 }
