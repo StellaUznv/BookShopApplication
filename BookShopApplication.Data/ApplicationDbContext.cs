@@ -17,7 +17,6 @@ namespace BookShopApplication.Data
         public DbSet<Shop> Shops { get; set; } = null!;
         public DbSet<Location> Locations { get; set; } = null!;
         public DbSet<BookInShop> BookInShops { get; set; } = null!;
-
         public DbSet<WishlistItem> WishlistItems { get; set; } = null!;
         public DbSet<CartItem> CartItems { get; set; } = null!;
 

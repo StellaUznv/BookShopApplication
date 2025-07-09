@@ -8,6 +8,17 @@ namespace BookShopApplication.GCommon.ValidationConstraints
 {
     public static class ModelValidationConstraints
     {
+        public static class UserConstraints
+        {
+            //FirstName
+            public const int FirstNameMaxLength = 100;
+            public const int FirstNameMinLength = 3;
+
+            //LastName
+            public const int LastNameMaxLength = 100;
+            public const int LastNameMinLength = 4;
+        }
+
         public static class BookConstraints
         {
             //Title
