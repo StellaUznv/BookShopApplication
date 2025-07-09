@@ -1,5 +1,6 @@
 ﻿using BookShopApplication.Services.Contracts;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace BookShopApplication.Web.Controllers
 {
@@ -14,10 +15,26 @@ namespace BookShopApplication.Web.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Index(Guid userId)
+        public async Task<IActionResult> Index()
         {
+            var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
             var model = await _service.DisplayWishlistItemsAsync(userId);
             return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Add(Guid bookId)
+        {
+            var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+
+            var isAdded = await _service.AddToWishlistAsync(userId, bookId);
+
+            if (isAdded)
+            {
+                return RedirectToAction("Index"); 
+            }
+
+            return NotFound();
         }
     }
 }
