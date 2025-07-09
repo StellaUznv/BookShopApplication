@@ -1,0 +1,64 @@
+﻿@model IEnumerable<BookShopApplication.Web.ViewModels.Wishlist.WishlistItemViewModel>
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+@{
+    ViewData["Title"] = "My Wishlist";
+}
+
+<div class="container mt-4">
+    <h2 class="mb-4 text-center">My Wishlist</h2>
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info text-center">
+            Your wishlist is empty.
+        </div>
+    }
+    else
+    {
+        <div class="row row-cols-2 row-cols-sm-3 row-cols-md-4 row-cols-lg-5 g-3">
+            @foreach (var item in Model)
+            {
+                <div class="col">
+                    <div class="card h-100 shadow-sm bg-light" style="font-size: 0.85rem;">
+                        @if (!string.IsNullOrEmpty(item.ImagePath))
+                        {
+                            <img src="@item.ImagePath"
+                                 class="card-img-top img-fluid"
+                                 alt="@item.Title"
+                                 style="object-fit: cover; height: 180px;" />
+                        }
+                        else
+                        {
+                            <div class="d-flex align-items-center justify-content-center bg-secondary text-white"
+                                 style="height: 180px;">
+                                <span>No Image</span>
+                            </div>
+                        }
+
+                        <div class="card-body p-2 d-flex flex-column">
+                            <h6 class="card-title text-truncate mb-1" title="@item.Title">@item.Title</h6>
+                            <p class="card-text mb-2"><strong>Price:</strong> $@item.Price</p>
+
+                            <div class="mt-auto d-flex justify-content-between">
+                                <a asp-controller="Book" asp-action="Details" asp-route-id="@item.BookId"
+                                   class="btn btn-sm btn-outline-primary">
+                                    View
+                                </a>
+
+                                <form asp-controller="Wishlist" asp-action="Remove"
+                                      method="post" class="d-inline">
+                                    <input type="hidden" name="id" value="@item.Id" />
+                                    <button type="submit" class="btn btn-sm btn-outline-danger">
+                                        Remove
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>
