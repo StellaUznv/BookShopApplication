@@ -15,15 +15,15 @@
                         {
                             <div class="overflow-hidden" style="height: 400px;">
                                 <img src="@Model.ImagePath"
-                                     class="img-fluid w-100 h-100 object-fit-cover rounded-start"
-                                     alt="@Model.Title"
-                                     style="object-fit: cover;" />
+                                class="img-fluid w-100 h-100 object-fit-cover rounded-start"
+                                alt="@Model.Title"
+                                style="object-fit: cover;" />
                             </div>
                         }
                         else
                         {
                             <div class="d-flex align-items-center justify-content-center bg-secondary text-white h-100"
-                                 style="height: 400px;">
+                            style="height: 400px;">
                                 <span>No Image Available</span>
                             </div>
                         }
@@ -58,10 +58,21 @@
                                         <input type="hidden" name="bookId" value="@Model.Id" />
                                         <button type="submit" class="btn btn-success btn-sm">Add to Cart</button>
                                     </form>
-                                    <form asp-controller="Wishlist" asp-action="Add" method="post">
-                                        <input type="hidden" name="bookId" value="@Model.Id" />
-                                        <button type="submit" class="btn btn-outline-secondary btn-sm">Add to Wishlist</button>
-                                    </form>
+                                    @if (!@Model.IsInWishlist)
+                                    {
+                                        <form asp-controller="Wishlist" asp-action="Add" method="post">
+                                            <input type="hidden" name="bookId" value="@Model.Id" />
+                                            <button type="submit" class="btn btn-secondary btn-sm">Add to Wishlist</button>
+                                        </form>
+                                    }
+                                    else
+                                    {
+                                        <form asp-controller="Wishlist" asp-action="Remove" method="post">
+                                            <input type="hidden" name="bookId" value="@Model.Id" />
+                                            <button type="submit" class="btn btn-warning btn-sm">Remove from Wishlist</button>
+                                        </form>
+                                    }
+
                                 </div>
                             }
                             else

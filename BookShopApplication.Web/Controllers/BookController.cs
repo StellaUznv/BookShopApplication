@@ -1,5 +1,6 @@
 ﻿using BookShopApplication.Services.Contracts;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace BookShopApplication.Web.Controllers
 {
@@ -14,7 +15,8 @@ namespace BookShopApplication.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> Index()
         {
-            var books = await _service.DisplayAllBooksAsync();
+            var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+            var books = await _service.DisplayAllBooksAsync(userId);
 
             return View(books);
         }
@@ -22,7 +24,8 @@ namespace BookShopApplication.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> Details(Guid id)
         {
-            var book = await _service.DisplayBookDetailsByIdAsync(id);
+            var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+            var book = await _service.DisplayBookDetailsByIdAsync(userId, id);
 
             return View(book);
         }

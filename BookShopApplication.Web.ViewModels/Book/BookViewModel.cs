@@ -16,5 +16,7 @@ namespace BookShopApplication.Web.ViewModels.Book
         public string Price { get; set; } = null!;
 
         public string? ImagePath { get; set; }
+
+        public bool IsInWishlist = false;
     }
 }
