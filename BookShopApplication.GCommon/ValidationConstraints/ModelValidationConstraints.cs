@@ -40,6 +40,9 @@ namespace BookShopApplication.GCommon.ValidationConstraints
             //Pages
             public const int PagesMaxValue = int.MaxValue;
             public const int PagesMinValue = 0;
+
+            //Image
+            public const int ImageMaxLength = 1000;
         }
 
         public static class GenreConstraints

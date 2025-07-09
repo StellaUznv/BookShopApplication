@@ -42,6 +42,9 @@ namespace BookShopApplication.Data.Configuration
             builder.Property(b => b.IsDeleted)
                 .IsRequired();
 
+            builder.Property(b => b.ImagePath)
+                .IsRequired(false)
+                .HasMaxLength(ImageMaxLength);
 
             builder.HasOne(b => b.Genre)
                 .WithMany(g => g.Books)
@@ -54,13 +57,13 @@ namespace BookShopApplication.Data.Configuration
 
             //Seeding
             builder.HasData(
-                new Book { Id = SeedGuids.Book1, Title = "The Hobbit", Description = "A fantasy book", AuthorName = "Tolkien", Price = 15.99M, PagesNumber = 310, GenreId = SeedGuids.Fantasy },
-                new Book { Id = SeedGuids.Book2, Title = "Dune", Description = "A sci-fi classic", AuthorName = "Frank Herbert", Price = 19.99M, PagesNumber = 412, GenreId = SeedGuids.SciFi },
-                new Book { Id = SeedGuids.Book3, Title = "Sherlock Holmes", Description = "Mystery detective", AuthorName = "Arthur Conan Doyle", Price = 12.99M, PagesNumber = 230, GenreId = SeedGuids.Mystery },
-                new Book { Id = SeedGuids.Book4, Title = "Ender's Game", Description = "Sci-fi military novel", AuthorName = "Orson Scott Card", Price = 14.99M, PagesNumber = 324, GenreId = SeedGuids.SciFi },
-                new Book { Id = SeedGuids.Book5, Title = "The Name of the Wind", Description = "Fantasy epic", AuthorName = "Patrick Rothfuss", Price = 18.99M, PagesNumber = 662, GenreId = SeedGuids.Fantasy },
-                new Book { Id = SeedGuids.Book6, Title = "The Hound of the Baskervilles", Description = "A thrilling mystery novel", AuthorName = "Arthur Conan Doyle", Price = 10.99M, PagesNumber = 256, GenreId = SeedGuids.Mystery },
-                new Book { Id = SeedGuids.Book7, Title = "Foundation", Description = "Sci-fi foundation of a galactic empire", AuthorName = "Isaac Asimov", Price = 16.99M, PagesNumber = 296, GenreId = SeedGuids.SciFi }
+                new Book { Id = SeedGuids.Book1, Title = "The Hobbit", Description = "A fantasy book", AuthorName = "Tolkien", Price = 15.99M, PagesNumber = 310, GenreId = SeedGuids.Fantasy, ImagePath = "/images/books/TheHobbitBookCover.jpg" },
+                new Book { Id = SeedGuids.Book2, Title = "Dune", Description = "A sci-fi classic", AuthorName = "Frank Herbert", Price = 19.99M, PagesNumber = 412, GenreId = SeedGuids.SciFi, ImagePath = "/images/books/DuneBookCover.jpg" },
+                new Book { Id = SeedGuids.Book3, Title = "Sherlock Holmes", Description = "Mystery detective", AuthorName = "Arthur Conan Doyle", Price = 12.99M, PagesNumber = 230, GenreId = SeedGuids.Mystery, ImagePath = "/images/books/SherlockHolmesBookCover.jpg" },
+                new Book { Id = SeedGuids.Book4, Title = "Ender's Game", Description = "Sci-fi military novel", AuthorName = "Orson Scott Card", Price = 14.99M, PagesNumber = 324, GenreId = SeedGuids.SciFi, ImagePath = "/images/books/Ender'sGameBookCover.jpg" },
+                new Book { Id = SeedGuids.Book5, Title = "The Name of the Wind", Description = "Fantasy epic", AuthorName = "Patrick Rothfuss", Price = 18.99M, PagesNumber = 662, GenreId = SeedGuids.Fantasy, ImagePath = "/images/books/TheNameOfTheWindBookCover.jpg" },
+                new Book { Id = SeedGuids.Book6, Title = "The Hound of the Baskervilles", Description = "A thrilling mystery novel", AuthorName = "Arthur Conan Doyle", Price = 10.99M, PagesNumber = 256, GenreId = SeedGuids.Mystery, ImagePath = "/images/books/TheHoundOfTheBaskervillesBookCover.jpg" },
+                new Book { Id = SeedGuids.Book7, Title = "Foundation", Description = "Sci-fi foundation of a galactic empire", AuthorName = "Isaac Asimov", Price = 16.99M, PagesNumber = 296, GenreId = SeedGuids.SciFi ,ImagePath = "/images/books/FoundationBookCover.jpg" }
             );
         }
     }

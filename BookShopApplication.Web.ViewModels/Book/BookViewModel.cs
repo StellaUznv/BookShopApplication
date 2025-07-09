@@ -15,6 +15,8 @@ namespace BookShopApplication.Web.ViewModels.Book
         public string Author { get; set; } = null!;
         public string Genre { get; set; } = null!;
         public string Price { get; set; } = null!;
+
+        public string? ImagePath { get; set; }
         public ICollection<string> AvailableInShops { get; set; } = new List<string>();
     }
 }

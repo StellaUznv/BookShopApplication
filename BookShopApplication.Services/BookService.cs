@@ -29,6 +29,7 @@ namespace BookShopApplication.Services
                     .ToList(),
                 Description = b.Description,
                 Genre = b.Genre.Name,
+                ImagePath = b.ImagePath,
                 Price = b.Price.ToString(),
                 Title = b.Title
 

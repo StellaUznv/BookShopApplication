@@ -26,4 +26,8 @@
     <ProjectReference Include="..\BookShopApplication.Web.ViewModels\BookShopApplication.Web.ViewModels.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\images\books\" />
+  </ItemGroup>
+
 </Project>

@@ -30,6 +30,9 @@ namespace BookShopApplication.Data.Models
         [Comment("Pages number in the Book entity")] 
         public int PagesNumber { get; set; }
 
+        [Comment("The image's path")]
+        public string? ImagePath { get; set; }
+
         [Comment("Tells if the Book is Soft Deleted or not")]
         public bool IsDeleted { get; set; } = false;
 
