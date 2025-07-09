@@ -21,7 +21,8 @@ namespace BookShopApplication.Web
             //    .AddEntityFrameworkStores<ApplicationDbContext>();
             builder.Services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
                 {
-                    //Todo: configure password, etc.
+                    options.Password.RequiredLength = 8;
+                    options.SignIn.RequireConfirmedEmail = false;
                 })
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();

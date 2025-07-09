@@ -6,10 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using BookShopApplication.GCommon.ValidationConstraints;
 using Microsoft.EntityFrameworkCore;
-using static BookShopApplication.GCommon.ValidationConstraints.ModelValidationConstraints;
-using static BookShopApplication.GCommon.ValidationErrorMessages.ModelErrorMessages;
 
 namespace BookShopApplication.Data.Models
 {
