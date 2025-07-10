@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using BookShopApplication.Data.Models;
-using BookShopApplication.Data.Seeding;
+using BookShopApplication.Data.Common;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using static BookShopApplication.GCommon.ValidationConstraints.ModelValidationConstraints.ShopConstraints;

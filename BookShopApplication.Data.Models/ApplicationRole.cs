@@ -9,5 +9,14 @@ namespace BookShopApplication.Data.Models
 {
     public class ApplicationRole : IdentityRole<Guid>
     {
+        public ApplicationRole() : base()
+        {
+        }
+
+        public ApplicationRole(string roleName) : base()
+        {
+            this.Name = roleName;
+            this.NormalizedName = roleName.ToUpperInvariant();
+        }
     }
 }

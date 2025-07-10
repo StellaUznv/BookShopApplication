@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BookShopApplication.Data.Seeding
+namespace BookShopApplication.Data.Common
 {
     public static class SeedGuids
     {

@@ -1,4 +1,6 @@
 using BookShopApplication.Data;
+using static BookShopApplication.Data.Seeding.Seeding;
+using BookShopApplication.Data.Common;
 using BookShopApplication.Data.Models;
 using BookShopApplication.GCommon.EmailSender;
 using BookShopApplication.Services;
@@ -11,7 +13,7 @@ namespace BookShopApplication.Web
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
 
@@ -42,6 +44,12 @@ namespace BookShopApplication.Web
 
             var app = builder.Build();
 
+            // SEED ROLES AND ADMIN USER HERE
+            using (var scope = app.Services.CreateScope())
+            {
+                var services = scope.ServiceProvider;
+                await SeedRolesAndAdminAsync(services);
+            }
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
@@ -62,6 +70,13 @@ namespace BookShopApplication.Web
             app.UseAuthentication();
             app.UseAuthorization();
 
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllerRoute(
+                    name: "areas",
+                    pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}"
+                );
+            });
             app.MapControllerRoute(
                 name: "default",
                 pattern: "{controller=Home}/{action=Index}/{id?}");
