@@ -47,5 +47,78 @@ namespace BookShopApplication.Web.Controllers
             // Fallback in case referrer is missing
             return RedirectToAction("Index", "Book");
         }
+        [HttpPost]
+        public async Task<IActionResult> RemoveById(Guid id)
+        {
+            var isRemoved = await _service.RemoveFromCartByIdAsync(id);
+
+            if (isRemoved)
+            {
+                TempData["SuccessMessage"] = "Successfully removed book from your Cart!";
+            }
+            else
+            {
+                TempData["ErrorMessage"] = "An Error occured while attempting to remove the item!";
+            }
+
+            var referer = Request.Headers["Referer"].ToString();
+            if (!string.IsNullOrWhiteSpace(referer))
+            {
+                return Redirect(referer);
+            }
+
+            // Fallback in case referrer is missing
+            return RedirectToAction("Index", "Book");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Remove(Guid bookId)
+        {
+            var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+
+            var isRemoved = await _service.RemoveFromCartAsync(userId, bookId);
+
+            if (isRemoved)
+            {
+                TempData["SuccessMessage"] = "Successfully removed book from your Cart!";
+            }
+            else
+            {
+                TempData["ErrorMessage"] = "An Error occured while attempting to remove the item!";
+            }
+
+            var referer = Request.Headers["Referer"].ToString();
+            if (!string.IsNullOrWhiteSpace(referer))
+            {
+                return Redirect(referer);
+            }
+
+            // Fallback in case referrer is missing
+            return RedirectToAction("Index", "Book");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> MoveToWishlistById(Guid id)
+        {
+            var isSuccessful = await _service.MoveToWishlistByIdAsync(id);
+
+            if (isSuccessful)
+            {
+                TempData["SuccessMessage"] = "Successfully moved book to your Wishlist!";
+            }
+            else
+            {
+                TempData["ErrorMessage"] = "An Error occured while attempting to move the item!";
+            }
+
+            var referer = Request.Headers["Referer"].ToString();
+            if (!string.IsNullOrWhiteSpace(referer))
+            {
+                return Redirect(referer);
+            }
+
+            // Fallback in case referrer is missing
+            return RedirectToAction("Index", "Book");
+        }
     }
 }

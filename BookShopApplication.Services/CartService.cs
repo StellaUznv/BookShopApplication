@@ -71,5 +71,84 @@ namespace BookShopApplication.Services
             await _context.CartItems.AddAsync(cartItem);
             return await _context.SaveChangesAsync() > 0;
         }
+
+        public async Task<bool> RemoveFromCartByIdAsync(Guid itemId)
+        {
+            bool isRemoved = false;
+
+            var itemToRemove = await GetCartItemAsync(itemId, _context);
+            if (itemToRemove != null)
+            {
+                _context.CartItems.Remove(itemToRemove);
+
+                return await _context.SaveChangesAsync() > 0;
+            }
+
+            return isRemoved;
+        }
+
+        public async Task<bool> RemoveFromCartAsync(Guid userId, Guid itemId)
+        {
+            bool isRemoved = false;
+
+            var itemToRemove = await GetCartItemByIdsAsync(userId, itemId, _context);
+            if (itemToRemove != null)
+            {
+                _context.CartItems.Remove(itemToRemove);
+
+                return await _context.SaveChangesAsync() > 0;
+            }
+
+            return isRemoved;
+        }
+
+        public async Task<bool> MoveToWishlistByIdAsync(Guid itemId)
+        {
+            bool isRemoved = false;
+            bool isAdded = false;
+
+            var itemToRemove = await GetCartItemAsync(itemId, _context);
+
+            var itemToAdd = new WishlistItem
+            {
+                Id = Guid.NewGuid(),
+                BookId = itemToRemove.BookId,
+                UserId = itemToRemove.UserId
+            };
+
+            if (itemToAdd != null)
+            {
+               await _context.WishlistItems.AddAsync(itemToAdd);
+
+               isAdded = await _context.SaveChangesAsync() > 0;
+            }
+
+            if (itemToRemove != null)
+            {
+                _context.CartItems.Remove(itemToRemove);
+
+                isRemoved = await _context.SaveChangesAsync() > 0;
+            }
+
+            return isAdded && isRemoved;
+
+        }
+
+        private static async Task<CartItem?> GetCartItemByIdsAsync(Guid userId, Guid itemId, ApplicationDbContext context)
+        {
+            var item = await context.CartItems
+                .SingleOrDefaultAsync(w => w.UserId == userId && w.BookId == itemId);
+
+            return item;
+        }
+
+        private static async Task<CartItem?> GetCartItemAsync(Guid itemId, ApplicationDbContext context)
+        {
+            var item = await context.CartItems
+                .SingleOrDefaultAsync(w => w.Id == itemId);
+
+            return item;
+
+        }
     }
 }

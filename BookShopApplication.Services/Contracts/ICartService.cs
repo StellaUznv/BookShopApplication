@@ -12,5 +12,11 @@ namespace BookShopApplication.Services.Contracts
         public Task<IEnumerable<CartItemViewModel>> DisplayAllCartItemsAsync(Guid userId);
 
         public Task<bool> AddToCartAsync(Guid userId, Guid bookId);
+
+        public Task<bool> RemoveFromCartByIdAsync(Guid itemId);
+
+        public Task<bool> RemoveFromCartAsync(Guid userId, Guid itemId);
+
+        public  Task<bool> MoveToWishlistByIdAsync(Guid itemId);
     }
 }
