@@ -65,39 +65,24 @@ namespace BookShopApplication.Services
 
             //todo:Simplify by adding private methods!!!
 
-            var book = await GetBookByIdAsNoTrackingAsync(bookId,_context);
+            if (userId.HasValue)
+            {
+                return await GetBookDetailsViewModelByUserIdAsync(userId.Value, bookId, _context);
+            }
+
+            return await GetBookDetailsViewModelByBookIdAsync(bookId, _context);
+        }
+
+        private static async Task<BookDetailsViewModel> GetBookDetailsViewModelByBookIdAsync(Guid bookId,
+            ApplicationDbContext context)
+        {
+            var book = await GetBookByIdAsNoTrackingAsync(bookId, context);
 
             if (book == null)
             {
                 // Optional: throw or return null/empty view model
                 throw new InvalidOperationException("Book not found.");
             }
-
-            if (userId.HasValue)
-            {
-                var wishlistItems = await GetWishListedItemsAsNoTrackingAsync(userId.Value, _context);
-                var cartItems = await GetCartItemsAsNoTrackingAsync(userId.Value, _context);
-
-                var userModel = new BookDetailsViewModel
-                {
-                    Id = book.Id,
-                    Author = book.AuthorName,
-                    Genre = book.Genre.Name,
-                    ImagePath = book.ImagePath,
-                    Price = book.Price.ToString("f2"),
-                    Title = book.Title,
-                    AvailableInShops = book.BookInShops
-                        .Select(bs => bs.Shop.Name)
-                        .ToList(),
-                    Description = book.Description,
-                    PagesNumber = book.PagesNumber.ToString(),
-                    IsInWishlist = wishlistItems.Contains(book.Id),
-                    IsInCart = cartItems.Contains(book.Id)
-                };
-
-                return userModel;
-            }
-
             var model = new BookDetailsViewModel
             {
                 Id = book.Id,
@@ -115,6 +100,37 @@ namespace BookShopApplication.Services
             return model;
         }
 
+        private static async Task<BookDetailsViewModel> GetBookDetailsViewModelByUserIdAsync(Guid userId,Guid bookId,
+            ApplicationDbContext context)
+        {
+            var book = await GetBookByIdAsNoTrackingAsync(bookId, context);
+
+            if (book == null)
+            {
+                // Optional: throw or return null/empty view model
+                throw new InvalidOperationException("Book not found.");
+            }
+            var wishlistItems = await GetWishListedItemsAsNoTrackingAsync(userId, context);
+            var cartItems = await GetCartItemsAsNoTrackingAsync(userId, context);
+
+            var userModel = new BookDetailsViewModel
+            {
+                Id = book.Id,
+                Author = book.AuthorName,
+                Genre = book.Genre.Name,
+                ImagePath = book.ImagePath,
+                Price = book.Price.ToString("f2"),
+                Title = book.Title,
+                AvailableInShops = book.BookInShops
+                    .Select(bs => bs.Shop.Name)
+                    .ToList(),
+                Description = book.Description,
+                PagesNumber = book.PagesNumber.ToString(),
+                IsInWishlist = wishlistItems.Contains(book.Id),
+                IsInCart = cartItems.Contains(book.Id)
+            };
+            return userModel;
+        }
 
         private static async Task<Book?> GetBookByIdAsNoTrackingAsync(Guid id, ApplicationDbContext context)
         {
