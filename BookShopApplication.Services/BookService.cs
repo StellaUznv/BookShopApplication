@@ -27,26 +27,34 @@ namespace BookShopApplication.Services
 
             if (userId.HasValue)
             {
-                var wishlistItems = await GetWishListedItemsAsNoTrackingAsync(userId.Value, _context);
-                var cartItems = await GetCartItemsAsNoTrackingAsync(userId.Value, _context);
-
-                var userBooks = await _context.Books.Select(b => new BookViewModel
-                    {
-                        Id = b.Id,
-                        Author = b.AuthorName,
-                        Genre = b.Genre.Name,
-                        ImagePath = b.ImagePath,
-                        Price = b.Price.ToString("f2"),
-                        Title = b.Title,
-                        IsInWishlist = wishlistItems.Contains(b.Id),
-                        IsInCart = cartItems.Contains(b.Id)
-
-                    }).AsNoTracking()
-                    .ToListAsync();
-                return userBooks;
+                return await GetAllBooksForUserByUserIdAsNoTracking(userId.Value, _context);
             }
 
-            var books = await _context.Books.Select(b => new BookViewModel
+            return await GetAllBooksToDisplayAsyncAsNoTracking(_context);
+        }
+
+        
+        public async Task<BookDetailsViewModel> DisplayBookDetailsByIdAsync(Guid? userId,Guid bookId)
+        {
+
+            //todo:Simplify by adding private methods!!!
+
+            if (userId.HasValue)
+            {
+                return await GetBookDetailsViewModelByUserIdAsyncAsNoTracking(userId.Value, bookId, _context);
+            }
+
+            return await GetBookDetailsViewModelByBookIdAsyncAsNoTracking(bookId, _context);
+        }
+
+
+
+        //Private helping methods...
+
+        private static async Task<IEnumerable<BookViewModel>> GetAllBooksToDisplayAsyncAsNoTracking(
+            ApplicationDbContext context)
+        {
+            var books = await context.Books.Select(b => new BookViewModel
                 {
                     Id = b.Id,
                     Author = b.AuthorName,
@@ -60,20 +68,28 @@ namespace BookShopApplication.Services
             return books;
         }
 
-        public async Task<BookDetailsViewModel> DisplayBookDetailsByIdAsync(Guid? userId,Guid bookId)
+        private static async Task<IEnumerable<BookViewModel>> GetAllBooksForUserByUserIdAsNoTracking(Guid userId, ApplicationDbContext context)
         {
+            var wishlistItems = await GetWishListedItemsAsNoTrackingAsync(userId, context);
+            var cartItems = await GetCartItemsAsNoTrackingAsync(userId, context);
 
-            //todo:Simplify by adding private methods!!!
+            var userBooks = await context.Books.Select(b => new BookViewModel
+                {
+                    Id = b.Id,
+                    Author = b.AuthorName,
+                    Genre = b.Genre.Name,
+                    ImagePath = b.ImagePath,
+                    Price = b.Price.ToString("f2"),
+                    Title = b.Title,
+                    IsInWishlist = wishlistItems.Contains(b.Id),
+                    IsInCart = cartItems.Contains(b.Id)
 
-            if (userId.HasValue)
-            {
-                return await GetBookDetailsViewModelByUserIdAsync(userId.Value, bookId, _context);
-            }
-
-            return await GetBookDetailsViewModelByBookIdAsync(bookId, _context);
+                }).AsNoTracking()
+                .ToListAsync();
+            return userBooks;
         }
 
-        private static async Task<BookDetailsViewModel> GetBookDetailsViewModelByBookIdAsync(Guid bookId,
+        private static async Task<BookDetailsViewModel> GetBookDetailsViewModelByBookIdAsyncAsNoTracking(Guid bookId,
             ApplicationDbContext context)
         {
             var book = await GetBookByIdAsNoTrackingAsync(bookId, context);
@@ -100,7 +116,7 @@ namespace BookShopApplication.Services
             return model;
         }
 
-        private static async Task<BookDetailsViewModel> GetBookDetailsViewModelByUserIdAsync(Guid userId,Guid bookId,
+        private static async Task<BookDetailsViewModel> GetBookDetailsViewModelByUserIdAsyncAsNoTracking(Guid userId,Guid bookId,
             ApplicationDbContext context)
         {
             var book = await GetBookByIdAsNoTrackingAsync(bookId, context);
