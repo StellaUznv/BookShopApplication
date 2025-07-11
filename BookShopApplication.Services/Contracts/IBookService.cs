@@ -10,9 +10,9 @@ namespace BookShopApplication.Services.Contracts
 {
     public interface IBookService 
     {
-        public Task<IEnumerable<BookViewModel>> DisplayAllBooksAsync(Guid userId);
+        public Task<IEnumerable<BookViewModel>> DisplayAllBooksAsync(Guid? userId);
 
-        public Task<BookDetailsViewModel> DisplayBookDetailsByIdAsync(Guid userId, Guid bookId);
+        public Task<BookDetailsViewModel> DisplayBookDetailsByIdAsync(Guid? userId, Guid bookId);
 
     }
 }

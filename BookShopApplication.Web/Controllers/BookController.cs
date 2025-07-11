@@ -15,16 +15,34 @@ namespace BookShopApplication.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> Index()
         {
-            var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
-            var books = await _service.DisplayAllBooksAsync(userId);
+            Guid? userId = null;
 
+            if (User.Identity != null && User.Identity.IsAuthenticated)
+            {
+                var idValue = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                if (!string.IsNullOrEmpty(idValue))
+                {
+                    userId = Guid.Parse(idValue);
+                }
+            }
+
+            var books = await _service.DisplayAllBooksAsync(userId);
             return View(books);
         }
 
         [HttpGet]
         public async Task<IActionResult> Details(Guid id)
         {
-            var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+            Guid? userId = null;
+
+            if (User.Identity != null && User.Identity.IsAuthenticated)
+            {
+                var idValue = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                if (!string.IsNullOrEmpty(idValue))
+                {
+                    userId = Guid.Parse(idValue);
+                }
+            }
             var book = await _service.DisplayBookDetailsByIdAsync(userId, id);
 
             return View(book);

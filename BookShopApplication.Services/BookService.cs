@@ -21,29 +21,50 @@ namespace BookShopApplication.Services
         }
 
 
-        public async Task<IEnumerable<BookViewModel>> DisplayAllBooksAsync(Guid userId)
+        public async Task<IEnumerable<BookViewModel>> DisplayAllBooksAsync(Guid? userId)
         {
-            var wishlistItems = await GetWishListedItemsAsNoTrackingAsync(userId, _context);
-            var cartItems = await GetCartItemsAsNoTrackingAsync(userId, _context);
+            //todo: Simplify by adding private methods !!!
+
+            if (userId.HasValue)
+            {
+                var wishlistItems = await GetWishListedItemsAsNoTrackingAsync(userId.Value, _context);
+                var cartItems = await GetCartItemsAsNoTrackingAsync(userId.Value, _context);
+
+                var userBooks = await _context.Books.Select(b => new BookViewModel
+                    {
+                        Id = b.Id,
+                        Author = b.AuthorName,
+                        Genre = b.Genre.Name,
+                        ImagePath = b.ImagePath,
+                        Price = b.Price.ToString("f2"),
+                        Title = b.Title,
+                        IsInWishlist = wishlistItems.Contains(b.Id),
+                        IsInCart = cartItems.Contains(b.Id)
+
+                    }).AsNoTracking()
+                    .ToListAsync();
+                return userBooks;
+            }
 
             var books = await _context.Books.Select(b => new BookViewModel
-            {
-                Id = b.Id,
-                Author = b.AuthorName,
-                Genre = b.Genre.Name,
-                ImagePath = b.ImagePath,
-                Price = b.Price.ToString("f2"),
-                Title = b.Title,
-                IsInWishlist = wishlistItems.Contains(b.Id),
-                IsInCart = cartItems.Contains(b.Id)
-
-            }).AsNoTracking()
+                {
+                    Id = b.Id,
+                    Author = b.AuthorName,
+                    Genre = b.Genre.Name,
+                    ImagePath = b.ImagePath,
+                    Price = b.Price.ToString("f2"),
+                    Title = b.Title
+                }).AsNoTracking()
                 .ToListAsync();
+
             return books;
         }
 
-        public async Task<BookDetailsViewModel> DisplayBookDetailsByIdAsync(Guid userId,Guid bookId)
+        public async Task<BookDetailsViewModel> DisplayBookDetailsByIdAsync(Guid? userId,Guid bookId)
         {
+
+            //todo:Simplify by adding private methods!!!
+
             var book = await GetBookByIdAsNoTrackingAsync(bookId,_context);
 
             if (book == null)
@@ -52,8 +73,30 @@ namespace BookShopApplication.Services
                 throw new InvalidOperationException("Book not found.");
             }
 
-            var wishlistItems = await GetWishListedItemsAsNoTrackingAsync(userId, _context);
-            var cartItems = await GetCartItemsAsNoTrackingAsync(userId, _context);
+            if (userId.HasValue)
+            {
+                var wishlistItems = await GetWishListedItemsAsNoTrackingAsync(userId.Value, _context);
+                var cartItems = await GetCartItemsAsNoTrackingAsync(userId.Value, _context);
+
+                var userModel = new BookDetailsViewModel
+                {
+                    Id = book.Id,
+                    Author = book.AuthorName,
+                    Genre = book.Genre.Name,
+                    ImagePath = book.ImagePath,
+                    Price = book.Price.ToString("f2"),
+                    Title = book.Title,
+                    AvailableInShops = book.BookInShops
+                        .Select(bs => bs.Shop.Name)
+                        .ToList(),
+                    Description = book.Description,
+                    PagesNumber = book.PagesNumber.ToString(),
+                    IsInWishlist = wishlistItems.Contains(book.Id),
+                    IsInCart = cartItems.Contains(book.Id)
+                };
+
+                return userModel;
+            }
 
             var model = new BookDetailsViewModel
             {
@@ -67,11 +110,8 @@ namespace BookShopApplication.Services
                     .Select(bs => bs.Shop.Name)
                     .ToList(),
                 Description = book.Description,
-                PagesNumber = book.PagesNumber.ToString(),
-                IsInWishlist = wishlistItems.Contains(book.Id),
-                IsInCart = cartItems.Contains(book.Id)
+                PagesNumber = book.PagesNumber.ToString()
             };
-
             return model;
         }
 
