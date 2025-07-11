@@ -18,5 +18,6 @@ namespace BookShopApplication.Web.ViewModels.Book
         public string PagesNumber { get; set; } = null!;
         public ICollection<string> AvailableInShops { get; set; } = new List<string>();
         public bool IsInWishlist { get; set; }
+        public bool IsInCart { get; set; }
     }
 }

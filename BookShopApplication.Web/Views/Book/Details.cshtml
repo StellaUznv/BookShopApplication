@@ -54,22 +54,38 @@
                             @if (User.Identity?.IsAuthenticated ?? false)
                             {
                                 <div class="d-flex gap-2 mt-3">
-                                    <form asp-controller="Cart" asp-action="Add" method="post">
-                                        <input type="hidden" name="bookId" value="@Model.Id" />
-                                        <button type="submit" class="btn btn-success btn-sm">Add to Cart</button>
-                                    </form>
+
+                                    @if (!@Model.IsInCart)
+                                    {
+                                        <form asp-controller="Cart" asp-action="Add" method="post">
+                                            <input type="hidden" name="bookId" value="@Model.Id" />
+                                            <button type="submit" class="btn btn-primary btn-sm">Add to Cart</button>
+                                        </form>
+                                    }
+                                    else
+                                    {
+                                        <form asp-controller="Cart" asp-action="Remove" method="post">
+                                            <input type="hidden" name="bookId" value="@Model.Id" />
+                                            <button type="submit" class="btn btn-warning btn-sm">Remove from Cart</button>
+                                        </form>
+                                    }
                                     @if (!@Model.IsInWishlist)
                                     {
-                                        <form asp-controller="Wishlist" asp-action="Add" method="post">
-                                            <input type="hidden" name="bookId" value="@Model.Id" />
-                                            <button type="submit" class="btn btn-secondary btn-sm">Add to Wishlist</button>
-                                        </form>
+                                        @if (!@Model.IsInCart)
+                                        {
+                                            <form asp-controller="Wishlist" asp-action="Add" method="post">
+                                                <input type="hidden" name="bookId" value="@Model.Id" />
+                                                <button type="submit" class="btn btn-danger btn-sm">Add to Wishlist</button>
+                                            </form>
+                                        }
+
+
                                     }
                                     else
                                     {
                                         <form asp-controller="Wishlist" asp-action="Remove" method="post">
                                             <input type="hidden" name="bookId" value="@Model.Id" />
-                                            <button type="submit" class="btn btn-warning btn-sm">Remove from Wishlist</button>
+                                            <button type="submit" class="btn btn-secondary btn-sm">Remove from Wishlist</button>
                                         </form>
                                     }
 

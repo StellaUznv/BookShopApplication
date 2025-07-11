@@ -24,6 +24,7 @@ namespace BookShopApplication.Services
         public async Task<IEnumerable<BookViewModel>> DisplayAllBooksAsync(Guid userId)
         {
             var wishlistItems = await GetWishListedItemsAsNoTrackingAsync(userId, _context);
+            var cartItems = await GetCartItemsAsNoTrackingAsync(userId, _context);
 
             var books = await _context.Books.Select(b => new BookViewModel
             {
@@ -33,7 +34,8 @@ namespace BookShopApplication.Services
                 ImagePath = b.ImagePath,
                 Price = b.Price.ToString("f2"),
                 Title = b.Title,
-                IsInWishlist = wishlistItems.Contains(b.Id)
+                IsInWishlist = wishlistItems.Contains(b.Id),
+                IsInCart = cartItems.Contains(b.Id)
 
             }).AsNoTracking()
                 .ToListAsync();
@@ -51,6 +53,7 @@ namespace BookShopApplication.Services
             }
 
             var wishlistItems = await GetWishListedItemsAsNoTrackingAsync(userId, _context);
+            var cartItems = await GetCartItemsAsNoTrackingAsync(userId, _context);
 
             var model = new BookDetailsViewModel
             {
@@ -65,7 +68,8 @@ namespace BookShopApplication.Services
                     .ToList(),
                 Description = book.Description,
                 PagesNumber = book.PagesNumber.ToString(),
-                IsInWishlist = wishlistItems.Contains(book.Id)
+                IsInWishlist = wishlistItems.Contains(book.Id),
+                IsInCart = cartItems.Contains(book.Id)
             };
 
             return model;
@@ -92,6 +96,16 @@ namespace BookShopApplication.Services
                 .Select(w => w.BookId)
                 .ToListAsync();
             return wishlistItems;
+        }
+
+        private static async Task<List<Guid>> GetCartItemsAsNoTrackingAsync(Guid userId, ApplicationDbContext context)
+        {
+            var cartItems = await context.CartItems
+                .Where(c => c.UserId == userId)
+                .AsNoTracking()
+                .Select(c => c.BookId)
+                .ToListAsync();
+            return cartItems;
         }
     }
 }

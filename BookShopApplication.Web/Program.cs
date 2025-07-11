@@ -39,6 +39,7 @@ namespace BookShopApplication.Web
 
             builder.Services.AddScoped<IBookService, BookService>();
             builder.Services.AddScoped<IWishlistService, WishlistService>();
+            builder.Services.AddScoped<ICartService, CartService>();
 
             builder.Services.AddTransient<IEmailSender, EmailSender>();
 

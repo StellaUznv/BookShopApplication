@@ -1,23 +1,23 @@
-﻿@model IEnumerable<BookShopApplication.Web.ViewModels.Wishlist.WishlistItemViewModel>
+﻿@model IEnumerable<BookShopApplication.Web.ViewModels.Cart.CartItemViewModel>
 @using Microsoft.AspNetCore.Mvc.TagHelpers
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 
 @{
-    ViewData["Title"] = "My Wishlist";
+    ViewData["Title"] = "My Cart";
 }
 
 <div class="container mt-4">
-    <h2 class="mb-4 text-center">My Wishlist</h2>
+    <h2 class="mb-4 text-center">My Cart</h2>
 
     @if (!Model.Any())
     {
         <div class="alert alert-info text-center">
-            Your wishlist is empty.
+            Your cart is empty.
         </div>
     }
     else
     {
-        <div class="row row-cols-2 row-cols-sm-3 row-cols-md-4 row-cols-lg-4 g-3">
+        <div class="row row-cols-2 row-cols-sm-3 row-cols-md-4 row-cols-lg-5 g-3">
             @foreach (var item in Model)
             {
                 <div class="col">
@@ -40,25 +40,19 @@
                         <div class="card-body p-2 d-flex flex-column">
                             <h6 class="card-title text-truncate mb-1" title="@item.Title">@item.Title</h6>
                             <p class="card-text mb-2"><strong>Price:</strong> $@item.Price</p>
+                            <p class="card-text mb-2"><strong>Quantity:</strong> @item.Quantity</p>
 
                             <div class="mt-auto d-flex justify-content-between">
                                 <a asp-controller="Book" asp-action="Details" asp-route-id="@item.BookId"
-                                   class="btn btn-sm btn-outline-secondary">
+                                   class="btn btn-sm btn-outline-info">
                                     View
                                 </a>
 
-                                <form asp-controller="Wishlist" asp-action="RemoveById"
+                                <form asp-controller="Cart" asp-action="RemoveById"
                                       method="post" class="d-inline">
                                     <input type="hidden" name="id" value="@item.Id" />
-                                    <button type="submit" class="btn btn-sm btn-outline-warning">
+                                    <button type="submit" class="btn btn-sm btn-outline-danger">
                                         Remove
-                                    </button>
-                                </form>
-                                <form asp-controller="Cart" asp-action="Add"
-                                      method="post" class="d-inline">
-                                    <input type="hidden" name="bookId" value="@item.BookId" />
-                                    <button type="submit" class="btn btn-sm btn-outline-primary">
-                                        Add To Cart
                                     </button>
                                 </form>
                             </div>
