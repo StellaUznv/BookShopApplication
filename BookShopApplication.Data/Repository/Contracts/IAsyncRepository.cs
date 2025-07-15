@@ -8,11 +8,11 @@ using System.Threading.Tasks;
 
 namespace BookShopApplication.Data.Repository.Contracts
 {
-    public interface IRepositoryAsync<TEntity, TKey>
+    public interface IAsyncRepository<TEntity, TKey>
     {
-        Task<TEntity> GetByIdAsync(TKey id);
+        Task<TEntity?> GetByIdAsync(TKey id);
 
-        Task<TEntity> FirstOrDefaultAsync(Expression<Func<TEntity, bool>> predicate);
+        Task<TEntity?> FirstOrDefaultAsync(Expression<Func<TEntity, bool>> predicate);
         Task<IEnumerable<TEntity>> GetAllAsync();
         Task AddAsync(TEntity item);
         Task AddRangeAsync(TEntity[] items);

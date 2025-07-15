@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Conventions;
 namespace BookShopApplication.Data.Repository
 {
     public abstract class BaseRepository<TEntity, TKey> : IRepository<TEntity, TKey> 
-        , IRepositoryAsync<TEntity,TKey>
+        , IAsyncRepository<TEntity,TKey>
     where TEntity : class
     {
         protected readonly ApplicationDbContext _context;
@@ -67,44 +67,48 @@ namespace BookShopApplication.Data.Repository
             return _context.SaveChanges() > 0;
         }
 
-        public Task<TEntity> GetByIdAsync(TKey id)
+        public async Task<TEntity?> GetByIdAsync(TKey id)
         {
-            throw new NotImplementedException();
+            return await this.dbSet.FindAsync(id);
         }
 
-        public Task<TEntity> FirstOrDefaultAsync(Expression<Func<TEntity, bool>> predicate)
+        public async Task<TEntity?> FirstOrDefaultAsync(Expression<Func<TEntity, bool>> predicate)
         {
-            throw new NotImplementedException();
+            return await this.dbSet.FirstOrDefaultAsync(predicate);
         }
 
-        public Task<IEnumerable<TEntity>> GetAllAsync()
+        public async Task<IEnumerable<TEntity>> GetAllAsync()
         {
-            throw new NotImplementedException();
+            return await this.dbSet.ToListAsync();
         }
 
-        public Task AddAsync(TEntity item)
+        public async Task AddAsync(TEntity item)
         {
-            throw new NotImplementedException();
+             await this.dbSet.AddAsync(item);
+             await this._context.SaveChangesAsync();
         }
 
-        public Task AddRangeAsync(TEntity[] items)
+        public async Task AddRangeAsync(TEntity[] items)
         {
-            throw new NotImplementedException();
+            await this.dbSet.AddRangeAsync(items);
+            await this._context.SaveChangesAsync();
         }
 
-        public Task<bool> DeleteAsync(TEntity entity)
+        public async Task<bool> DeleteAsync(TEntity entity)
         {
-            throw new NotImplementedException();
+            this.dbSet.Remove(entity);
+            return await this._context.SaveChangesAsync() > 0;
         }
 
-        public Task<bool> UpdateAsync(TEntity item)
+        public async Task<bool> UpdateAsync(TEntity item)
         {
-            throw new NotImplementedException();
+            this.dbSet.Update(item);
+            return await this._context.SaveChangesAsync() > 0;
         }
 
-        public Task SaveChangesAsync()
+        public async Task SaveChangesAsync()
         {
-            throw new NotImplementedException();
+           await this._context.SaveChangesAsync();
         }
     }
 }
