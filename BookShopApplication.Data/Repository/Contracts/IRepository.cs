@@ -9,9 +9,9 @@ namespace BookShopApplication.Data.Repository.Contracts
 {
     public interface IRepository<TEntity, TKey>
     {
-        TEntity GetById(TKey id);
+        TEntity? GetById(TKey id);
 
-        TEntity FirstOrDefault(Func<TEntity, bool> predicate);
+        TEntity? FirstOrDefault(Func<TEntity, bool> predicate);
         IEnumerable<TEntity> GetAll();
 
         IQueryable<TEntity> GetAllAttached();

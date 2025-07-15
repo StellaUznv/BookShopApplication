@@ -23,44 +23,48 @@ namespace BookShopApplication.Data.Repository
             this.dbSet = this._context.Set<TEntity>();
         }
 
-        public TEntity GetById(TKey id)
+        public TEntity? GetById(TKey id)
         {
-            throw new NotImplementedException();
+            return this.dbSet.Find(id);
         }
 
-        public TEntity FirstOrDefault(Func<TEntity, bool> predicate)
+        public TEntity? FirstOrDefault(Func<TEntity, bool> predicate)
         {
-            throw new NotImplementedException();
+            return this.dbSet.FirstOrDefault(predicate);
         }
 
         public IEnumerable<TEntity> GetAll()
         {
-            throw new NotImplementedException();
+            return this.dbSet.ToList();
         }
 
         public IQueryable<TEntity> GetAllAttached()
         {
-            throw new NotImplementedException();
+            return this.dbSet.AsQueryable();
         }
 
         public void Add(TEntity item)
         {
-            throw new NotImplementedException();
+            this.dbSet.Add(item);
+            this._context.SaveChanges();
         }
 
         public void AddRange(TEntity[] items)
         {
-            throw new NotImplementedException();
+            this.dbSet.AddRange(items);
+            this._context.SaveChanges();
         }
 
         public bool Delete(TEntity entity)
         {
-            throw new NotImplementedException();
+            this.dbSet.Remove(entity);
+            return _context.SaveChanges() > 0;
         }
 
         public bool Update(TEntity item)
         {
-            throw new NotImplementedException();
+            this.dbSet.Update(item);
+            return _context.SaveChanges() > 0;
         }
 
         public Task<TEntity> GetByIdAsync(TKey id)
