@@ -2,6 +2,8 @@ using BookShopApplication.Data;
 using static BookShopApplication.Data.Seeding.Seeding;
 using BookShopApplication.Data.Common;
 using BookShopApplication.Data.Models;
+using BookShopApplication.Data.Repository;
+using BookShopApplication.Data.Repository.Contracts;
 using BookShopApplication.GCommon.EmailSender;
 using BookShopApplication.Services;
 using BookShopApplication.Services.Contracts;
@@ -36,6 +38,8 @@ namespace BookShopApplication.Web
                 .AddDefaultTokenProviders();
             
             builder.Services.AddControllersWithViews();
+
+            builder.Services.AddScoped<IBookRepository, BookRepository>();
 
             builder.Services.AddScoped<IBookService, BookService>();
             builder.Services.AddScoped<IWishlistService, WishlistService>();
