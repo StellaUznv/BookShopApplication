@@ -6,11 +6,12 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using BookShopApplication.Data.Models.Contracts;
 using Microsoft.EntityFrameworkCore;
 
 namespace BookShopApplication.Data.Models
 {
-    public class Book
+    public class Book : ISoftDeletable
     {
         [Key]
         public Guid Id { get; set; }

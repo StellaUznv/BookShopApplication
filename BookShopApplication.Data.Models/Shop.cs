@@ -5,11 +5,12 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using BookShopApplication.Data.Models.Contracts;
 using Microsoft.EntityFrameworkCore;
 
 namespace BookShopApplication.Data.Models
 {
-    public class Shop
+    public class Shop : ISoftDeletable
     {
         [Key]
         public Guid Id { get; set; }

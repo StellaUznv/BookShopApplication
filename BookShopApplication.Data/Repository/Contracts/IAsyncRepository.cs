@@ -19,5 +19,6 @@ namespace BookShopApplication.Data.Repository.Contracts
         Task<bool> DeleteAsync(TEntity entity);
         Task<bool> UpdateAsync(TEntity item);
         Task SaveChangesAsync();
+        Task<bool> SoftDeleteAsync(TEntity entity);
     }
 }

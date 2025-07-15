@@ -5,11 +5,12 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using BookShopApplication.Data.Models.Contracts;
 using Microsoft.EntityFrameworkCore;
 
 namespace BookShopApplication.Data.Models
 {
-    public class CartItem
+    public class CartItem : ISoftDeletable
     {
         [Key]
         public Guid Id { get; set; }
@@ -31,5 +32,7 @@ namespace BookShopApplication.Data.Models
 
         [Comment("Tells if it's bought or not")]
         public bool IsPurchased { get; set; } = false;
+        [Comment("Tells if it's deleted or not")]
+        public bool IsDeleted { get; set; }
     }
 }

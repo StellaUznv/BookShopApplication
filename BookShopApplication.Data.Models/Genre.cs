@@ -5,10 +5,11 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using BookShopApplication.Data.Models.Contracts;
 
 namespace BookShopApplication.Data.Models
 {
-    public class Genre
+    public class Genre : ISoftDeletable
     {
         [Key]
         public Guid Id { get; set; }

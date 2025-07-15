@@ -23,5 +23,7 @@ namespace BookShopApplication.Data.Repository.Contracts
         bool Delete(TEntity entity);
         bool Update(TEntity item);
 
+        bool SoftDelete(TEntity item);
+
     }
 }

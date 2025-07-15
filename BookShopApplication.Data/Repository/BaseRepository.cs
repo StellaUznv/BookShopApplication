@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using BookShopApplication.Data.Repository.Contracts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Conventions;
+using static BookShopApplication.GCommon.ExceptionMessages.ExceptionMessages.Data;
 
 namespace BookShopApplication.Data.Repository
 {
@@ -67,6 +69,12 @@ namespace BookShopApplication.Data.Repository
             return _context.SaveChanges() > 0;
         }
 
+        public bool SoftDelete(TEntity item)
+        {
+            this.PerformSoftDeleteOfEntity(item);
+            return this.Update(item);
+        }
+
         public async Task<TEntity?> GetByIdAsync(TKey id)
         {
             return await this.dbSet.FindAsync(id);
@@ -109,6 +117,32 @@ namespace BookShopApplication.Data.Repository
         public async Task SaveChangesAsync()
         {
            await this._context.SaveChangesAsync();
+        }
+
+        public async Task<bool> SoftDeleteAsync(TEntity entity)
+        {
+            this.PerformSoftDeleteOfEntity(entity);
+            return await this.UpdateAsync(entity);
+        }
+
+        private void PerformSoftDeleteOfEntity(TEntity entity)
+        {
+            PropertyInfo? isDeletedProperty =
+                this.GetIsDeletedProperty(entity);
+            if (isDeletedProperty == null)
+            {
+                throw new InvalidOperationException(SoftDeleteOnNonSoftDeletableEntity);
+            }
+
+            isDeletedProperty.SetValue(entity, true);
+        }
+
+        private PropertyInfo? GetIsDeletedProperty(TEntity entity)
+        {
+            return typeof(TEntity)
+                .GetProperties()
+                .FirstOrDefault(pi => pi.PropertyType == typeof(bool) &&
+                                      pi.Name == "IsDeleted");
         }
     }
 }
