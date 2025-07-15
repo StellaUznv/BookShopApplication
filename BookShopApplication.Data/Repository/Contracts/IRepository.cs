@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace BookShopApplication.Data.Repository.Contracts
 {
-    public interface IRepositoryInterface<TEntity, TKey>
+    public interface IRepository<TEntity, TKey>
     {
         TEntity GetById(TKey id);
 
@@ -22,5 +22,6 @@ namespace BookShopApplication.Data.Repository.Contracts
 
         bool Delete(TEntity entity);
         bool Update(TEntity item);
+
     }
 }
