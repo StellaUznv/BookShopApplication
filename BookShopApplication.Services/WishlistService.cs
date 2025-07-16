@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using BookShopApplication.Data;
 using BookShopApplication.Data.Models;
+using BookShopApplication.Data.Repository.Contracts;
 using BookShopApplication.Services.Contracts;
 using BookShopApplication.Web.ViewModels.Wishlist;
 using Microsoft.EntityFrameworkCore;
@@ -15,14 +16,16 @@ namespace BookShopApplication.Services
     public class WishlistService : IWishlistService
     {
         private readonly ApplicationDbContext _context;
-        public WishlistService(ApplicationDbContext context)
+        private readonly IWishlistRepository _wishlistRepository;
+        public WishlistService(ApplicationDbContext context,IWishlistRepository _wishlistRepository)
         {
+            this._wishlistRepository = _wishlistRepository;
             this._context = context;
         }
 
         public async Task<IEnumerable<WishlistItemViewModel>> DisplayWishlistItemsAsync(Guid userId)
         {
-            var items = await _context.WishlistItems
+            var items = await _wishlistRepository.GetAllAttached()
                 .Where(w => w.UserId == userId)
                 .Select(w => new WishlistItemViewModel
                 {
@@ -40,7 +43,7 @@ namespace BookShopApplication.Services
         public async Task<bool> AddToWishlistAsync(Guid userId, Guid bookId)
         {
 
-            bool alreadyExists = await _context.WishlistItems
+            bool alreadyExists = await _wishlistRepository
                 .AnyAsync(w => w.UserId == userId && w.BookId == bookId);
 
             if (alreadyExists)
@@ -55,8 +58,7 @@ namespace BookShopApplication.Services
                 BookId = bookId
             };
 
-            await _context.WishlistItems.AddAsync(wishlistItem);
-            return await _context.SaveChangesAsync() > 0;
+            return await _wishlistRepository.AddAsync(wishlistItem); // Calls SaveChangesAsync.
         }
 
         public async Task<bool> RemoveFromWishlistByIdAsync(Guid itemId)
@@ -89,6 +91,7 @@ namespace BookShopApplication.Services
             return isRemoved;
         }
 
+        //Private Helping methods...
         private static async Task<WishlistItem?> GetWishlistItemByIdsAsync(Guid userId, Guid itemId, ApplicationDbContext context)
         {
             var item = await context.WishlistItems
