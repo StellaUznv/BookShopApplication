@@ -92,18 +92,18 @@ namespace BookShopApplication.Services
         }
 
         //Private Helping methods...
-        private static async Task<WishlistItem?> GetWishlistItemByIdsAsync(Guid userId, Guid itemId, ApplicationDbContext context)
+        private static async Task<WishlistItem?> GetWishlistItemByIdsAsync(Guid userId, Guid itemId, IWishlistRepository wishlistRepository)
         {
-            var item = await context.WishlistItems
-                .SingleOrDefaultAsync(w => w.UserId == userId && w.BookId == itemId);
+            var item = await wishlistRepository
+                .FirstOrDefaultAsync(w => w.UserId == userId && w.BookId == itemId);
 
             return item;
         }
 
-        private static async Task<WishlistItem?> GetWishlistItemAsync(Guid itemId, ApplicationDbContext context)
+        private static async Task<WishlistItem?> GetWishlistItemAsync(Guid itemId, IWishlistRepository wishlistRepository)
         {
-            var item = await context.WishlistItems
-                .SingleOrDefaultAsync(w => w.Id == itemId);
+            var item = await wishlistRepository
+                .FirstOrDefaultAsync(w => w.Id == itemId);
 
             return item;
 

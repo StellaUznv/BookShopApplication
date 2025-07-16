@@ -121,10 +121,14 @@ namespace BookShopApplication.Services
 
             var itemToMove = await GetCartItemAsync(itemId, _cartRepository);
 
+            
+
             var itemToAddToWishlist = new WishlistItem();
 
             if (itemToMove != null)
             {
+                //Todo fix bug item that exists in wishlist to not be added.
+
                 itemToAddToWishlist.Id = Guid.NewGuid();
                 itemToAddToWishlist.BookId = itemToMove.BookId;
                 itemToAddToWishlist.UserId = itemToMove.UserId;
