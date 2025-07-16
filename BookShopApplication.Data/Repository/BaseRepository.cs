@@ -90,10 +90,10 @@ namespace BookShopApplication.Data.Repository
             return await this.dbSet.ToListAsync();
         }
 
-        public async Task AddAsync(TEntity item)
+        public async Task<bool> AddAsync(TEntity item)
         {
              await this.dbSet.AddAsync(item);
-             await this._context.SaveChangesAsync();
+             return await this._context.SaveChangesAsync() > 0;
         }
 
         public async Task AddRangeAsync(TEntity[] items)
@@ -123,6 +123,11 @@ namespace BookShopApplication.Data.Repository
         {
             this.PerformSoftDeleteOfEntity(entity);
             return await this.UpdateAsync(entity);
+        }
+
+        public async Task<bool> AnyAsync(Expression<Func<TEntity, bool>> predicate)
+        {
+            return await dbSet.AnyAsync(predicate);
         }
 
         private void PerformSoftDeleteOfEntity(TEntity entity)

@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using BookShopApplication.Data;
 using BookShopApplication.Data.Models;
+using BookShopApplication.Data.Repository.Contracts;
 using BookShopApplication.Services.Contracts;
 using BookShopApplication.Web.ViewModels.Cart;
 using Microsoft.EntityFrameworkCore;
@@ -14,16 +15,20 @@ namespace BookShopApplication.Services
     public class CartService : ICartService
     {
         private readonly ApplicationDbContext _context;
+        private readonly ICartRepository _cartRepository;
+        private readonly IWishlistRepository _wishlistRepository;
 
-        public CartService(ApplicationDbContext context)
+        public CartService(ApplicationDbContext context , ICartRepository repository, IWishlistRepository wishlistRepository)
         {
-            _context = context;
+            this._context = context;
+            this._cartRepository = repository;
+            this._wishlistRepository = wishlistRepository;
         }
 
 
         public async Task<IEnumerable<CartItemViewModel>> DisplayAllCartItemsAsync(Guid userId)
         {
-            var cartItems = await _context.CartItems
+            var cartItems = await _cartRepository.GetAllAttached()
                 .Where(c => c.UserId == userId)
                 .Select(c => new CartItemViewModel
                 {
@@ -40,7 +45,8 @@ namespace BookShopApplication.Services
 
         public async Task<bool> AddToCartAsync(Guid userId, Guid bookId)
         {
-            bool alreadyExists = await _context.CartItems
+
+            bool alreadyExists = await _cartRepository
                 .AnyAsync(w => w.UserId == userId && w.BookId == bookId);
 
             if (alreadyExists)
@@ -48,15 +54,25 @@ namespace BookShopApplication.Services
                 return false;
             }
 
-            bool isInWishlist = await _context.WishlistItems.AnyAsync(w => w.UserId == userId && w.BookId == bookId);
+            bool isInWishlist = await _wishlistRepository.AnyAsync(w => w.UserId == userId && w.BookId == bookId);
             
             if (isInWishlist)
             {
                 var wishlistItem =
-                    await _context.WishlistItems.FirstAsync(w => w.UserId == userId && w.BookId == bookId);
+                    await _wishlistRepository.FirstOrDefaultAsync(w => w.UserId == userId && w.BookId == bookId);
+                if (wishlistItem != null)
+                {
+                    if (!await _wishlistRepository.DeleteAsync(wishlistItem))
+                    {
+                        //Todo: custom error
+                    } // calls SaveChangesAsync too.
+                }
+                else
+                {
+                    //Todo: custom error
+                }
 
-                _context.WishlistItems.Remove(wishlistItem);
-                await _context.SaveChangesAsync();
+
             }
 
             var cartItem = new CartItem
@@ -68,8 +84,7 @@ namespace BookShopApplication.Services
                 IsPurchased = false
             };
 
-            await _context.CartItems.AddAsync(cartItem);
-            return await _context.SaveChangesAsync() > 0;
+           return await _cartRepository.AddAsync(cartItem); // Calls SaveChangesAsync.
         }
 
         public async Task<bool> RemoveFromCartByIdAsync(Guid itemId)
