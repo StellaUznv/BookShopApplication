@@ -15,14 +15,14 @@ namespace BookShopApplication.Services
 {
     public class BookService : IBookService
     {
-        private readonly ApplicationDbContext _context;
         private readonly IBookRepository _bookRepository;
         private readonly IWishlistRepository _wishlistRepository;
-        public BookService(ApplicationDbContext context, IBookRepository repository, IWishlistRepository wishlistRepository)
+        private readonly ICartRepository _cartRepository;
+        public BookService(IBookRepository repository, IWishlistRepository wishlistRepository, ICartRepository cartRepository)
         {
-            this._context = context;
             this._bookRepository = repository;
             this._wishlistRepository = wishlistRepository;
+            this._cartRepository = cartRepository;
         }
 
 
@@ -31,7 +31,7 @@ namespace BookShopApplication.Services
 
             if (userId.HasValue)
             {
-                return await GetAllBooksForUserByUserIdAsNoTracking(userId.Value, _bookRepository, _context, _wishlistRepository);
+                return await GetAllBooksForUserByUserIdAsNoTracking(userId.Value, _bookRepository, _wishlistRepository, _cartRepository);
             }
 
             return await GetAllBooksToDisplayAsyncAsNoTracking(_bookRepository);
@@ -43,7 +43,7 @@ namespace BookShopApplication.Services
 
             if (userId.HasValue)
             {
-                return await GetBookDetailsViewModelByUserIdAsyncAsNoTracking(userId.Value, bookId, _context, _bookRepository,_wishlistRepository);
+                return await GetBookDetailsViewModelByUserIdAsyncAsNoTracking(userId.Value, bookId, _bookRepository,_wishlistRepository, _cartRepository);
             }
 
             return await GetBookDetailsViewModelByBookIdAsyncAsNoTracking(bookId, _bookRepository);
@@ -70,14 +70,14 @@ namespace BookShopApplication.Services
             return booksModels;
         }
 
-        private static async Task<IEnumerable<BookViewModel>> GetAllBooksForUserByUserIdAsNoTracking(Guid userId,  IBookRepository repository
-            , ApplicationDbContext context,IWishlistRepository wishlistRepository)
+        private static async Task<IEnumerable<BookViewModel>> GetAllBooksForUserByUserIdAsNoTracking(Guid userId,  IBookRepository repository 
+            ,IWishlistRepository wishlistRepository , ICartRepository cartRepository)
         {
 
             //ToDo: Get these methods to their corresponding repositories!!!
 
             var wishlistItems = await wishlistRepository.GetWishListedItemsIdsAsNoTrackingAsync(userId);
-            var cartItems = await GetCartItemsIdsAsNoTrackingAsync(userId, context);
+            var cartItems = await cartRepository.GetCartItemsIdsAsNoTrackingAsync(userId);
 
             var userBooks = await repository.GetAllAttached().Include(g=>g.Genre).AsNoTracking()
                 .ToListAsync();
@@ -123,7 +123,7 @@ namespace BookShopApplication.Services
         }
 
         private static async Task<BookDetailsViewModel> GetBookDetailsViewModelByUserIdAsyncAsNoTracking(Guid userId, Guid bookId,
-            ApplicationDbContext context, IBookRepository repository, IWishlistRepository wishlistRepository)
+             IBookRepository repository, IWishlistRepository wishlistRepository, ICartRepository cartRepository)
         {
             var book = await GetBookByIdAsNoTrackingAsync(bookId, repository);
 
@@ -136,7 +136,7 @@ namespace BookShopApplication.Services
             //ToDo: Get these methods to their corresponding repositories!!!
 
             var wishlistItems = await wishlistRepository.GetWishListedItemsIdsAsNoTrackingAsync(userId);
-            var cartItems = await GetCartItemsIdsAsNoTrackingAsync(userId, context);
+            var cartItems = await cartRepository.GetCartItemsIdsAsNoTrackingAsync(userId);
 
             var userModel = new BookDetailsViewModel
             {
@@ -169,16 +169,5 @@ namespace BookShopApplication.Services
             return book;
         }
 
-        //ToDo: Get these methods to their corresponding repositories!!!
-
-        private static async Task<List<Guid>> GetCartItemsIdsAsNoTrackingAsync(Guid userId, ApplicationDbContext context)
-        {
-            var cartItems = await context.CartItems
-                .Where(c => c.UserId == userId)
-                .AsNoTracking()
-                .Select(c => c.BookId)
-                .ToListAsync();
-            return cartItems;
-        }
     }
 }

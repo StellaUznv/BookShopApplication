@@ -18,7 +18,7 @@ namespace BookShopApplication.Data.Repository
 
         public async Task<List<Guid>> GetWishListedItemsIdsAsNoTrackingAsync(Guid userId)
         {
-            var wishlistItems = await _context.WishlistItems
+            var wishlistItems = await dbSet
                 .Where(w => w.UserId == userId)
                 .AsNoTracking()
                 .Select(w => w.BookId)
