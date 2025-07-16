@@ -14,13 +14,11 @@ namespace BookShopApplication.Services
 {
     public class CartService : ICartService
     {
-        private readonly ApplicationDbContext _context;
         private readonly ICartRepository _cartRepository;
         private readonly IWishlistRepository _wishlistRepository;
 
-        public CartService(ApplicationDbContext context , ICartRepository repository, IWishlistRepository wishlistRepository)
+        public CartService(ICartRepository repository, IWishlistRepository wishlistRepository)
         {
-            this._context = context;
             this._cartRepository = repository;
             this._wishlistRepository = wishlistRepository;
         }
@@ -121,28 +119,25 @@ namespace BookShopApplication.Services
             bool isRemoved = false;
             bool isAdded = false;
 
-            var itemToRemove = await GetCartItemAsync(itemId, _cartRepository);
+            var itemToMove = await GetCartItemAsync(itemId, _cartRepository);
 
-            var itemToAdd = new WishlistItem
+            var itemToAddToWishlist = new WishlistItem();
+
+            if (itemToMove != null)
             {
-                Id = Guid.NewGuid(),
-                BookId = itemToRemove.BookId,
-                UserId = itemToRemove.UserId
-            };
+                itemToAddToWishlist.Id = Guid.NewGuid();
+                itemToAddToWishlist.BookId = itemToMove.BookId;
+                itemToAddToWishlist.UserId = itemToMove.UserId;
 
-            if (itemToAdd != null)
-            {
-               await _context.WishlistItems.AddAsync(itemToAdd);
-
-               isAdded = await _context.SaveChangesAsync() > 0;
+                isRemoved = await _cartRepository.DeleteAsync(itemToMove); //Calls SaveChangesAsync.
             }
 
-            if (itemToRemove != null)
+            if (itemToAddToWishlist != null)
             {
-                _context.CartItems.Remove(itemToRemove);
-
-                isRemoved = await _context.SaveChangesAsync() > 0;
+               isAdded = await _wishlistRepository.AddAsync(itemToAddToWishlist); // Calls SaveChangesAsync.
             }
+
+            
 
             return isAdded && isRemoved;
 
