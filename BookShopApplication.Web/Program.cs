@@ -40,6 +40,7 @@ namespace BookShopApplication.Web
             builder.Services.AddControllersWithViews();
 
             builder.Services.AddScoped<IBookRepository, BookRepository>();
+            builder.Services.AddScoped<IWishlistRepository, WishlistRepository>();
 
             builder.Services.AddScoped<IBookService, BookService>();
             builder.Services.AddScoped<IWishlistService, WishlistService>();

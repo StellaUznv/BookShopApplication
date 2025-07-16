@@ -17,10 +17,12 @@ namespace BookShopApplication.Services
     {
         private readonly ApplicationDbContext _context;
         private readonly IBookRepository _bookRepository;
-        public BookService(ApplicationDbContext context, IBookRepository repository)
+        private readonly IWishlistRepository _wishlistRepository;
+        public BookService(ApplicationDbContext context, IBookRepository repository, IWishlistRepository wishlistRepository)
         {
             this._context = context;
             this._bookRepository = repository;
+            this._wishlistRepository = wishlistRepository;
         }
 
 
@@ -29,7 +31,7 @@ namespace BookShopApplication.Services
 
             if (userId.HasValue)
             {
-                return await GetAllBooksForUserByUserIdAsNoTracking(userId.Value, _bookRepository, _context);
+                return await GetAllBooksForUserByUserIdAsNoTracking(userId.Value, _bookRepository, _context, _wishlistRepository);
             }
 
             return await GetAllBooksToDisplayAsyncAsNoTracking(_bookRepository);
@@ -41,7 +43,7 @@ namespace BookShopApplication.Services
 
             if (userId.HasValue)
             {
-                return await GetBookDetailsViewModelByUserIdAsyncAsNoTracking(userId.Value, bookId, _context, _bookRepository);
+                return await GetBookDetailsViewModelByUserIdAsyncAsNoTracking(userId.Value, bookId, _context, _bookRepository,_wishlistRepository);
             }
 
             return await GetBookDetailsViewModelByBookIdAsyncAsNoTracking(bookId, _bookRepository);
@@ -69,12 +71,12 @@ namespace BookShopApplication.Services
         }
 
         private static async Task<IEnumerable<BookViewModel>> GetAllBooksForUserByUserIdAsNoTracking(Guid userId,  IBookRepository repository
-            , ApplicationDbContext context)
+            , ApplicationDbContext context,IWishlistRepository wishlistRepository)
         {
 
             //ToDo: Get these methods to their corresponding repositories!!!
 
-            var wishlistItems = await GetWishListedItemsIdsAsNoTrackingAsync(userId, context);
+            var wishlistItems = await wishlistRepository.GetWishListedItemsIdsAsNoTrackingAsync(userId);
             var cartItems = await GetCartItemsIdsAsNoTrackingAsync(userId, context);
 
             var userBooks = await repository.GetAllAttached().Include(g=>g.Genre).AsNoTracking()
@@ -121,7 +123,7 @@ namespace BookShopApplication.Services
         }
 
         private static async Task<BookDetailsViewModel> GetBookDetailsViewModelByUserIdAsyncAsNoTracking(Guid userId, Guid bookId,
-            ApplicationDbContext context, IBookRepository repository)
+            ApplicationDbContext context, IBookRepository repository, IWishlistRepository wishlistRepository)
         {
             var book = await GetBookByIdAsNoTrackingAsync(bookId, repository);
 
@@ -133,7 +135,7 @@ namespace BookShopApplication.Services
 
             //ToDo: Get these methods to their corresponding repositories!!!
 
-            var wishlistItems = await GetWishListedItemsIdsAsNoTrackingAsync(userId, context);
+            var wishlistItems = await wishlistRepository.GetWishListedItemsIdsAsNoTrackingAsync(userId);
             var cartItems = await GetCartItemsIdsAsNoTrackingAsync(userId, context);
 
             var userModel = new BookDetailsViewModel
@@ -168,15 +170,6 @@ namespace BookShopApplication.Services
         }
 
         //ToDo: Get these methods to their corresponding repositories!!!
-        private static async Task<List<Guid>> GetWishListedItemsIdsAsNoTrackingAsync(Guid userId, ApplicationDbContext context)
-        {
-            var wishlistItems = await context.WishlistItems
-                .Where(w => w.UserId == userId)
-                .AsNoTracking()
-                .Select(w => w.BookId)
-                .ToListAsync();
-            return wishlistItems;
-        }
 
         private static async Task<List<Guid>> GetCartItemsIdsAsNoTrackingAsync(Guid userId, ApplicationDbContext context)
         {
