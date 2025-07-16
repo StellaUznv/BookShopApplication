@@ -15,12 +15,10 @@ namespace BookShopApplication.Services
 {
     public class WishlistService : IWishlistService
     {
-        private readonly ApplicationDbContext _context;
         private readonly IWishlistRepository _wishlistRepository;
         public WishlistService(ApplicationDbContext context,IWishlistRepository _wishlistRepository)
         {
             this._wishlistRepository = _wishlistRepository;
-            this._context = context;
         }
 
         public async Task<IEnumerable<WishlistItemViewModel>> DisplayWishlistItemsAsync(Guid userId)
@@ -65,12 +63,11 @@ namespace BookShopApplication.Services
         {
             bool isRemoved = false;
 
-            var itemToRemove = await GetWishlistItemAsync(itemId, _context);
+            var itemToRemove = await GetWishlistItemAsync(itemId, _wishlistRepository);
             if (itemToRemove != null)
             {
-                 _context.WishlistItems.Remove(itemToRemove);
-                 
-                 return await _context.SaveChangesAsync() > 0;
+                isRemoved = await _wishlistRepository.DeleteAsync(itemToRemove);// Calls SaveChangesAsync
+                return isRemoved;
             }
 
             return isRemoved;
@@ -80,12 +77,11 @@ namespace BookShopApplication.Services
         {
             bool isRemoved = false; 
 
-            var itemToRemove = await GetWishlistItemByIdsAsync(userId, itemId, _context);
+            var itemToRemove = await GetWishlistItemByIdsAsync(userId, itemId, _wishlistRepository);
             if (itemToRemove != null)
             {
-                _context.WishlistItems.Remove(itemToRemove);
-
-                return await _context.SaveChangesAsync() > 0;
+                isRemoved = await _wishlistRepository.DeleteAsync(itemToRemove);// Calls SaveChangesAsync
+                return isRemoved;
             }
 
             return isRemoved;
