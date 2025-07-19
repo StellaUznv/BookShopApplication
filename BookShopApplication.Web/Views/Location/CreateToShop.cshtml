@@ -5,54 +5,82 @@
 }
 
 <div class="container mt-5">
-    <h2 class="mb-4">Create Location for Shop</h2>
+<div class="row justify-content-center">
+<div class="col-lg-8 col-md-10 col-sm-12">
+<div class="bg-light shadow rounded p-4">
+    <h2 class="mb-4 text-center"><i class="bi bi-geo-alt-fill"></i>Fill the location for your Shop</h2>
+
     <form asp-action="CreateToShop" method="post" class="needs-validation" novalidate>
-        <div class="mb-3">
-            <label asp-for="CountryName" class="form-label"></label>
-            <input asp-for="CountryName" class="form-control" />
-            <span asp-validation-for="CountryName" class="text-danger"></span>
+        <div class="row g-3">
+            <div class="col-md-6">
+                <label asp-for="CountryName" class="form-label">Country</label>
+                <div class="input-group">
+                    <span class="input-group-text"><i class="bi bi-globe-europe-africa"></i></span>
+                    <input asp-for="CountryName" class="form-control" autocomplete="country" />
+                </div>
+                <span asp-validation-for="CountryName" class="text-danger small"></span>
+            </div>
+
+            <div class="col-md-6">
+                <label asp-for="CityName" class="form-label">City</label>
+                <div class="input-group">
+                    <span class="input-group-text"><i class="bi bi-building"></i></span>
+                    <input asp-for="CityName" class="form-control" autocomplete="address-level2" />
+                </div>
+                <span asp-validation-for="CityName" class="text-danger small"></span>
+            </div>
+
+            <div class="col-md-6">
+                <label asp-for="Address" class="form-label">Street Address</label>
+                <div class="input-group">
+                    <span class="input-group-text"><i class="bi bi-signpost"></i></span>
+                    <input asp-for="Address" class="form-control" autocomplete="street-address" />
+                </div>
+                <span asp-validation-for="Address" class="text-danger small"></span>
+            </div>
+
+            <div class="col-md-6">
+                <label asp-for="ZipCode" class="form-label">Zip Code</label>
+                <div class="input-group">
+                    <span class="input-group-text"><i class="bi bi-mailbox"></i></span>
+                    <input asp-for="ZipCode" class="form-control" autocomplete="postal-code" />
+                </div>
+                <span asp-validation-for="ZipCode" class="text-danger small"></span>
+            </div>
+
+            <div class="col-md-6">
+                <label asp-for="Latitude" class="form-label">Latitude</label>
+                <input asp-for="Latitude" class="form-control" type="number" step="any" readonly />
+                <span asp-validation-for="Latitude" class="text-danger small"></span>
+            </div>
+
+            <div class="col-md-6">
+                <label asp-for="Longitude" class="form-label">Longitude</label>
+                <input asp-for="Longitude" class="form-control" type="number" step="any" readonly />
+                <span asp-validation-for="Longitude" class="text-danger small"></span>
+            </div>
+
+            <div class="col-12">
+                <label class="form-label">Select or Search Location on Map</label>
+                <div id="map" class="rounded border" style="height: 400px;"></div>
+            </div>
+
+            <div class="col-12 mt-3">
+                <button type="submit" class="btn btn-primary w-100">
+                    <i class="bi bi-check-circle-fill"></i> Confirm Location
+                </button>
+            </div>
         </div>
-        <div class="mb-3">
-            <label asp-for="CityName" class="form-label"></label>
-            <input asp-for="CityName" class="form-control" />
-            <span asp-validation-for="CityName" class="text-danger"></span>
-        </div>
-        <div class="mb-3">
-            <label asp-for="Address" class="form-label"></label>
-            <input asp-for="Address" class="form-control" />
-            <span asp-validation-for="Address" class="text-danger"></span>
-        </div>
-        <div class="mb-3">
-            <label asp-for="ZipCode" class="form-label"></label>
-            <input asp-for="ZipCode" class="form-control" />
-            <span asp-validation-for="ZipCode" class="text-danger"></span>
-        </div>
-        <div class="mb-3">
-            <label asp-for="Latitude" class="form-label"></label>
-            <input asp-for="Latitude" class="form-control" type="number" step="any" readonly />
-            <span asp-validation-for="Latitude" class="text-danger"></span>
-        </div>
-        <div class="mb-3">
-            <label asp-for="Longitude" class="form-label"></label>
-            <input asp-for="Longitude" class="form-control" type="number" step="any" readonly />
-            <span asp-validation-for="Longitude" class="text-danger"></span>
-        </div>
-        <div class="mb-3">
-            <label class="form-label">Select Location on Map</label>
-            <div id="map" style="height: 300px; border: 1px solid #ccc;"></div>
-        </div>
-            <button type="submit" class="btn btn-sm btn-primary w-100">
-                <i class="bi bi-heart"></i>Continue
-            </button>
-        
     </form>
+</div>
+</div>
+</div>
 </div>
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
     <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css" />
-
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
     <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
 
@@ -71,20 +99,13 @@
             const url = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`;
             const response = await fetch(url);
             if (!response.ok) return;
-
             const data = await response.json();
             if (data && data.address) {
                 const addr = data.address;
-
-                const street = addr.road || addr.pedestrian || addr.neighbourhood || addr.building || "";
-                const city = addr.city || addr.town || addr.village || addr.hamlet || "";
-                const country = addr.country || "";
-                const postcode = addr.postcode || "";
-
-                document.getElementById("Address").value = street;
-                document.getElementById("CityName").value = city;
-                document.getElementById("CountryName").value = country;
-                document.getElementById("ZipCode").value = postcode;
+                document.getElementById("Address").value = addr.road || addr.pedestrian || addr.neighbourhood || addr.building || "";
+                document.getElementById("CityName").value = addr.city || addr.town || addr.village || addr.hamlet || "";
+                document.getElementById("CountryName").value = addr.country || "";
+                document.getElementById("ZipCode").value = addr.postcode || "";
                 document.getElementById("Latitude").value = lat;
                 document.getElementById("Longitude").value = lng;
             }
@@ -108,8 +129,9 @@
         });
 
         // Add search control
-        L.Control.geocoder({
-            defaultMarkGeocode: false
+        var geocoder = L.Control.geocoder({
+            defaultMarkGeocode: false,
+            placeholder: "Search for address..."
         })
         .on('markgeocode', function(e) {
             const latlng = e.geocode.center;
@@ -130,11 +152,9 @@
         .addTo(map);
 
         // Ensure all inputs have IDs for JS targeting
-        document.getElementsByName("CountryName")[0].id = "CountryName";
-        document.getElementsByName("CityName")[0].id = "CityName";
-        document.getElementsByName("Address")[0].id = "Address";
-        document.getElementsByName("ZipCode")[0].id = "ZipCode";
-        document.getElementsByName("Latitude")[0].id = "Latitude";
-        document.getElementsByName("Longitude")[0].id = "Longitude";
+        ["CountryName", "CityName", "Address", "ZipCode", "Latitude", "Longitude"].forEach(name => {
+            const input = document.getElementsByName(name)[0];
+            if (input) input.id = name;
+        });
     </script>
 }
