@@ -1,0 +1,71 @@
+﻿@model IEnumerable<BookShopApplication.Web.ViewModels.Shop.ShopViewModel>
+
+@{
+    ViewData["Title"] = "Shop List";
+}
+
+<head>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+</head>
+<body>
+<div class="container mt-5">
+    <h2 class="mb-4">Shops</h2>
+
+    <table class="table table-striped table-bordered table-hover">
+        <thead class="table-dark">
+        <tr>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Address</th>
+            <th>City</th>
+            <th>Latitude</th>
+            <th>Longitude</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var shop in Model)
+        {
+            <tr>
+                <td>@shop.Name</td>
+                <td>@shop.Description</td>
+                <td>@shop.LocationAddress</td>
+                <td>@shop.LocationCity</td>
+                <td>@shop.Latitude</td>
+                <td>@shop.Longitude</td>
+            </tr>
+        }
+        </tbody>
+    </table>
+
+    <div id="map" style="height: 400px; margin-bottom: 2rem;"></div>
+</div>
+@using System.Text.Json
+@{
+    var shopDataJson = JsonSerializer.Serialize(Model.Select(s => new {
+        s.Name,
+        s.LocationAddress,
+        s.LocationCity,
+        s.Latitude,
+        s.Longitude
+    }));
+}
+@section Scripts {
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script>
+        var shops = @Html.Raw(shopDataJson);
+
+        var map = L.map('map').setView([shops[0].Latitude, shops[0].Longitude], 12);
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+        }).addTo(map);
+
+        shops.forEach(function(shop) {
+            L.marker([shop.Latitude, shop.Longitude])
+                .addTo(map)
+                .bindPopup(shop.Name + "<br>" + shop.LocationAddress + ", " + shop.LocationCity);
+        });
+    </script>
+}
+</body>
+
