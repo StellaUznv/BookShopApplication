@@ -42,9 +42,9 @@ namespace BookShopApplication.Data.Configuration
 
             //Seeding
             builder.HasData(
-                new Shop { Id = SeedGuids.Shop1, Name = "NY Bookstore", Description = "Books in NY", LocationId = SeedGuids.Loc1, Latitude = 40.7128, Longitude = -74.0060, ManagerId = SeedGuids.Manager},
-                new Shop { Id = SeedGuids.Shop2, Name = "London Reads", Description = "Books in London", LocationId = SeedGuids.Loc2, Latitude = 51.5074, Longitude = -0.1278 , ManagerId = SeedGuids.Manager },
-                new Shop { Id = SeedGuids.Shop3, Name = "Toronto Pages", Description = "Books in Toronto", LocationId = SeedGuids.Loc3, Latitude = 43.6532, Longitude = -79.3832 , ManagerId = SeedGuids.Manager }
+                new Shop { Id = SeedGuids.Shop1, Name = "NY Bookstore", Description = "Books in NY", LocationId = SeedGuids.Loc1,  ManagerId = SeedGuids.Manager},
+                new Shop { Id = SeedGuids.Shop2, Name = "London Reads", Description = "Books in London", LocationId = SeedGuids.Loc2 , ManagerId = SeedGuids.Manager },
+                new Shop { Id = SeedGuids.Shop3, Name = "Toronto Pages", Description = "Books in Toronto", LocationId = SeedGuids.Loc3, ManagerId = SeedGuids.Manager }
             );
         }
     }

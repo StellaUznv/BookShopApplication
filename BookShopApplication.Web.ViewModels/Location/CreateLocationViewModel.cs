@@ -23,6 +23,12 @@ namespace BookShopApplication.Web.ViewModels.Location
 
         [Required]
         public string ZipCode { get; set; } = null!;
+        [Required]
+        public double Latitude { get; set; }
+
+        [Required]
+        public double Longitude { get; set; }
+
 
 
     }

@@ -43,9 +43,9 @@ namespace BookShopApplication.Data.Configuration
 
             //Seeding
             builder.HasData(
-                new Location { Id = SeedGuids.Loc1, CountryName = "USA", CityName = "New York", Address = "123 Broadway Ave, Manhattan" , ZipCode = "10001" },
-                new Location { Id = SeedGuids.Loc2, CountryName = "UK", CityName = "London", Address = "456 Brick Lane, Shoreditch", ZipCode = "E1 6AN" },
-                new Location { Id = SeedGuids.Loc3, CountryName = "Canada", CityName = "Toronto", Address = "789 King St W, Downtown", ZipCode = "M5V" }
+                new Location { Id = SeedGuids.Loc1, CountryName = "USA", CityName = "New York", Address = "123 Broadway Ave, Manhattan" , ZipCode = "10001" , Latitude = 40.7128, Longitude = -74.0060},
+                new Location { Id = SeedGuids.Loc2, CountryName = "UK", CityName = "London", Address = "456 Brick Lane, Shoreditch", ZipCode = "E1 6AN", Latitude = 51.5074, Longitude = -0.1278 },
+                new Location { Id = SeedGuids.Loc3, CountryName = "Canada", CityName = "Toronto", Address = "789 King St W, Downtown", ZipCode = "M5V", Latitude = 43.6532, Longitude = -79.3832 }
             );
         }
     }

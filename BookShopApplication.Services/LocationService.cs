@@ -31,7 +31,9 @@ namespace BookShopApplication.Services
                     Address = model.Address,
                     CityName = model.CityName,
                     CountryName = model.CountryName,
-                    ZipCode = model.ZipCode
+                    ZipCode = model.ZipCode,
+                    Latitude = model.Latitude,
+                    Longitude = model.Longitude
                 };
 
                 isCreated = await _locationRepository.AddAsync(location);

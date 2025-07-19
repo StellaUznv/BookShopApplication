@@ -28,8 +28,8 @@ namespace BookShopApplication.Services
                 Id = s.Id,
                 Description = s.Description,
                 Name = s.Name,
-                Latitude = s.Latitude,
-                Longitude = s.Longitude,
+                Latitude = s.Location.Latitude,
+                Longitude = s.Location.Longitude,
                 LocationAddress = s.Location.Address,
                 LocationCity = s.Location.CityName
             }).AsNoTracking()
@@ -45,8 +45,6 @@ namespace BookShopApplication.Services
                 Id = Guid.NewGuid(),
                 Description = model.Description,
                 Name = model.Name,
-                Latitude = model.Latitude,
-                Longitude = model.Longitude,
                 LocationId = locationId,
                 ManagerId = userId
             };

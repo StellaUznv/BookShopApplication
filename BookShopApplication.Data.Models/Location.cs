@@ -22,6 +22,11 @@ namespace BookShopApplication.Data.Models
         public string Address { get; set; } = null!;
         [Comment("PostalCode in Location entity")]
         public string ZipCode { get; set; } = null!;
+        [Comment("Latitude coordinate of the Shop")]
+        public double Latitude { get; set; }
+
+        [Comment("Longitude coordinate of the Shop")]
+        public double Longitude { get; set; }
         [Comment("Reference collection to Shop entity")]
         public ICollection<Shop> Shops { get; set; } = new List<Shop>();
         [Comment("Tells if the Location is Soft Deleted or not")]

@@ -20,73 +20,11 @@
             <textarea asp-for="Description" class="form-control"></textarea>
             <span asp-validation-for="Description" class="text-danger"></span>
         </div>
-        <div class="mb-3">
-            <label class="form-label">Select Location on Map</label>
-            <div id="map" style="height: 300px; border: 1px solid #ccc;"></div>
-        </div>
-        <div class="mb-3">
-            <label asp-for="Latitude" class="form-label"></label>
-            <input asp-for="Latitude" class="form-control" type="number" step="any" readonly />
-            <span asp-validation-for="Latitude" class="text-danger"></span>
-        </div>
-        <div class="mb-3">
-            <label asp-for="Longitude" class="form-label"></label>
-            <input asp-for="Longitude" class="form-control" type="number" step="any" readonly />
-            <span asp-validation-for="Longitude" class="text-danger"></span>
-        </div>
-        <div class="mb-3">
-            <label asp-for="Address" class="form-label"></label>
-            <input asp-for="Address" class="form-control" />
-            <span asp-validation-for="Address" class="text-danger"></span>
-        </div>
-        <div class="mb-3">
-            <label asp-for="City" class="form-label"></label>
-            <input asp-for="City" class="form-control" />
-            <span asp-validation-for="City" class="text-danger"></span>
-        </div>
+        
         <button type="submit" class="btn btn-primary">Create Shop</button>
     </form>
 </div>
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
-    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
-    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-    <script>
-        // Default map center (e.g., Europe)
-        var defaultLat = 48.8584;
-        var defaultLng = 2.2945;
-        var map = L.map('map').setView([defaultLat, defaultLng], 3);
-
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            maxZoom: 19,
-        }).addTo(map);
-
-        var marker;
-
-        function setLatLngFields(lat, lng) {
-            document.getElementById("Latitude").value = lat;
-            document.getElementById("Longitude").value = lng;
-        }
-
-        map.on('click', function (e) {
-            var lat = e.latlng.lat.toFixed(6);
-            var lng = e.latlng.lng.toFixed(6);
-
-            if (marker) {
-                marker.setLatLng(e.latlng);
-            } else {
-                marker = L.marker(e.latlng, { draggable: true }).addTo(map);
-                marker.on('dragend', function (event) {
-                    var position = event.target.getLatLng();
-                    setLatLngFields(position.lat.toFixed(6), position.lng.toFixed(6));
-                });
-            }
-            setLatLngFields(lat, lng);
-        });
-
-        // Set input IDs for JS
-        document.getElementsByName("Latitude")[0].id = "Latitude";
-        document.getElementsByName("Longitude")[0].id = "Longitude";
-    </script>
 }
