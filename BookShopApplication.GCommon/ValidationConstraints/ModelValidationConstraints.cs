@@ -66,6 +66,10 @@ namespace BookShopApplication.GCommon.ValidationConstraints
             public const int CityNameMaxLength = 150;
             public const int CityNameMinLength = 3;
 
+            //Address
+            public const int AddressMaxLength = 500;
+            public const int AddressMinLength = 3;
+
             //ZipCode
 
             public const int ZipCodeMaxLength = 20;

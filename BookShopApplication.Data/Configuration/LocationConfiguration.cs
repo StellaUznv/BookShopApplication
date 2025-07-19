@@ -32,6 +32,10 @@ namespace BookShopApplication.Data.Configuration
                 .IsRequired()
                 .HasMaxLength(ZipCodeMaxLength);
 
+            builder.Property(l=>l.Address)
+                .IsRequired()
+                .HasMaxLength(AddressMaxLength);
+
             builder.HasMany(l => l.Shops)
                 .WithOne(s => s.Location)
                 .HasForeignKey(s => s.LocationId);
@@ -39,9 +43,9 @@ namespace BookShopApplication.Data.Configuration
 
             //Seeding
             builder.HasData(
-                new Location { Id = SeedGuids.Loc1, CountryName = "USA", CityName = "New York", ZipCode = "10001" },
-                new Location { Id = SeedGuids.Loc2, CountryName = "UK", CityName = "London", ZipCode = "E1 6AN" },
-                new Location { Id = SeedGuids.Loc3, CountryName = "Canada", CityName = "Toronto", ZipCode = "M5V" }
+                new Location { Id = SeedGuids.Loc1, CountryName = "USA", CityName = "New York", Address = "123 Broadway Ave, Manhattan" , ZipCode = "10001" },
+                new Location { Id = SeedGuids.Loc2, CountryName = "UK", CityName = "London", Address = "456 Brick Lane, Shoreditch", ZipCode = "E1 6AN" },
+                new Location { Id = SeedGuids.Loc3, CountryName = "Canada", CityName = "Toronto", Address = "789 King St W, Downtown", ZipCode = "M5V" }
             );
         }
     }

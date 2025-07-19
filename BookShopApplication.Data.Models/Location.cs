@@ -18,6 +18,8 @@ namespace BookShopApplication.Data.Models
         public string CountryName { get; set; } = null!;
         [Comment("Name of the City in Location entity")]
         public string CityName { get; set; } = null!;
+        [Comment("Address line")]
+        public string Address { get; set; } = null!;
         [Comment("PostalCode in Location entity")]
         public string ZipCode { get; set; } = null!;
         [Comment("Reference collection to Shop entity")]
