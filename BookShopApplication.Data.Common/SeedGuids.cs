@@ -31,5 +31,9 @@ namespace BookShopApplication.Data.Common
         public static readonly Guid Shop1 = Guid.Parse("44444444-4444-4444-4444-444444444444");
         public static readonly Guid Shop2 = Guid.Parse("55555555-5555-5555-5555-555555555555");
         public static readonly Guid Shop3 = Guid.Parse("66666666-6666-6666-6666-666666666666");
+
+        // Users
+        public static readonly Guid Manager = Guid.Parse("44444444-4444-4444-4444-444444444444");
+       
     }
 }

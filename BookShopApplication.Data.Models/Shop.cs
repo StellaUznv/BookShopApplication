@@ -35,6 +35,9 @@ namespace BookShopApplication.Data.Models
         [Comment("Longitude coordinate of the Shop")]
         public double Longitude { get; set; }
 
+        public Guid ManagerId { get; set; }
+        public ApplicationUser Manager { get; set; } = null!;
+
         [Comment("Reference collection to the BookInShop mapping table")]
         public ICollection<BookInShop> BooksInShop { get; set; } = new List<BookInShop>();
     }
