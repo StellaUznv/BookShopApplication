@@ -43,11 +43,13 @@ namespace BookShopApplication.Web
             builder.Services.AddScoped<IWishlistRepository, WishlistRepository>();
             builder.Services.AddScoped<ICartRepository, CartRepository>();
             builder.Services.AddScoped<IShopRepository, ShopRepository>();
+            builder.Services.AddScoped<ILocationRepository, LocationRepository>();
 
             builder.Services.AddScoped<IBookService, BookService>();
             builder.Services.AddScoped<IWishlistService, WishlistService>();
             builder.Services.AddScoped<ICartService, CartService>();
             builder.Services.AddScoped<IShopService, ShopService>();
+            builder.Services.AddScoped<ILocationService, LocationService>();
 
             builder.Services.AddTransient<IEmailSender, EmailSender>();
 

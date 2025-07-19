@@ -9,6 +9,9 @@ namespace BookShopApplication.Web.ViewModels.Location
 {
     public class CreateLocationViewModel
     {
+        [Required]
+        public Guid Id = Guid.NewGuid();
+
         [Required] 
         public string CountryName { get; set; } = null!;
 

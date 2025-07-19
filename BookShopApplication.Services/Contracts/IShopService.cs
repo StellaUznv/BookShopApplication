@@ -9,6 +9,8 @@ namespace BookShopApplication.Services.Contracts
 {
     public interface IShopService
     {
-        public Task<IEnumerable<ShopViewModel>> DisplayAllShopsAsync(Guid? userId);
+        public Task<IEnumerable<ShopViewModel>> DisplayAllShopsAsync();
+
+        public Task<bool> CreateShopAsync(CreateShopViewModel model, Guid userId, Guid locationId);
     }
 }

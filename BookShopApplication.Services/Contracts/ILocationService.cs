@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using BookShopApplication.Web.ViewModels.Location;
 
 namespace BookShopApplication.Services.Contracts
 {
     public interface ILocationService
     {
+        public Task<bool> CreateLocationAsync(CreateLocationViewModel model);
     }
 }

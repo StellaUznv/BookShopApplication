@@ -38,6 +38,23 @@
     </table>
 
     <div id="map" style="height: 400px; margin-bottom: 2rem;"></div>
+    <div class="text-center mt-auto">
+        @if (User.Identity?.IsAuthenticated ?? false)
+        {
+
+
+            <div class="d-flex justify-content-between gap-2 mt-2">
+
+                    <form asp-controller="Location" asp-action="CreateToShop" method="get" class="w-50">
+                        <button type="submit" class="btn btn-sm btn-primary w-100">
+                            <i class="bi bi-heart"></i>Create your own shop
+                        </button>
+                    </form>
+               
+            </div>
+        }
+
+    </div>
 </div>
 @using System.Text.Json
 @{
