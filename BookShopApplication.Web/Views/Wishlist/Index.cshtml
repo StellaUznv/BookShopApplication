@@ -41,26 +41,27 @@
                             <h6 class="card-title text-truncate mb-1" title="@item.Title">@item.Title</h6>
                             <p class="card-text mb-2"><strong>Price:</strong> $@item.Price</p>
 
-                            <div class="mt-auto d-flex justify-content-between">
-                                <a asp-controller="Book" asp-action="Details" asp-route-id="@item.BookId"
-                                   class="btn btn-sm btn-outline-secondary">
-                                    View
-                                </a>
+                            <div class="mt-auto">
+                                <div class="btn-group w-100" role="group" aria-label="Wishlist actions">
+                                    <a asp-controller="Book" asp-action="Details" asp-route-id="@item.BookId"
+                                       class="btn btn-sm btn-outline-secondary text-nowrap">
+                                        View
+                                    </a>
 
-                                <form asp-controller="Wishlist" asp-action="RemoveById"
-                                      method="post" class="d-inline">
-                                    <input type="hidden" name="id" value="@item.Id" />
-                                    <button type="submit" class="btn btn-sm btn-outline-warning">
-                                        Remove
-                                    </button>
-                                </form>
-                                <form asp-controller="Cart" asp-action="Add"
-                                      method="post" class="d-inline">
-                                    <input type="hidden" name="bookId" value="@item.BookId" />
-                                    <button type="submit" class="btn btn-sm btn-outline-primary">
-                                        Add To Cart
-                                    </button>
-                                </form>
+                                    <form asp-controller="Wishlist" asp-action="RemoveById" method="post">
+                                        <input type="hidden" name="id" value="@item.Id" />
+                                        <button type="submit" class="btn btn-sm btn-outline-warning text-nowrap">
+                                            Remove
+                                        </button>
+                                    </form>
+
+                                    <form asp-controller="Cart" asp-action="Add" method="post">
+                                        <input type="hidden" name="bookId" value="@item.BookId" />
+                                        <button type="submit" class="btn btn-sm btn-outline-primary text-nowrap">
+                                            Add To Cart
+                                        </button>
+                                    </form>
+                                </div>
                             </div>
                         </div>
                     </div>
