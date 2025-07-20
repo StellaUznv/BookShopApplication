@@ -1,0 +1,45 @@
+﻿
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml"; // or your global layout path
+    ViewData["Title"] = "Manager Dashboard";
+}
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+<div class="container py-5">
+    <h2 class="text-center mb-4">Manager Dashboard</h2>
+
+    <div class="row justify-content-center g-4">
+
+        <!-- My Shops Card -->
+        <div class="col-md-4">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-body d-flex flex-column justify-content-between">
+                    <div>
+                        <h5 class="card-title">My Shops</h5>
+                        <p class="card-text text-muted">View, edit, or manage books in your shops.</p>
+                    </div>
+                    <a asp-controller="Shop" asp-action="ManagedShops" class="btn btn-primary mt-3 w-100">
+                        Go to My Shops
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Add More Features Here -->
+        <!--
+        <div class="col-md-4">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-body d-flex flex-column justify-content-between">
+                    <div>
+                        <h5 class="card-title">Shop Analytics</h5>
+                        <p class="card-text text-muted">Coming soon: See performance stats for your shops.</p>
+                    </div>
+                    <a href="#" class="btn btn-outline-secondary mt-3 w-100" disabled>
+                        Coming Soon
+                    </a>
+                </div>
+            </div>
+        </div>
+        -->
+
+    </div>
+</div>

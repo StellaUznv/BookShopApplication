@@ -9,6 +9,13 @@
     <li class="nav-item">
         <a  class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hello @User.Identity?.Name!</a>
     </li>
+    @if (User.IsInRole("Manager"))
+    {
+        <li class="nav-item">
+            <a class="nav-link" asp-area="Manager" asp-controller="Manager" asp-action="Index">Manager Dashboard</a>
+        </li>
+    }
+
     <li class="nav-item">
         <a class="nav-link text-dark" asp-area="" asp-controller="Wishlist" asp-action="Index">Wishlist</a>
     </li>
