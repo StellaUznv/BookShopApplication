@@ -195,7 +195,7 @@ namespace BookShopApplication.Data.Migrations
 
                     b.HasIndex("GenreId");
 
-                    b.ToTable("Books");
+                    b.ToTable("Books", (string)null);
 
                     b.HasData(
                         new
@@ -296,7 +296,7 @@ namespace BookShopApplication.Data.Migrations
 
                     b.HasIndex("ShopId");
 
-                    b.ToTable("BookInShops");
+                    b.ToTable("BookInShops", (string)null);
 
                     b.HasData(
                         new
@@ -385,7 +385,7 @@ namespace BookShopApplication.Data.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("CartItems");
+                    b.ToTable("CartItems", (string)null);
                 });
 
             modelBuilder.Entity("BookShopApplication.Data.Models.Genre", b =>
@@ -412,7 +412,7 @@ namespace BookShopApplication.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Genres");
+                    b.ToTable("Genres", (string)null);
 
                     b.HasData(
                         new
@@ -482,7 +482,7 @@ namespace BookShopApplication.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Locations");
+                    b.ToTable("Locations", (string)null);
 
                     b.HasData(
                         new
@@ -555,7 +555,7 @@ namespace BookShopApplication.Data.Migrations
 
                     b.HasIndex("ManagerId");
 
-                    b.ToTable("Shops");
+                    b.ToTable("Shops", (string)null);
 
                     b.HasData(
                         new
@@ -607,7 +607,7 @@ namespace BookShopApplication.Data.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("WishlistItems");
+                    b.ToTable("WishlistItems", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
