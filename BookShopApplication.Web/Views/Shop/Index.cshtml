@@ -20,17 +20,27 @@
                         <h5 class="card-title">@shop.Name</h5>
                         <p class="card-text text-muted">@shop.Description</p>
                         <p class="card-text">
-                            <strong>Address:</strong> @shop.LocationAddress<br />
+                            <strong>Address:</strong> @shop.LocationAddress<br/>
                             <strong>City:</strong> @shop.LocationCity
                         </p>
-                        <button class="btn btn-sm btn-outline-primary mt-auto view-on-map-btn"
-                                data-lat="@shop.Latitude"
-                                data-lng="@shop.Longitude"
-                                data-name="@shop.Name"
-                                data-address="@shop.LocationAddress"
-                                data-city="@shop.LocationCity">
-                            📍 View on Map
-                        </button>
+                        <div class="mt-auto d-flex flex-column gap-2">
+                            <a asp-controller="Shop"
+                               asp-action="Details"
+                               asp-route-id="@shop.Id"
+                               class="btn btn-sm btn-primary">
+                                View Shop Details
+                            </a>
+
+                            <button type="button"
+                                    class="btn btn-sm btn-outline-secondary view-on-map-btn"
+                                    data-lat="@shop.Latitude"
+                                    data-lng="@shop.Longitude"
+                                    data-name="@shop.Name"
+                                    data-address="@shop.LocationAddress"
+                                    data-city="@shop.LocationCity">
+                                📍 View on Map
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>

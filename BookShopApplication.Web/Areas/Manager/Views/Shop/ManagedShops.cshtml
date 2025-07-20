@@ -1,24 +1,61 @@
 ﻿@{
-    Layout = "~/Views/Shared/_Layout.cshtml"; // or your global layout path
+    Layout = "~/Views/Shared/_Layout.cshtml";
     ViewData["Title"] = "Managed Shops";
 }
 @model IEnumerable<BookShopApplication.Web.ViewModels.Shop.ShopViewModel>
-<h2>My Shops</h2>
 
-<div class="row row-cols-1 row-cols-md-3 g-4">
+@* Leaflet CSS *@
+<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+
+<h2 class="mb-4 text-center">My Shops</h2>
+
+<div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
     @foreach (var shop in Model)
     {
         <div class="col">
-            <div class="card shadow-sm">
+            <div class="card shadow-sm h-100">
                 <div class="card-body">
                     <h5 class="card-title">@shop.Name</h5>
                     <p class="card-text">@shop.Description</p>
                     <p class="text-muted">@shop.LocationAddress, @shop.LocationCity</p>
-                    <a asp-action="Edit" asp-route-id="@shop.Id" class="btn btn-sm btn-warning">Edit</a>
-                    <a asp-action="Delete" asp-route-id="@shop.Id" class="btn btn-sm btn-danger">Delete</a>
-                    <a asp-action="AddBook" asp-route-shopId="@shop.Id" class="btn btn-sm btn-primary">Add Book</a>
+
+                    <div id="map-@shop.Id" class="mb-3" style="height: 200px; border-radius: 8px;"></div>
+
+                    <div class="d-flex gap-2">
+                        <a asp-action="Edit" asp-route-id="@shop.Id" class="btn btn-sm btn-warning w-100">Edit</a>
+                        <a asp-action="Delete" asp-route-id="@shop.Id" class="btn btn-sm btn-danger w-100">Delete</a>
+                        <a asp-action="DisplayBooks" asp-route-shopId="@shop.Id" class="btn btn-sm btn-primary w-100">Manage Books</a>
+                    </div>
                 </div>
             </div>
         </div>
     }
 </div>
+
+@* Leaflet JS *@
+@section Scripts {
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script>
+        const shops = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(
+            Model.Select(s => new {
+                s.Id,
+                s.Latitude,
+                s.Longitude,
+                s.Name
+            })
+        ));
+
+        shops.forEach(shop => {
+            const map = L.map(`map-${shop.Id}`).setView([shop.Latitude, shop.Longitude], 14);
+
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                maxZoom: 19
+            }).addTo(map);
+
+            L.marker([shop.Latitude, shop.Longitude])
+                .addTo(map)
+                .bindPopup(shop.Name)
+                .openPopup();
+        });
+    </script>
+}

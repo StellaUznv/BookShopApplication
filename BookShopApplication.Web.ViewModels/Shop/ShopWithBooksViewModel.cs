@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using BookShopApplication.Data.Models;
+using BookShopApplication.Web.ViewModels.Book;
 
 namespace BookShopApplication.Web.ViewModels.Shop
 {
@@ -16,6 +17,6 @@ namespace BookShopApplication.Web.ViewModels.Shop
         public string LocationCity { get; set; } = null!;
         public double Latitude { get; set; }
         public double Longitude { get; set; }
-        public List<BookInShop> BooksInShop { get; set; } = new List<BookInShop>();
+        public List<BookViewModel> BooksInShop { get; set; } = new List<BookViewModel>();
     }
 }

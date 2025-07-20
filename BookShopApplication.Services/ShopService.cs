@@ -1,23 +1,29 @@
-﻿using System;
+﻿using BookShopApplication.Data.Models;
+using BookShopApplication.Data.Repository;
+using BookShopApplication.Data.Repository.Contracts;
+using BookShopApplication.Services.Contracts;
+using BookShopApplication.Web.ViewModels.Book;
+using BookShopApplication.Web.ViewModels.Shop;
+using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using BookShopApplication.Data.Models;
-using BookShopApplication.Data.Repository.Contracts;
-using BookShopApplication.Services.Contracts;
-using BookShopApplication.Web.ViewModels.Shop;
-using Microsoft.EntityFrameworkCore;
 
 namespace BookShopApplication.Services
 {
     public class ShopService : IShopService
     {
         private readonly IShopRepository _shopRepository;
+        private readonly IWishlistRepository _wishlistRepository;
+        private readonly ICartRepository _cartRepository;
 
-        public ShopService(IShopRepository shopRepository)
+        public ShopService(IShopRepository shopRepository, IWishlistRepository wishlistRepository, ICartRepository cartRepository)
         {
             _shopRepository = shopRepository;
+            _wishlistRepository = wishlistRepository;
+            _cartRepository = cartRepository;
         }
 
 
@@ -50,6 +56,44 @@ namespace BookShopApplication.Services
             };
 
             return await _shopRepository.AddAsync(shop);
+        }
+
+        public async Task<ShopWithBooksViewModel> DisplayShopAsync(Guid shopId, Guid userId)
+        {
+            
+            var shop = await _shopRepository.GetAllAttached()
+                .Include(s => s.Location)
+                .Include(s => s.BooksInShop)
+                .ThenInclude(bs => bs.Book.Genre)
+                .FirstAsync(s => s.Id == shopId);
+
+
+            var wishlistItems = await _wishlistRepository.GetWishListedItemsIdsAsNoTrackingAsync(userId);
+            var cartItems = await _cartRepository.GetCartItemsIdsAsNoTrackingAsync(userId);
+
+            var model = new ShopWithBooksViewModel
+            {
+                Id = shop.Id,
+                Description = shop.Description,
+                Name = shop.Name,
+                Latitude = shop.Location.Latitude,
+                Longitude = shop.Location.Longitude,
+                LocationAddress = shop.Location.Address,
+                LocationCity = shop.Location.CityName,
+                BooksInShop = shop.BooksInShop.Select(bs => new BookViewModel
+                {
+                    Id = bs.BookId,
+                    Author = bs.Book.AuthorName,
+                    Genre = bs.Book.Genre.Name,
+                    ImagePath = bs.Book.ImagePath,
+                    IsInCart = cartItems.Contains(bs.Book.Id),
+                    IsInWishlist = wishlistItems.Contains(bs.Book.Id),
+                    Price = bs.Book.Price.ToString("f2"),
+                    Title = bs.Book.Title
+                }).ToList()
+            };
+
+            return model;
         }
 
         public async Task<IEnumerable<ShopViewModel>> GetManagedShopsAsync(Guid userId)
