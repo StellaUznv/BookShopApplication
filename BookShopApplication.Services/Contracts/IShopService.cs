@@ -12,5 +12,7 @@ namespace BookShopApplication.Services.Contracts
         public Task<IEnumerable<ShopViewModel>> DisplayAllShopsAsync();
 
         public Task<bool> CreateShopAsync(CreateShopViewModel model, Guid userId, Guid locationId);
+
+        public Task<IEnumerable<ShopViewModel>> GetManagedShopsAsync(Guid userId);
     }
 }

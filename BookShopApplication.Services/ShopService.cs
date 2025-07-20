@@ -51,5 +51,22 @@ namespace BookShopApplication.Services
 
             return await _shopRepository.AddAsync(shop);
         }
+
+        public async Task<IEnumerable<ShopViewModel>> GetManagedShopsAsync(Guid userId)
+        {
+            var shops = await _shopRepository.GetAllAttached()
+                .Where(s => s.ManagerId == userId)
+                .Select(s => new ShopViewModel
+                {
+                    Id = s.Id,
+                    Description = s.Description,
+                    Latitude = s.Location.Latitude,
+                    Longitude = s.Location.Longitude,
+                    LocationAddress = s.Location.Address,
+                    LocationCity = s.Location.CityName,
+                    Name = s.Name
+                }).ToListAsync();
+            return shops;
+        }
     }
 }
