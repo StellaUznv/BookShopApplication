@@ -84,7 +84,11 @@ namespace BookShopApplication.Services
 
         private static async Task<IEnumerable<BookViewModel>> GetAllBooksToDisplayAsyncAsNoTracking(IBookRepository bookRepository)
         {
-            var books = await bookRepository.GetAllAttached().AsNoTracking().ToListAsync();
+            var books = await bookRepository
+                .GetAllAttached()
+                .Include(b => b.Genre)
+                .AsNoTracking()
+                .ToListAsync();
 
             var booksModels = books.Select(b => new BookViewModel
             {
