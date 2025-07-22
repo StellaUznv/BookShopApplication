@@ -1,0 +1,34 @@
+﻿@model BookShopApplication.Web.ViewModels.Shop.ShopBooksViewModel
+@{
+    ViewData["Title"] = "Manage Books";
+}
+
+<h2 class="text-center mb-4">Manage Books in Shop</h2>
+
+<a asp-action="AddBook" asp-route-shopId="@Model.ShopId" class="btn btn-success mb-3">Add Book</a>
+
+<table class="table table-bordered">
+    <thead>
+    <tr>
+        <th>Title</th>
+        <th>Author</th>
+        <th>Price</th>
+        <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var book in Model.Books)
+    {
+        <tr>
+            <td>@book.Title</td>
+            <td>@book.Author</td>
+            <td>@book.Price</td>
+            <td>
+                <a asp-action="EditBook" asp-route-id="@book.Id" class="btn btn-sm btn-warning">Edit</a>
+                <a asp-action="DeleteBook" asp-route-id="@book.Id" class="btn btn-sm btn-danger">Delete</a>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>
+

@@ -122,11 +122,34 @@ namespace BookShopApplication.Services
             return await _shopRepository.UpdateAsync(shop);
         }
 
+        public async Task<ShopBooksViewModel> GetBooksByShopIdAsync(Guid shopId)
+        {
+            var shop = await _shopRepository.FirstOrDefaultAsync(s => s.Id == shopId);
+
+            var bookModels = shop.BooksInShop.Select(bs => new BookViewModel
+            {
+                Author = bs.Book.AuthorName,
+                Genre = bs.Book.Genre.Name,
+                Id = bs.BookId,
+                ImagePath = bs.Book.ImagePath,
+                Price = bs.Book.Price.ToString("f2"),
+                Title = bs.Book.Title
+            }).ToList();
+
+            var model = new ShopBooksViewModel
+            {
+                Books = bookModels,
+                ShopId = shopId
+            };
+            return model;
+        }
+
+
         public async Task<IEnumerable<ShopViewModel>> GetManagedShopsAsync(Guid userId)
         {
             var shops = await _shopRepository.GetAllAttached()
                 .Where(s => s.ManagerId == userId)
-                .Select(s => new ShopViewModel
+                .Select(s => new ShopViewModel()
                 {
                     Id = s.Id,
                     Description = s.Description,
@@ -134,7 +157,8 @@ namespace BookShopApplication.Services
                     Longitude = s.Location.Longitude,
                     LocationAddress = s.Location.Address,
                     LocationCity = s.Location.CityName,
-                    Name = s.Name
+                    Name = s.Name,
+                    
                 }).ToListAsync();
             return shops;
         }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using BookShopApplication.Web.ViewModels.Book;
 using BookShopApplication.Web.ViewModels.Shop;
 
 namespace BookShopApplication.Services.Contracts
@@ -20,5 +21,8 @@ namespace BookShopApplication.Services.Contracts
         public Task<EditShopViewModel> GetShopToEditAsync(Guid shopId);
 
         public Task<bool> EditShopAsync(EditShopViewModel model);
+
+        public Task<ShopBooksViewModel> GetBooksByShopIdAsync(Guid shopId);
+
     }
 }

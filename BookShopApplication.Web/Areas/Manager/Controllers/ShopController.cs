@@ -4,6 +4,7 @@ using BookShopApplication.Web.ViewModels.Shop;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
+using BookShopApplication.Web.ViewModels.Book;
 
 namespace BookShopApplication.Web.Areas.Manager.Controllers
 {
@@ -57,5 +58,11 @@ namespace BookShopApplication.Web.Areas.Manager.Controllers
             return RedirectToAction("Edit", "Location", new { area = "Manager" });
         }
 
+        [HttpGet]
+        public async Task<IActionResult> DisplayBooks(Guid id)
+        {
+            var model = await _shopService.GetBooksByShopIdAsync(id);
+            return View(model);
+        }
     }
 }
