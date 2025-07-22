@@ -64,5 +64,21 @@ namespace BookShopApplication.Web.Areas.Manager.Controllers
             var model = await _shopService.GetBooksByShopIdAsync(id);
             return View(model);
         }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Delete(Guid id)
+        {
+            var success = await _shopService.DeleteShopAsync(id);
+
+            if (!success)
+            {
+                TempData["Error"] = "Failed to delete the shop.";
+                return RedirectToAction("ManagedShops");
+            }
+
+            TempData["Success"] = "Shop deleted successfully.";
+            return RedirectToAction("ManagedShops");
+        }
     }
 }

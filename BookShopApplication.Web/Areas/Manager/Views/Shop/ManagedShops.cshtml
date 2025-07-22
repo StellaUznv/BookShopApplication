@@ -23,7 +23,12 @@
 
                     <div class="d-flex gap-2">
                         <a asp-action="Edit" asp-route-id="@shop.Id" class="btn btn-sm btn-warning w-100">Edit</a>
-                        <a asp-action="Delete" asp-route-id="@shop.Id" class="btn btn-sm btn-danger w-100">Delete</a>
+                        <form asp-action="Delete" asp-route-id="@shop.Id" method="post" class="w-100">
+                            <button type="submit" class="btn btn-sm btn-danger w-100"
+                                    onclick="return confirm('Are you sure you want to delete this shop?');">
+                                Delete
+                            </button>
+                        </form>
                         <a asp-action="DisplayBooks" asp-route-Id="@shop.Id" class="btn btn-sm btn-primary w-100">Manage Books</a>
                     </div>
                 </div>

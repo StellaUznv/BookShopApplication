@@ -162,5 +162,14 @@ namespace BookShopApplication.Services
                 }).ToListAsync();
             return shops;
         }
+
+        public async Task<bool> DeleteShopAsync(Guid shopId)
+        {
+            var shop = await _shopRepository.FirstOrDefaultAsync(s => s.Id == shopId);
+            //track deletion time or deleted by user, set those here
+
+            return await _shopRepository.SoftDeleteAsync(shop);
+        }
+
     }
 }

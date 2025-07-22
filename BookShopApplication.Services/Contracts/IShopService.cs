@@ -24,5 +24,7 @@ namespace BookShopApplication.Services.Contracts
 
         public Task<ShopBooksViewModel> GetBooksByShopIdAsync(Guid shopId);
 
+        public Task<bool> DeleteShopAsync(Guid shopId);
+
     }
 }
