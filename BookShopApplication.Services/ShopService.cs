@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace BookShopApplication.Services
 {
@@ -94,6 +95,31 @@ namespace BookShopApplication.Services
             };
 
             return model;
+        }
+
+        public async Task<EditShopViewModel> GetShopToEditAsync(Guid id)
+        {
+            var shop = await _shopRepository.FirstOrDefaultAsync(s => s.Id == id);
+
+            var model = new EditShopViewModel
+            {
+                Description = shop.Description,
+                Name = shop.Name,
+                Id = shop.Id,
+                LocationId = shop.LocationId
+            };
+
+            return model;
+        }
+
+        public async Task<bool> EditShopAsync(EditShopViewModel model)
+        {
+            var shop = await _shopRepository.FirstOrDefaultAsync(s => s.Id == model.Id);
+
+            shop.Description = model.Description;
+            shop.Name = model.Name;
+
+            return await _shopRepository.UpdateAsync(shop);
         }
 
         public async Task<IEnumerable<ShopViewModel>> GetManagedShopsAsync(Guid userId)

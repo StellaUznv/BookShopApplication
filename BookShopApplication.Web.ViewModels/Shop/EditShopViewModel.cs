@@ -7,17 +7,16 @@ using System.Threading.Tasks;
 
 namespace BookShopApplication.Web.ViewModels.Shop
 {
-    public class CreateShopViewModel
+    public class EditShopViewModel
     {
-
-        
-        [Required] 
+        [Required]
+        public Guid Id { get; set; }
+        [Required]
         public string Name { get; set; } = null!;
 
-        [Required] 
+        [Required]
         public string Description { get; set; } = null!;
-
-       
-
+        [Required]
+        public Guid LocationId { get; set; }
     }
 }
