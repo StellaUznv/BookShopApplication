@@ -41,5 +41,37 @@ namespace BookShopApplication.Services
             
             return isCreated;
         }
+
+        public async Task<EditLocationViewModel> GetLocationToEditAsync(Guid id)
+        {
+            var location = await _locationRepository.FirstOrDefaultAsync(l => l.Id == id);
+
+            var model = new EditLocationViewModel
+            {
+                Id = id,
+                Address = location.Address,
+                CityName = location.CityName,
+                CountryName = location.CountryName,
+                ZipCode = location.ZipCode,
+                Latitude = location.Latitude,
+                Longitude = location.Longitude
+
+            };
+            return model;
+        }
+
+        public async Task<bool> EditLocationAsync(EditLocationViewModel model)
+        {
+            var location = await _locationRepository.FirstOrDefaultAsync(l => l.Id == model.Id);
+
+            location.Latitude = model.Latitude;
+            location.Longitude = model.Longitude;
+            location.CityName = model.CityName;
+            location.CountryName = model.CountryName;
+            location.ZipCode = model.ZipCode;
+            location.Address = model.Address;
+
+            return await _locationRepository.UpdateAsync(location);
+        }
     }
 }

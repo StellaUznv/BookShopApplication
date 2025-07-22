@@ -10,5 +10,9 @@ namespace BookShopApplication.Services.Contracts
     public interface ILocationService
     {
         public Task<bool> CreateLocationAsync(CreateLocationViewModel model);
+
+        public Task<EditLocationViewModel> GetLocationToEditAsync(Guid locationId);
+
+        public Task<bool> EditLocationAsync(EditLocationViewModel model);
     }
 }
