@@ -124,7 +124,12 @@ namespace BookShopApplication.Services
 
         public async Task<ShopBooksViewModel> GetBooksByShopIdAsync(Guid shopId)
         {
-            var shop = await _shopRepository.FirstOrDefaultAsync(s => s.Id == shopId);
+            var shop = await _shopRepository
+                .GetAllAttached()
+                .Include(s => s.BooksInShop)
+                .ThenInclude(bs => bs.Book)
+                .ThenInclude(b => b.Genre)
+                .FirstOrDefaultAsync(s => s.Id == shopId);
 
             var bookModels = shop.BooksInShop.Select(bs => new BookViewModel
             {

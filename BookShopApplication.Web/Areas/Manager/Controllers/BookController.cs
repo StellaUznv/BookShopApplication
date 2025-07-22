@@ -1,4 +1,5 @@
-﻿using BookShopApplication.Services.Contracts;
+﻿using BookShopApplication.Data.Models;
+using BookShopApplication.Services.Contracts;
 using BookShopApplication.Web.ViewModels.Book;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -20,7 +21,7 @@ namespace BookShopApplication.Web.Areas.Manager.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Create()
+        public async Task<IActionResult> Create(Guid shopId)
         {
             var genresModel = await _genreService.GetGenreListAsync();
 
@@ -30,9 +31,32 @@ namespace BookShopApplication.Web.Areas.Manager.Controllers
                 {
                     Text = g.Name,
                     Value = g.Id.ToString()
-                }).ToList()
+                }).ToList(),
+                ShopId = shopId
             };
             return View(model);
         }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create(CreateBookViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                // Reload genres in case of validation failure
+                var genresModel = await _genreService.GetGenreListAsync();
+                model.Genres = genresModel.Select(g => new SelectListItem
+                {
+                    Text = g.Name,
+                    Value = g.Id.ToString()
+                }).ToList();
+
+                return View(model);
+            }
+
+            await _bookService.CreateBookAsync(model);
+
+            return RedirectToAction("DisplayBooks", "Shop", new { id = model.ShopId });
+        }
+
     }
 }

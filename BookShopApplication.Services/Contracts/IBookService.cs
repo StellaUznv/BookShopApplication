@@ -14,5 +14,7 @@ namespace BookShopApplication.Services.Contracts
 
         public Task<BookDetailsViewModel> DisplayBookDetailsByIdAsync(Guid? userId, Guid bookId);
 
+        public Task<bool> CreateBookAsync(CreateBookViewModel model);
+
     }
 }

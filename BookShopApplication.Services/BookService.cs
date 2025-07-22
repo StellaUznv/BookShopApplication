@@ -9,6 +9,7 @@ using BookShopApplication.Data;
 using BookShopApplication.Data.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Net;
+using BookShopApplication.Data.Migrations;
 using BookShopApplication.Data.Repository.Contracts;
 
 namespace BookShopApplication.Services
@@ -18,11 +19,13 @@ namespace BookShopApplication.Services
         private readonly IBookRepository _bookRepository;
         private readonly IWishlistRepository _wishlistRepository;
         private readonly ICartRepository _cartRepository;
-        public BookService(IBookRepository repository, IWishlistRepository wishlistRepository, ICartRepository cartRepository)
+        private readonly IBookInShopRepository _bookInShopRepository;
+        public BookService(IBookRepository repository, IWishlistRepository wishlistRepository, ICartRepository cartRepository, IBookInShopRepository bookInShopRepository)
         {
             this._bookRepository = repository;
             this._wishlistRepository = wishlistRepository;
             this._cartRepository = cartRepository;
+            this._bookInShopRepository = bookInShopRepository;
         }
 
 
@@ -49,6 +52,32 @@ namespace BookShopApplication.Services
             return await GetBookDetailsViewModelByBookIdAsyncAsNoTracking(bookId, _bookRepository);
         }
 
+        public async Task<bool> CreateBookAsync(CreateBookViewModel model)
+        {
+            bool bookAdded = false;
+            var book = new Book
+            {
+                Id = Guid.NewGuid(),
+                Title = model.Title,
+                Description = model.Description,
+                AuthorName = model.Author,
+                Price = model.Price,
+                PagesNumber = model.PagesNumber,
+                GenreId = model.GenreId!.Value, // Already validated
+                ImagePath = model.ImagePath ?? "", // Optional
+                IsDeleted = false
+            };
+            bookAdded = await _bookRepository.AddAsync(book);
+
+            bool bookInShopAdded = false;
+            var bookShop = new BookInShop
+            {
+                BookId = book.Id,
+                ShopId = model.ShopId
+            };
+            bookInShopAdded = await _bookInShopRepository.AddAsync(bookShop);
+            return bookAdded && bookInShopAdded;
+        }
 
 
         //Private helping methods...
