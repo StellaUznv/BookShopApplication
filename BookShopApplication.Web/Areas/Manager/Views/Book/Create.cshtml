@@ -1,0 +1,53 @@
+﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model BookShopApplication.Web.ViewModels.Book.CreateBookViewModel
+
+<form asp-action="Create" method="post" enctype="multipart/form-data">
+    <input type="hidden" asp-for="ShopId" />
+
+    <!-- other inputs like Title, Author, etc. -->
+    <div class="mb-3">
+        <label asp-for="Title" class="form-label"></label>
+        <textarea asp-for="Title" class="form-control"></textarea>
+        <span asp-validation-for="Title" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="Description" class="form-label"></label>
+        <textarea asp-for="Description" class="form-control"></textarea>
+        <span asp-validation-for="Description" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="Author" class="form-label"></label>
+        <textarea asp-for="Author" class="form-control"></textarea>
+        <span asp-validation-for="Author" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="Price" class="form-label"></label>
+        <textarea asp-for="Price" class="form-control"></textarea>
+        <span asp-validation-for="Price" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="PagesNumber" class="form-label"></label>
+        <textarea asp-for="PagesNumber" class="form-control"></textarea>
+        <span asp-validation-for="PagesNumber" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="ImagePath" class="form-label"></label>
+        <textarea asp-for="ImagePath" class="form-control"></textarea>
+        <span asp-validation-for="ImagePath" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="GenreId" class="form-label">Select Genre</label>
+        <select asp-for="GenreId" asp-items="Model.Genres" class="form-select">
+            <option value="">-- Select existing genre --</option>
+        </select>
+        <span asp-validation-for="GenreId" class="text-danger"></span>
+    </div>
+
+    <!-- submit button -->
+    <button type="submit" class="btn btn-primary">Add Book</button>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
+
