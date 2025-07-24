@@ -61,13 +61,12 @@ namespace BookShopApplication.Services
 
         public async Task<ShopWithBooksViewModel> DisplayShopAsync(Guid shopId, Guid? userId)
         {
-            
             var shop = await _shopRepository.GetAllAttached()
                 .Include(s => s.Location)
                 .Include(s => s.BooksInShop)
-                .ThenInclude(bs => bs.Book.Genre)
+                .ThenInclude(bs => bs.Book)
+                .ThenInclude(b => b.Genre)
                 .FirstAsync(s => s.Id == shopId);
-            var model = new ShopWithBooksViewModel();
 
             if (userId != null)
             {
@@ -75,7 +74,7 @@ namespace BookShopApplication.Services
                 var wishlistItems = await _wishlistRepository.GetWishListedItemsIdsAsNoTrackingAsync(id);
                 var cartItems = await _cartRepository.GetCartItemsIdsAsNoTrackingAsync(id);
 
-                model = new ShopWithBooksViewModel
+                return new ShopWithBooksViewModel
                 {
                     Id = shop.Id,
                     Description = shop.Description,
@@ -88,7 +87,7 @@ namespace BookShopApplication.Services
                     {
                         Id = bs.BookId,
                         Author = bs.Book.AuthorName,
-                        Genre = bs.Book.Genre.Name,
+                        Genre = bs.Book.Genre?.Name ?? "Unknown",
                         ImagePath = bs.Book.ImagePath,
                         IsInCart = cartItems.Contains(bs.Book.Id),
                         IsInWishlist = wishlistItems.Contains(bs.Book.Id),
@@ -98,9 +97,8 @@ namespace BookShopApplication.Services
                 };
             }
 
-            
-
-            model = new ShopWithBooksViewModel
+            // Anonymous or unauthenticated user
+            return new ShopWithBooksViewModel
             {
                 Id = shop.Id,
                 Description = shop.Description,
@@ -113,15 +111,14 @@ namespace BookShopApplication.Services
                 {
                     Id = bs.BookId,
                     Author = bs.Book.AuthorName,
-                    Genre = bs.Book.Genre.Name,
+                    Genre = bs.Book.Genre?.Name ?? "Unknown",
                     ImagePath = bs.Book.ImagePath,
                     Price = bs.Book.Price.ToString("f2"),
                     Title = bs.Book.Title
                 }).ToList()
             };
-
-            return model;
         }
+
 
         public async Task<EditShopViewModel> GetShopToEditAsync(Guid id)
         {

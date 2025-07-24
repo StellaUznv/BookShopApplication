@@ -67,7 +67,16 @@ namespace BookShopApplication.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> Details(Guid id)
         {
-            var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+            Guid? userId = null;
+
+            if (User.Identity?.IsAuthenticated == true)
+            {
+                var userIdString = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                if (Guid.TryParse(userIdString, out var parsedId))
+                {
+                    userId = parsedId;
+                }
+            }
             var viewModel = await _shopService.DisplayShopAsync(id, userId);
 
             if (viewModel == null)
