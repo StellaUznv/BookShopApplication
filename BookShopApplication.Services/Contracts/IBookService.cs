@@ -16,5 +16,9 @@ namespace BookShopApplication.Services.Contracts
 
         public Task<bool> CreateBookAsync(CreateBookViewModel model);
 
+        public Task<EditBookViewModel> GetBookToEdit(Guid bookId, Guid shopId);
+
+        public Task<bool> EditBookAsync(EditBookViewModel model);
+
     }
 }

@@ -58,5 +58,44 @@ namespace BookShopApplication.Web.Areas.Manager.Controllers
             return RedirectToAction("DisplayBooks", "Shop", new { id = model.ShopId });
         }
 
+        [HttpGet]
+        public async Task<IActionResult> Edit(Guid id, Guid shopId)
+        {
+            var model = await _bookService.GetBookToEdit(id, shopId);
+
+            var genresModel = await _genreService.GetGenreListAsync();
+            model.Genres = genresModel.Select(g => new SelectListItem
+            {
+                Text = g.Name,
+                Value = g.Id.ToString()
+            }).ToList();
+
+            
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Edit(EditBookViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                var genresModel = await _genreService.GetGenreListAsync();
+                model.Genres = genresModel.Select(g => new SelectListItem
+                {
+                    Text = g.Name,
+                    Value = g.Id.ToString()
+                }).ToList();
+
+                return View(model);
+            }
+
+            bool success = await _bookService.EditBookAsync(model);
+            if (!success)
+            {
+                ModelState.AddModelError("", "Failed to update the book.");
+                return View(model);
+            }
+            return RedirectToAction("DisplayBooks", "Shop", new { id = model.ShopId });
+        }
     }
 }

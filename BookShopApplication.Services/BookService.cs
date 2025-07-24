@@ -101,6 +101,66 @@ namespace BookShopApplication.Services
             return bookAdded && bookInShopAdded;
         }
 
+        public async Task<EditBookViewModel> GetBookToEdit(Guid bookId, Guid shopId)
+        {
+            var book = await _bookRepository.FirstOrDefaultAsync(b => b.Id == bookId);
+            var model = new EditBookViewModel
+            {
+                Id = book.Id,
+                Author = book.AuthorName,
+                Description = book.Description,
+                GenreId = book.GenreId,
+                ImagePath = book.ImagePath,
+                PagesNumber = book.PagesNumber,
+                Price = book.Price,
+                ShopId = shopId,
+                Title = book.Title
+            };
+
+            return model;
+        }
+
+        public async Task<bool> EditBookAsync(EditBookViewModel model)
+        {
+            // 1. Save Image File to wwwroot/images/books/
+            string? savedImagePath = null;
+            if (model.ImageFile != null && model.ImageFile.Length > 0)
+            {
+                var extension = Path.GetExtension(model.ImageFile.FileName);
+                var fileName = $"{model.Id}{extension}";
+                var relativePath = Path.Combine("images", "books", fileName);
+                var fullPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", relativePath);
+
+                Directory.CreateDirectory(Path.GetDirectoryName(fullPath)!);
+
+                using (var stream = new FileStream(fullPath, FileMode.Create))
+                {
+                    await model.ImageFile.CopyToAsync(stream);
+                }
+
+                savedImagePath = "/" + relativePath.Replace("\\", "/");
+            }
+            var book = await _bookRepository.FirstOrDefaultAsync(b => b.Id == model.Id);
+            
+            if (savedImagePath == null)
+            {
+                savedImagePath = book.ImagePath;
+            }
+
+            
+
+            book.Title = model.Title;
+            book.AuthorName = model.Author;
+            book.Description = model.Description;
+            book.GenreId = model.GenreId;
+            book.ImagePath = savedImagePath;
+            book.PagesNumber = model.PagesNumber;
+            book.Price = model.Price;
+            
+
+            return await _bookRepository.UpdateAsync(book);
+        }
+
 
         //Private helping methods...
 

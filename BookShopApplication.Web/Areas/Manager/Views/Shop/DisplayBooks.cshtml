@@ -25,7 +25,7 @@
             <td>@book.Genre</td>
             <td>$@book.Price</td>
             <td>
-                <a asp-area="Manager" asp-action="EditBook" asp-route-id="@book.Id" class="btn btn-sm btn-warning">Edit</a>
+                    <a asp-area="Manager" asp-controller="Book" asp-action="Edit" asp-route-id="@book.Id" asp-route-shopId ="@Model.ShopId" class="btn btn-sm btn-warning">Edit</a>
                 <a asp-area="Manager" asp-action="DeleteBook" asp-route-id="@book.Id" class="btn btn-sm btn-danger">Delete</a>
             </td>
         </tr>
