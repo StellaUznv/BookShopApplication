@@ -11,6 +11,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Net;
 using BookShopApplication.Data.Migrations;
 using BookShopApplication.Data.Repository.Contracts;
+using BookShopApplication.Web.ViewModels.Shop;
 
 namespace BookShopApplication.Services
 {
@@ -168,7 +169,11 @@ namespace BookShopApplication.Services
                 Price = book.Price.ToString("f2"),
                 Title = book.Title,
                 AvailableInShops = book.BookInShops
-                    .Select(bs => bs.Shop.Name)
+                    .Select(bs => new ShopNameViewModel
+                    {
+                        Id = bs.ShopId,
+                        Name = bs.Shop.Name
+                    })
                     .ToList(),
                 Description = book.Description,
                 PagesNumber = book.PagesNumber.ToString()
@@ -201,7 +206,11 @@ namespace BookShopApplication.Services
                 Price = book.Price.ToString("f2"),
                 Title = book.Title,
                 AvailableInShops = book.BookInShops
-                    .Select(bs => bs.Shop.Name)
+                    .Select(bs => new ShopNameViewModel
+                    {
+                        Id = bs.ShopId,
+                        Name = bs.Shop.Name
+                    })
                     .ToList(),
                 Description = book.Description,
                 PagesNumber = book.PagesNumber.ToString(),
@@ -217,7 +226,8 @@ namespace BookShopApplication.Services
             var book = await repository.GetAllAttached()
                 .Include(b => b.Genre)
                 .Include(b => b.BookInShops)
-                .ThenInclude(bs => bs.Shop).AsNoTracking()
+                .ThenInclude(bs => bs.Shop)
+                .AsNoTracking()
                 .SingleOrDefaultAsync(b => b.Id == id);
 
             return book;

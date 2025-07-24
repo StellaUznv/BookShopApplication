@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using BookShopApplication.Web.ViewModels.Shop;
 
 namespace BookShopApplication.Web.ViewModels.Book
 {
@@ -16,7 +17,7 @@ namespace BookShopApplication.Web.ViewModels.Book
         public string Price { get; set; } = null!;
         public string? ImagePath { get; set; }
         public string PagesNumber { get; set; } = null!;
-        public ICollection<string> AvailableInShops { get; set; } = new List<string>();
+        public ICollection<ShopNameViewModel> AvailableInShops { get; set; } = new List<ShopNameViewModel>();
         public bool IsInWishlist { get; set; }
         public bool IsInCart { get; set; }
     }
