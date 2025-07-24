@@ -97,5 +97,19 @@ namespace BookShopApplication.Web.Areas.Manager.Controllers
             }
             return RedirectToAction("DisplayBooks", "Shop", new { id = model.ShopId });
         }
+
+        [HttpPost]
+        public async Task<IActionResult> Delete(Guid id, Guid shopId)
+        {
+            var isDeleted = await _bookService.DeleteBookAsync(id);
+            if (!isDeleted)
+            {
+                TempData["Error"] = "Failed to delete the shop.";
+                return RedirectToAction("DisplayBooks", "Shop", new {id = shopId });
+            }
+
+            TempData["Success"] = "Shop deleted successfully.";
+            return RedirectToAction("DisplayBooks", "Shop", new {id = shopId });
+    }
     }
 }

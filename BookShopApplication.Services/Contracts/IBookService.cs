@@ -20,5 +20,7 @@ namespace BookShopApplication.Services.Contracts
 
         public Task<bool> EditBookAsync(EditBookViewModel model);
 
+        public Task<bool> DeleteBookAsync(Guid bookId);
+
     }
 }

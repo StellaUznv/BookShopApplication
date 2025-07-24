@@ -177,7 +177,6 @@ namespace BookShopApplication.Services
             return model;
         }
 
-
         public async Task<IEnumerable<ShopViewModel>> GetManagedShopsAsync(Guid userId)
         {
             var shops = await _shopRepository.GetAllAttached()

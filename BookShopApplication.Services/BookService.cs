@@ -1,17 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using BookShopApplication.Data;
+using BookShopApplication.Data.Migrations;
+using BookShopApplication.Data.Models;
+using BookShopApplication.Data.Repository;
+using BookShopApplication.Data.Repository.Contracts;
 using BookShopApplication.Services.Contracts;
 using BookShopApplication.Web.ViewModels.Book;
-using BookShopApplication.Data;
-using BookShopApplication.Data.Models;
-using Microsoft.EntityFrameworkCore;
-using System.Net;
-using BookShopApplication.Data.Migrations;
-using BookShopApplication.Data.Repository.Contracts;
 using BookShopApplication.Web.ViewModels.Shop;
+using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace BookShopApplication.Services
 {
@@ -159,6 +160,24 @@ namespace BookShopApplication.Services
             
 
             return await _bookRepository.UpdateAsync(book);
+        }
+
+        public async Task<bool> DeleteBookAsync(Guid bookId)
+        {
+            var book = await _bookRepository.GetAllAttached()
+                .Include(b => b.BookInShops)
+                .Where(b => b.Id == bookId)
+                .FirstOrDefaultAsync();
+
+            if (book == null) return false;
+
+            foreach (var bs in book.BookInShops)
+            {
+                await _bookInShopRepository.SoftDeleteAsync(bs); // Mark the book as deleted
+            }
+
+
+            return await _bookRepository.SoftDeleteAsync(book);
         }
 
 

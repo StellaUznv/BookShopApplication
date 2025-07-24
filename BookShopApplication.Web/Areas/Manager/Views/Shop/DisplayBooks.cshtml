@@ -7,26 +7,32 @@
 
 <a asp-controller="Book" asp-action="Create" asp-route-shopId="@Model.ShopId" class="btn btn-success mb-3">Add Book</a>
 
-<table class="table table-bordered">
+<table class="table table-bordered table-hover rounded-3">
     <thead>
-    <tr>
-        <th>Title</th>
-        <th>Author</th>
-        <th>Price</th>
-        <th></th>
+    <tr class="table-primary">
+            <th scope="col">Title</th>
+            <th scope="col">Author</th>
+            <th scope="col">Genre</th>
+            <th scope="col">Price</th>
+            <th scope="col">Actions:</th>
     </tr>
     </thead>
     <tbody>
     @foreach (var book in Model.Books)
     {
-        <tr>
+        <tr >
             <td>@book.Title</td>
             <td>@book.Author</td>
             <td>@book.Genre</td>
             <td>$@book.Price</td>
             <td>
-                    <a asp-area="Manager" asp-controller="Book" asp-action="Edit" asp-route-id="@book.Id" asp-route-shopId ="@Model.ShopId" class="btn btn-sm btn-warning">Edit</a>
-                <a asp-area="Manager" asp-action="DeleteBook" asp-route-id="@book.Id" class="btn btn-sm btn-danger">Delete</a>
+                    <a asp-area="Manager" asp-controller="Book" asp-action="Edit" asp-route-id="@book.Id" asp-route-shopId ="@Model.ShopId" class="btn btn-sm btn-warning" >Edit</a>
+                    <form asp-area="Manager" asp-controller="Book" asp-action="Delete" asp-route-id="@book.Id" asp-route-shopId="@Model.ShopId" method="post" class="form-check-inline">
+                        <button type="submit" class="btn btn-sm btn-danger"
+                                onclick="return confirm('Are you sure you want to delete this book?');">
+                            Delete
+                        </button>
+                    </form>
             </td>
         </tr>
     }
