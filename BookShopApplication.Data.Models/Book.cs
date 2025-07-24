@@ -9,6 +9,8 @@ using System.Threading.Tasks;
 using BookShopApplication.Data.Models.Contracts;
 using Microsoft.EntityFrameworkCore;
 
+
+
 namespace BookShopApplication.Data.Models
 {
     public class Book : ISoftDeletable

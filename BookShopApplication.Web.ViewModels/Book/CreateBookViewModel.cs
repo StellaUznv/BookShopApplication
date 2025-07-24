@@ -7,6 +7,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 
 namespace BookShopApplication.Web.ViewModels.Book
 {
@@ -30,6 +31,7 @@ namespace BookShopApplication.Web.ViewModels.Book
         [Required]
         public int PagesNumber { get; set; }
 
+        public IFormFile? ImageFile { get; set; }
         public string? ImagePath { get; set; }
 
         [Required]

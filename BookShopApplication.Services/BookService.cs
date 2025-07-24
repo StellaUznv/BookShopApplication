@@ -54,17 +54,38 @@ namespace BookShopApplication.Services
 
         public async Task<bool> CreateBookAsync(CreateBookViewModel model)
         {
+            var bookId = Guid.NewGuid();
+
+            // 1. Save Image File to wwwroot/images/books/
+            string? savedImagePath = null;
+            if (model.ImageFile != null && model.ImageFile.Length > 0)
+            {
+                var extension = Path.GetExtension(model.ImageFile.FileName);
+                var fileName = $"{bookId}{extension}";
+                var relativePath = Path.Combine("images", "books", fileName);
+                var fullPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", relativePath);
+
+                Directory.CreateDirectory(Path.GetDirectoryName(fullPath)!);
+
+                using (var stream = new FileStream(fullPath, FileMode.Create))
+                {
+                    await model.ImageFile.CopyToAsync(stream);
+                }
+
+                savedImagePath = "/" + relativePath.Replace("\\", "/");
+            }
+
             bool bookAdded = false;
             var book = new Book
             {
-                Id = Guid.NewGuid(),
+                Id = bookId,
                 Title = model.Title,
                 Description = model.Description,
                 AuthorName = model.Author,
                 Price = model.Price,
                 PagesNumber = model.PagesNumber,
                 GenreId = model.GenreId!.Value, // Already validated
-                ImagePath = model.ImagePath ?? "", // Optional
+                ImagePath = savedImagePath ?? "", // Optional
                 IsDeleted = false
             };
             bookAdded = await _bookRepository.AddAsync(book);
