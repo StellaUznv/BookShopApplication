@@ -20,6 +20,7 @@ namespace BookShopApplication.Web.ViewModels.Cart
 
         public string Price { get; set; } = null!;
 
-        public string Quantity { get; set; } = null!;
+        public int Quantity { get; set; }
+
     }
 }

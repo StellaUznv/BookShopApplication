@@ -9,7 +9,7 @@ namespace BookShopApplication.Services.Contracts
 {
     public interface ICartService
     {
-        public Task<IEnumerable<CartItemViewModel>> DisplayAllCartItemsAsync(Guid userId);
+        public Task<CartViewModel> DisplayAllCartItemsAsync(Guid userId);
 
         public Task<bool> AddToCartAsync(Guid userId, Guid bookId);
 

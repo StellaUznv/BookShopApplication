@@ -24,8 +24,9 @@ namespace BookShopApplication.Services
         }
 
 
-        public async Task<IEnumerable<CartItemViewModel>> DisplayAllCartItemsAsync(Guid userId)
+        public async Task<CartViewModel> DisplayAllCartItemsAsync(Guid userId)
         {
+            var cart = new CartViewModel();
             var cartItems = await _cartRepository.GetAllAttached()
                 .Where(c => c.UserId == userId)
                 .Select(c => new CartItemViewModel
@@ -34,11 +35,17 @@ namespace BookShopApplication.Services
                     Id = c.Id,
                     ImagePath = c.Book.ImagePath,
                     Price = c.Book.Price.ToString("f2"),
-                    Quantity = c.Quantity.ToString(),
+                    Quantity = c.Quantity,
                     Title = c.Book.Title,
                     UserId = c.UserId
                 }).ToListAsync();
-            return cartItems;
+            foreach (var item in cartItems)
+            {
+                cart.Total += decimal.Parse(item.Price) * item.Quantity;
+            }
+            cart.Items = cartItems;
+            
+            return cart;
         }
 
         public async Task<bool> AddToCartAsync(Guid userId, Guid bookId)
