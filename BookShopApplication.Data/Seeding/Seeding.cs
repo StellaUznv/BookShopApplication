@@ -50,26 +50,31 @@ namespace BookShopApplication.Data.Seeding
             }
 
             //// Seed Admin User (optional, but useful for testing)
-            //var managerEmail = "manager@bookshop.com";
-            //var managerUser = await userManager.FindByEmailAsync(managerEmail);
+            var managerEmail = "manager@bookshop.com";
+            var managerUser = await userManager.FindByEmailAsync(managerEmail);
 
-            //if (managerUser == null)
-            //{
-            //    managerUser = new ApplicationUser
-            //    {
-            //        Id = SeedGuids.Manager,
-            //        UserName = managerEmail,
-            //        Email = managerEmail,
-            //        EmailConfirmed = true
-            //    };
+            if (managerUser == null)
+            {
+                managerUser = new ApplicationUser
+                {
+                    Id = SeedGuids.Manager,
+                    UserName = managerEmail,
+                    Email = managerEmail,
+                    EmailConfirmed = true
+                };
 
-            //    var result = await userManager.CreateAsync(managerUser, "Manager@123");
+                var result = await userManager.CreateAsync(managerUser, "Manager@123");
 
-            //    if (result.Succeeded)
-            //    {
-            //        await userManager.AddToRoleAsync(managerUser, "Manager");
-            //    }
-            //}
+                if (result.Succeeded)
+                {
+                    await userManager.AddToRoleAsync(managerUser, "Manager");
+                }
+            }
+            else
+            {
+                await userManager.AddToRoleAsync(managerUser, "Manager");
+            }
+
         }
 
     }

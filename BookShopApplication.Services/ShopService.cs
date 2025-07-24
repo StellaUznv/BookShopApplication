@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http.HttpResults;
@@ -19,12 +20,16 @@ namespace BookShopApplication.Services
         private readonly IShopRepository _shopRepository;
         private readonly IWishlistRepository _wishlistRepository;
         private readonly ICartRepository _cartRepository;
+        private readonly IBookInShopRepository _bookInShopRepository;
+        private readonly IBookRepository _bookRepository;
 
-        public ShopService(IShopRepository shopRepository, IWishlistRepository wishlistRepository, ICartRepository cartRepository)
+        public ShopService(IShopRepository shopRepository, IWishlistRepository wishlistRepository, ICartRepository cartRepository, IBookInShopRepository bookInShopRepository, IBookRepository bookRepository)
         {
             _shopRepository = shopRepository;
             _wishlistRepository = wishlistRepository;
             _cartRepository = cartRepository;
+            _bookInShopRepository = bookInShopRepository;
+            _bookRepository = bookRepository;
         }
 
 
@@ -193,11 +198,27 @@ namespace BookShopApplication.Services
 
         public async Task<bool> DeleteShopAsync(Guid shopId)
         {
-            var shop = await _shopRepository.FirstOrDefaultAsync(s => s.Id == shopId);
-            //track deletion time or deleted by user, set those here
+            
+                var shop = await _shopRepository
+                    .GetAllAttached()
+                    .Include(s => s.BooksInShop)
+                    .ThenInclude(bs => bs.Book)
+                    .FirstOrDefaultAsync(s => s.Id == shopId);
 
-            return await _shopRepository.SoftDeleteAsync(shop);
+                if (shop == null) return false;
+
+                foreach (var bs in shop.BooksInShop)
+                {
+                    await _bookRepository.SoftDeleteAsync(bs.Book);
+
+                    await _bookInShopRepository.SoftDeleteAsync(bs); // Mark the book as deleted
+                }
+
+            
+                return await _shopRepository.DeleteAsync(shop);
+
+
         }
 
-    }
+}
 }

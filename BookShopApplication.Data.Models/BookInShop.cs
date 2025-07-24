@@ -5,10 +5,11 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using BookShopApplication.Data.Models.Contracts;
 
 namespace BookShopApplication.Data.Models
 {
-    public class BookInShop
+    public class BookInShop : ISoftDeletable
     {
         [Required]
         public Guid BookId { get; set; }
@@ -20,6 +21,7 @@ namespace BookShopApplication.Data.Models
         [ForeignKey(nameof(ShopId))]
         [Required] 
         public Shop Shop { get; set; } = null!;
-        
+        [Required]
+        public bool IsDeleted { get; set; } = false;
     }
 }
