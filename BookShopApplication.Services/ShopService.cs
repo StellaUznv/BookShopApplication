@@ -219,5 +219,15 @@ namespace BookShopApplication.Services
 
         }
 
-}
+        public async Task<bool> HasUserAnyShopsAsync(Guid userId)
+        {
+            if (await _shopRepository.AnyAsync(s=>s.ManagerId == userId))
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+    }
 }

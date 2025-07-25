@@ -11,11 +11,13 @@ namespace BookShopApplication.Web.Controllers
     {
         private readonly IShopService _shopService;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly SignInManager<ApplicationUser> _signInManager;
 
-        public ShopController(IShopService service, UserManager<ApplicationUser> userManager)
+        public ShopController(IShopService service, UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager)
         {
             this._shopService = service;
             this._userManager = userManager;
+            this._signInManager = signInManager;
         }
 
         public async Task<IActionResult> Index()
@@ -54,6 +56,8 @@ namespace BookShopApplication.Web.Controllers
                 if (user != null && !await _userManager.IsInRoleAsync(user, "Manager"))
                 {
                     await _userManager.AddToRoleAsync(user, "Manager");
+
+                    await _signInManager.RefreshSignInAsync(user);
                 }
                 TempData["SuccessMessage"] = "Successfully created your shop!";
             }

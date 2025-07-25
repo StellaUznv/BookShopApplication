@@ -1,10 +1,12 @@
 ﻿using BookShopApplication.Data.Repository.Contracts;
 using BookShopApplication.Services.Contracts;
+using BookShopApplication.Web.ViewModels.Book;
 using BookShopApplication.Web.ViewModels.Shop;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
-using BookShopApplication.Web.ViewModels.Book;
+using BookShopApplication.Data.Models;
 
 namespace BookShopApplication.Web.Areas.Manager.Controllers
 {
@@ -13,10 +15,14 @@ namespace BookShopApplication.Web.Areas.Manager.Controllers
     public class ShopController : Controller
     {
         private readonly IShopService _shopService;
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly SignInManager<ApplicationUser> _signInManager;
 
-        public ShopController(IShopService service)
+        public ShopController(IShopService service, SignInManager<ApplicationUser> signInManager, UserManager<ApplicationUser> userManager)
         {
-            this._shopService= service;
+            this._shopService = service;
+            this._signInManager = signInManager;
+            this._userManager = userManager;
         }
 
         [HttpGet]
@@ -69,6 +75,7 @@ namespace BookShopApplication.Web.Areas.Manager.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(Guid id)
         {
+            var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
             var success = await _shopService.DeleteShopAsync(id);
 
             if (!success)
@@ -77,8 +84,29 @@ namespace BookShopApplication.Web.Areas.Manager.Controllers
                 return RedirectToAction("ManagedShops");
             }
 
+            bool hasRemainingShops = await _shopService.HasUserAnyShopsAsync(userId);
+
+            if (!hasRemainingShops)
+            {
+                var user = await _userManager.FindByIdAsync(userId.ToString());
+                if (user != null && await _userManager.IsInRoleAsync(user, "Manager"))
+                {
+                    await _userManager.RemoveFromRoleAsync(user, "Manager");
+
+                    // ✅ Refresh authentication cookie
+                    await _signInManager.RefreshSignInAsync(user);
+
+                    TempData["Success"] = "Shop deleted successfully.";
+                    //todo: Fix redirect!!!
+                    return Redirect($"Shop/Index");
+                }
+            }
             TempData["Success"] = "Shop deleted successfully.";
+
             return RedirectToAction("ManagedShops");
+            
+
+            
         }
     }
 }
