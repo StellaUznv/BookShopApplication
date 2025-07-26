@@ -13,7 +13,7 @@ namespace BookShopApplication.Data.Configuration
     {
         public void Configure(EntityTypeBuilder<CartItem> builder)
         {
-            builder.HasQueryFilter(c => !c.IsPurchased);
+            builder.HasQueryFilter(c => !c.IsDeleted);
 
             builder.HasKey(c => c.Id);
 
@@ -31,8 +31,9 @@ namespace BookShopApplication.Data.Configuration
                 .IsRequired()
                 .HasDefaultValue(1);
 
-            builder.Property(c => c.IsPurchased)
-                .IsRequired();
+            builder.HasMany(c => c.PurchasedItemByUsers)
+                .WithOne(pi => pi.CartItem)
+                .HasForeignKey(pi => pi.CartItemId);
         }
     }
 }

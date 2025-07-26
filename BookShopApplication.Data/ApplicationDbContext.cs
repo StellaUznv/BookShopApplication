@@ -19,6 +19,7 @@ namespace BookShopApplication.Data
         public DbSet<BookInShop> BookInShops { get; set; } = null!;
         public DbSet<WishlistItem> WishlistItems { get; set; } = null!;
         public DbSet<CartItem> CartItems { get; set; } = null!;
+        public DbSet<PurchaseItemUser> PurchaseItems { get; set; } = null!;
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

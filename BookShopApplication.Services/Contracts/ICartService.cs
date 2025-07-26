@@ -18,5 +18,7 @@ namespace BookShopApplication.Services.Contracts
         public Task<bool> RemoveFromCartAsync(Guid userId, Guid itemId);
 
         public  Task<bool> MoveToWishlistByIdAsync(Guid itemId);
+
+        public Task<bool> PurchaseBooksAsync(ICollection<CartItemViewModel> books);
     }
 }

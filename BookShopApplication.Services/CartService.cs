@@ -86,7 +86,6 @@ namespace BookShopApplication.Services
                 UserId = userId,
                 BookId = bookId,
                 Quantity = 1,
-                IsPurchased = false
             };
 
            return await _cartRepository.AddAsync(cartItem); // Calls SaveChangesAsync.
@@ -153,6 +152,12 @@ namespace BookShopApplication.Services
             return isAdded && isRemoved;
 
         }
+
+        public Task<bool> PurchaseBooksAsync(ICollection<CartItemViewModel> books)
+        {
+            throw new NotImplementedException();
+        }
+
 
         // Private Helping methods...
         private static async Task<CartItem?> GetCartItemByIdsAsync(Guid userId, Guid itemId, ICartRepository cartRepository)

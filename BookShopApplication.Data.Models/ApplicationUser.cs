@@ -25,5 +25,8 @@ namespace BookShopApplication.Data.Models
         [Comment("User's managed shops")] 
         public ICollection<Shop> ManagedShops { get; set; } = new List<Shop>();
 
+        [Comment("A collection of purchased CartItems")]
+        public ICollection<PurchaseItemUser> PurchasedItemsByUser { get; set; } = new List<PurchaseItemUser>();
+
     }
 }

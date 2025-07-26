@@ -20,6 +20,10 @@ namespace BookShopApplication.Data.Configuration
 
             builder.Property(u => u.LastName)
                 .HasMaxLength(LastNameMaxLength);
+            builder.HasMany(u => u.PurchasedItemsByUser)
+                .WithOne(pi=> pi.User)
+                .HasForeignKey(pi => pi.UserId);
+                
 
             var hasher = new PasswordHasher<ApplicationUser>();
             var managerUser = new ApplicationUser

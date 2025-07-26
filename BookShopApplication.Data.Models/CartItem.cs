@@ -29,9 +29,8 @@ namespace BookShopApplication.Data.Models
 
         [Comment("Number of the same items to buy")]
         public int Quantity { get; set; } = 1;
-
-        [Comment("Tells if it's bought or not")]
-        public bool IsPurchased { get; set; } = false;
+        [Comment("A collection of users who bought the item")]
+        public ICollection<PurchaseItemUser> PurchasedItemByUsers { get; set; } = new List<PurchaseItemUser>();
         [Comment("Tells if it's deleted or not")]
         public bool IsDeleted { get; set; }
     }
