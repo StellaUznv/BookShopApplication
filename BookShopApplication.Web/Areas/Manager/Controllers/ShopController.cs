@@ -98,7 +98,8 @@ namespace BookShopApplication.Web.Areas.Manager.Controllers
 
                     TempData["Success"] = "Shop deleted successfully.";
                     //todo: Fix redirect!!!
-                    return Redirect($"Shop/Index");
+                    return RedirectToAction("Index", "Shop", new { area = "" });
+
                 }
             }
             TempData["Success"] = "Shop deleted successfully.";
