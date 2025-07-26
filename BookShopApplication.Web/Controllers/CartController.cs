@@ -1,6 +1,7 @@
 ﻿using BookShopApplication.Services.Contracts;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
+using BookShopApplication.Web.ViewModels.Cart;
 
 namespace BookShopApplication.Web.Controllers
 {
@@ -120,5 +121,29 @@ namespace BookShopApplication.Web.Controllers
             // Fallback in case referrer is missing
             return RedirectToAction("Index", "Book");
         }
+
+        [HttpPost]
+        public async Task<IActionResult> Purchase(ICollection<CartItemViewModel> models)
+        {
+            var isSuccessful = await _service.PurchaseBooksAsync(models);
+
+            if (isSuccessful)
+            {
+                TempData["SuccessMessage"] = "Successfully purchased items in your cart!";
+            }
+            else
+            {
+                TempData["ErrorMessage"] = "An Error occured while attempting to purchase the items!";
+            }
+
+            var referer = Request.Headers["Referer"].ToString();
+            if (!string.IsNullOrWhiteSpace(referer))
+            {
+                return Redirect(referer);
+            }
+            // Fallback in case referrer is missing
+            return RedirectToAction("Index", "Book");
+        }
+
     }
 }

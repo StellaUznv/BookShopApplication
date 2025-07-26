@@ -16,11 +16,13 @@ namespace BookShopApplication.Services
     {
         private readonly ICartRepository _cartRepository;
         private readonly IWishlistRepository _wishlistRepository;
+        private readonly IPurchaseItemUserRepository _purchaseItemUserRepository;
 
-        public CartService(ICartRepository repository, IWishlistRepository wishlistRepository)
+        public CartService(ICartRepository repository, IWishlistRepository wishlistRepository,IPurchaseItemUserRepository purchaseItemUserRepository)
         {
             this._cartRepository = repository;
             this._wishlistRepository = wishlistRepository;
+            this._purchaseItemUserRepository = purchaseItemUserRepository;
         }
 
 
@@ -153,9 +155,35 @@ namespace BookShopApplication.Services
 
         }
 
-        public Task<bool> PurchaseBooksAsync(ICollection<CartItemViewModel> books)
+        public async Task<bool> PurchaseBooksAsync(ICollection<CartItemViewModel> books)
         {
-            throw new NotImplementedException();
+            var itemsToPurchase = books.Select(b => new PurchaseItemUser
+            {
+                CartItemId = b.Id,
+                UserId = b.UserId
+            }).ToArray();
+
+            bool removedFromCart = false;
+            bool addedFromCart = false;
+            foreach (var item in books)
+            {
+                var cartItem = await _cartRepository.GetByIdAsync(item.Id);
+                if (cartItem != null)
+                {
+                    removedFromCart = await _cartRepository.SoftDeleteAsync(cartItem);
+
+                    if (!removedFromCart)
+                    {
+                        return false;
+                    }
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            addedFromCart = await _purchaseItemUserRepository.AddRangeAsync(itemsToPurchase);
+            return addedFromCart && removedFromCart;
         }
 
 

@@ -76,7 +76,7 @@
                         <h5 class="card-title">$@Model.Total.ToString("f2")</h5>
                         <p class="card-text text-muted">Proceed to checkout.</p>
                     </div>
-                    <a @* asp-controller="Shop" asp-action="ManagedShops"  *@ class="btn btn-primary mt-3 w-100">
+                    <a asp-controller="Cart" asp-action="Purchase" asp-route-models="@Model.Items" class="btn btn-primary mt-3 w-100">
                         Check out
                     </a>
                 </div>

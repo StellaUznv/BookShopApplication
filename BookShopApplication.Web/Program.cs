@@ -45,6 +45,7 @@ namespace BookShopApplication.Web
             builder.Services.AddScoped<ILocationRepository, LocationRepository>();
             builder.Services.AddScoped<IGenreRepository, GenreRepository>();
             builder.Services.AddScoped<IBookInShopRepository, BookInShopRepository>();
+            builder.Services.AddScoped<IPurchaseItemUserRepository, PurchaseItemUserRepository>();
 
             builder.Services.AddScoped<IBookService, BookService>();
             builder.Services.AddScoped<IWishlistService, WishlistService>();
