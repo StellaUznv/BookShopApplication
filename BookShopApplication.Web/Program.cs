@@ -67,6 +67,12 @@ namespace BookShopApplication.Web
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
+                //// Handles all exceptions
+                //app.UseExceptionHandler("/Error");
+
+                //// Handles non-matched routes (404s etc.)
+                //app.UseStatusCodePagesWithReExecute("/Error/{0}");
+
                 app.UseMigrationsEndPoint();
             }
             else
