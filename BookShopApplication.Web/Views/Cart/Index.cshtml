@@ -76,9 +76,19 @@
                         <h5 class="card-title">$@Model.Total.ToString("f2")</h5>
                         <p class="card-text text-muted">Proceed to checkout.</p>
                     </div>
-                    <a asp-controller="Cart" asp-action="Purchase" asp-route-models="@Model.Items" class="btn btn-primary mt-3 w-100">
-                        Check out
-                    </a>
+                    <form asp-controller="Cart" asp-action="Purchase" method="post">
+                        @{
+                            var index = 0;
+                        }
+
+                        @foreach (var item in Model.Items)
+                        {
+                            <input type="hidden" name="models[@index].Id" value="@item.Id" />
+                            <input type="hidden" name="models[@index].UserId" value="@item.UserId" />
+                            index++;
+                        }
+                        <button type="submit" class="btn btn-primary btn-sm">Check Out</button>
+                    </form>
                 </div>
             </div>
         </div>
