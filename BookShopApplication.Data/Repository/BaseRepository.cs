@@ -96,10 +96,10 @@ namespace BookShopApplication.Data.Repository
              return await this._context.SaveChangesAsync() > 0;
         }
 
-        public async Task AddRangeAsync(TEntity[] items)
+        public async Task<bool> AddRangeAsync(TEntity[] items)
         {
             await this.dbSet.AddRangeAsync(items);
-            await this._context.SaveChangesAsync();
+           return await this._context.SaveChangesAsync()>0;
         }
 
         public async Task<bool> DeleteAsync(TEntity entity)

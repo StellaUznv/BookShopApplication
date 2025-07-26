@@ -15,7 +15,7 @@ namespace BookShopApplication.Data.Repository.Contracts
         Task<TEntity?> FirstOrDefaultAsync(Expression<Func<TEntity, bool>> predicate);
         Task<IEnumerable<TEntity>> GetAllAsync();
         Task<bool> AddAsync(TEntity item);
-        Task AddRangeAsync(TEntity[] items);
+        Task<bool> AddRangeAsync(TEntity[] items);
         Task<bool> DeleteAsync(TEntity entity);
         Task<bool> UpdateAsync(TEntity item);
         Task SaveChangesAsync();
