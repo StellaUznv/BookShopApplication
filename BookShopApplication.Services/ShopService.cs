@@ -64,6 +64,39 @@ namespace BookShopApplication.Services
             return await _shopRepository.AddAsync(shop);
         }
 
+        public async Task<IEnumerable<ShopWithBooksViewModel>> GetAllShopsWithBooksAsync()
+        {
+            var shops = await _shopRepository.GetAllAttached()
+                .Include(s => s.Location)
+                .Include(s => s.BooksInShop)
+                .ThenInclude(bs => bs.Book)
+                .ThenInclude(b => b.Genre)
+                .ToListAsync();
+
+            var models = shops.Select(s => new ShopWithBooksViewModel
+            {
+                BooksInShop = s.BooksInShop.Select(bi => new BookViewModel
+                {
+                    Id = bi.BookId,
+                    Author = bi.Book.AuthorName,
+                    Genre = bi.Book.Genre.Name,
+                    ImagePath = bi.Book.ImagePath,
+                    Price = bi.Book.Price.ToString("f2"),
+                    Title = bi.Book.Title
+
+                }).ToList(),
+                Description = s.Description,
+                Name = s.Name,
+                Id = s.Id,
+                Latitude = s.Location.Latitude,
+                Longitude = s.Location.Longitude,
+                LocationAddress = s.Location.Address,
+                LocationCity = s.Location.CityName
+            }).ToList();
+
+            return models;
+        }
+
         public async Task<ShopWithBooksViewModel> DisplayShopAsync(Guid shopId, Guid? userId)
         {
             var shop = await _shopRepository.GetAllAttached()

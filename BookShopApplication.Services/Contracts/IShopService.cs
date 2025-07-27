@@ -27,6 +27,7 @@ namespace BookShopApplication.Services.Contracts
         public Task<bool> DeleteShopAsync(Guid shopId);
 
         public Task<bool> HasUserAnyShopsAsync(Guid userId);
+        public Task<IEnumerable<ShopWithBooksViewModel>> GetAllShopsWithBooksAsync();
 
     }
 }
