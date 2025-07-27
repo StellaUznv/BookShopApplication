@@ -13,10 +13,9 @@ namespace BookShopApplication.Data.Models
         {
         }
 
-        public ApplicationRole(string roleName) : base()
+        public ApplicationRole(string roleName) : base(roleName)
         {
             this.Name = roleName;
-            this.NormalizedName = roleName.ToUpperInvariant();
         }
     }
 }
