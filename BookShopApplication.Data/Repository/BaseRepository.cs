@@ -125,6 +125,11 @@ namespace BookShopApplication.Data.Repository
             return await this.UpdateAsync(entity);
         }
 
+        public async Task<int> GetCountAsync()
+        {
+            return await this.dbSet.CountAsync();
+        }
+
         public async Task<bool> AnyAsync(Expression<Func<TEntity, bool>> predicate)
         {
             return await dbSet.AnyAsync(predicate);
