@@ -1,0 +1,35 @@
+﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model List<BookShopApplication.Web.ViewModels.Role.RoleViewModel>
+@{
+    ViewData["Title"] = "Roles";
+}
+
+<div class="container py-5">
+    <h2 class="mb-4">Manage Roles</h2>
+    <a asp-action="Create" class="btn btn-success mb-3">Create Role</a>
+
+    <table class="table table-bordered table-hover">
+        <thead class="table-dark">
+            <tr>
+                <th>Role Name</th>
+                <th style="width: 180px">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var role in Model)
+            {
+                <tr>
+                    <td>@role.Name</td>
+                    <td>
+                        <div class="btn-group">
+                            <a asp-action="Edit" asp-route-id="@role.Id" class="btn btn-sm btn-warning">Edit</a>
+                            <form asp-action="Delete" asp-route-id="@role.Id" method="post" onsubmit="return confirm('Delete this role?');">
+                                <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
