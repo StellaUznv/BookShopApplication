@@ -1,0 +1,40 @@
+﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model BookShopApplication.Web.ViewModels.Role.RoleEditViewModel
+@{
+    ViewData["Title"] = "Edit Role";
+}
+
+<div class="container py-5">
+    <h2>Edit Role</h2>
+
+    <form asp-action="Edit" method="post">
+        <input type="hidden" asp-for="Id" />
+
+        <div class="mb-3">
+            <label asp-for="Name" class="form-label"></label>
+            <input asp-for="Name" class="form-control" />
+            <span asp-validation-for="Name" class="text-danger"></span>
+        </div>
+
+        <h5 class="mt-4">Assign Users to this Role</h5>
+        <div class="form-group">
+            @for (int i = 0; i < Model.Users.Count; i++)
+            {
+                <div class="form-check">
+                    <input asp-for="Users[i].IsAssigned" class="form-check-input" />
+                    <input type="hidden" asp-for="Users[i].UserId" />
+                    <input type="hidden" asp-for="Users[i].UserName" />
+                    <label class="form-check-label">@Model.Users[i].UserName</label>
+                </div>
+            }
+        </div>
+
+        <button type="submit" class="btn btn-primary mt-3">Save Changes</button>
+        <a asp-action="Index" class="btn btn-secondary mt-3">Cancel</a>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
+
