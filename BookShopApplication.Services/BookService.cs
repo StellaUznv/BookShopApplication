@@ -30,6 +30,10 @@ namespace BookShopApplication.Services
             this._bookInShopRepository = bookInShopRepository;
         }
 
+        public async Task<IEnumerable<BookViewModel>> DisplayAllBooksAsync()
+        {
+            return await GetAllBooksToDisplayAsyncAsNoTracking(_bookRepository);
+        }
 
         public async Task<IEnumerable<BookViewModel>> DisplayAllBooksAsync(Guid? userId)
         {
