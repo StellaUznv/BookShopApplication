@@ -1,0 +1,62 @@
+﻿@model BookShopApplication.Web.ViewModels.Admin.AdminDashboardViewModel
+@using Microsoft.AspNetCore.Mvc.TagHelpers;
+@{
+    ViewData["Title"] = "Admin Dashboard";
+}
+
+<div class="container py-5">
+    <h1 class="mb-4 text-center">Admin Dashboard</h1>
+
+    <div class="row g-4">
+        <div class="col-md-4">
+            <div class="card shadow border-0 h-100">
+                <div class="card-body d-flex flex-column">
+                    <h5 class="card-title">Manage Books</h5>
+                    <p class="card-text text-muted">Total: @Model.TotalBooks books</p>
+                    <a asp-area="Admin" asp-controller="Book" asp-action="Index" class="btn btn-outline-primary mt-auto">Go to Books</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card shadow border-0 h-100">
+                <div class="card-body d-flex flex-column">
+                    <h5 class="card-title">Manage Shops</h5>
+                    <p class="card-text text-muted">Total: @Model.TotalShops shops</p>
+                    <a asp-area="Admin" asp-controller="Shops" asp-action="Index" class="btn btn-outline-primary mt-auto">Go to Shops</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card shadow border-0 h-100">
+                <div class="card-body d-flex flex-column">
+                    <h5 class="card-title">Manage Roles</h5>
+                    <p class="card-text text-muted">Roles: @Model.TotalRoles</p>
+                    <a asp-area="Admin" asp-controller="Roles" asp-action="Index" class="btn btn-outline-primary mt-auto">Go to Roles</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card shadow border-0 h-100">
+                <div class="card-body d-flex flex-column">
+                    <h5 class="card-title">Manage Locations</h5>
+                    <p class="card-text text-muted">Total: @Model.TotalLocations</p>
+                    <a asp-area="Admin" asp-controller="Locations" asp-action="Index" class="btn btn-outline-primary mt-auto">Go to Locations</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card shadow border-0 h-100">
+                <div class="card-body d-flex flex-column">
+                    <h5 class="card-title">Manage Genres</h5>
+                    <p class="card-text text-muted">Total: @Model.TotalGenres</p>
+                    <a asp-area="Admin" asp-controller="Genres" asp-action="Index" class="btn btn-outline-primary mt-auto">Go to Genres</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
