@@ -40,5 +40,39 @@ namespace BookShopApplication.Web.Areas.Admin.Controllers
             await _locationService.CreateLocationAsync(model);
             return RedirectToAction("Index", "Location", new { area = "Admin" });
         }
+        [HttpGet]
+        public async Task<IActionResult> Edit(Guid id)
+        {
+            //if (!TempData.ContainsKey("LocationId"))
+            //{
+            //    return BadRequest("Missing Location ID.");
+            //}
+
+            //var locationId = Guid.Parse(TempData["LocationId"].ToString());
+
+            var model = await _locationService.GetLocationToEditAsync(id);
+            return View(model);
+
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(EditLocationViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            var success = await _locationService.EditLocationAsync(model);
+
+            if (!success)
+            {
+                ModelState.AddModelError("", "Failed to update the shop.");
+                return View(model);
+            }
+
+            return RedirectToAction("Index", "Location", new { area = "Admin" });
+        }
     }
 }
