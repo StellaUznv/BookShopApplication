@@ -14,5 +14,6 @@ namespace BookShopApplication.Services.Contracts
         public Task<EditLocationViewModel> GetLocationToEditAsync(Guid locationId);
 
         public Task<bool> EditLocationAsync(EditLocationViewModel model);
+        public Task<IEnumerable<LocationViewModel>> GetAllLocationsAsync();
     }
 }

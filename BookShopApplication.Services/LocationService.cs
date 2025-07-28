@@ -73,5 +73,23 @@ namespace BookShopApplication.Services
 
             return await _locationRepository.UpdateAsync(location);
         }
+
+        public async Task<IEnumerable<LocationViewModel>> GetAllLocationsAsync()
+        {
+            var locations = await _locationRepository.GetAllAsync();
+
+            var models = locations.Select(l => new LocationViewModel
+            {
+                CityName = l.CityName,
+                CountryName = l.CountryName,
+                ZipCode = l.ZipCode,
+                Latitude = l.Latitude,
+                Longitude = l.Longitude,
+                Address = l.Address,
+                Id = l.Id
+            }).ToList();
+
+            return models;
+        }
     }
 }
