@@ -38,7 +38,7 @@ namespace BookShopApplication.Web.Areas.Admin.Controllers
                 return View(model);
             }
             await _locationService.CreateLocationAsync(model);
-            return RedirectToAction("Index", "Location", new { area = "" });
+            return RedirectToAction("Index", "Location", new { area = "Admin" });
         }
     }
 }

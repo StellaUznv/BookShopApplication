@@ -1,148 +1,160 @@
 ﻿@model BookShopApplication.Web.ViewModels.Location.CreateLocationViewModel
+
 @{
     ViewData["Title"] = "Create Location";
 }
 
-<div class="container py-4">
-    <h2>@ViewData["Title"]</h2>
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8 col-md-10 col-sm-12">
+            <div class="bg-light shadow rounded p-4">
+                <h2 class="mb-4 text-center"><i class="bi bi-geo-alt-fill"></i> Create a New Location</h2>
 
-    <form asp-action="Create" method="post">
-        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <form asp-action="Create" method="post" class="needs-validation" novalidate>
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label asp-for="CountryName" class="form-label">Country</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-globe-europe-africa"></i></span>
+                                <input asp-for="CountryName" class="form-control" autocomplete="country" />
+                            </div>
+                            <span asp-validation-for="CountryName" class="text-danger small"></span>
+                        </div>
 
-        <div class="row">
-            <div class="col-md-6">
-                <div class="mb-3">
-                    <label asp-for="CountryName" class="form-label"></label>
-                    <input asp-for="CountryName" class="form-control" id="CountryName" />
-                    <span asp-validation-for="CountryName" class="text-danger"></span>
-                </div>
-                <div class="mb-3">
-                    <label asp-for="CityName" class="form-label"></label>
-                    <input asp-for="CityName" class="form-control" id="CityName" />
-                    <span asp-validation-for="CityName" class="text-danger"></span>
-                </div>
-                <div class="mb-3">
-                    <label asp-for="Address" class="form-label"></label>
-                    <input asp-for="Address" class="form-control" id="Address" />
-                    <span asp-validation-for="Address" class="text-danger"></span>
-                </div>
-                <div class="mb-3">
-                    <label asp-for="ZipCode" class="form-label"></label>
-                    <input asp-for="ZipCode" class="form-control" id="ZipCode" />
-                    <span asp-validation-for="ZipCode" class="text-danger"></span>
-                </div>
-                <div class="mb-3">
-                    <label asp-for="Latitude" class="form-label"></label>
-                    <input asp-for="Latitude" class="form-control" id="Latitude" />
-                    <span asp-validation-for="Latitude" class="text-danger"></span>
-                </div>
-                <div class="mb-3">
-                    <label asp-for="Longitude" class="form-label"></label>
-                    <input asp-for="Longitude" class="form-control" id="Longitude" />
-                    <span asp-validation-for="Longitude" class="text-danger"></span>
-                </div>
+                        <div class="col-md-6">
+                            <label asp-for="CityName" class="form-label">City</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-building"></i></span>
+                                <input asp-for="CityName" class="form-control" autocomplete="address-level2" />
+                            </div>
+                            <span asp-validation-for="CityName" class="text-danger small"></span>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label asp-for="Address" class="form-label">Street Address</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-signpost"></i></span>
+                                <input asp-for="Address" class="form-control" autocomplete="street-address" />
+                            </div>
+                            <span asp-validation-for="Address" class="text-danger small"></span>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label asp-for="ZipCode" class="form-label">Zip Code</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-mailbox"></i></span>
+                                <input asp-for="ZipCode" class="form-control" autocomplete="postal-code" />
+                            </div>
+                            <span asp-validation-for="ZipCode" class="text-danger small"></span>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label asp-for="Latitude" class="form-label">Latitude</label>
+                            <input asp-for="Latitude" class="form-control" type="number" step="any" readonly />
+                            <span asp-validation-for="Latitude" class="text-danger small"></span>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label asp-for="Longitude" class="form-label">Longitude</label>
+                            <input asp-for="Longitude" class="form-control" type="number" step="any" readonly />
+                            <span asp-validation-for="Longitude" class="text-danger small"></span>
+                        </div>
+
+                        <div class="col-12">
+                            <label class="form-label">Select or Search Location on Map</label>
+                            <div id="map" class="rounded border" style="height: 400px;"></div>
+                        </div>
+
+                        <div class="col-12 mt-3">
+                            <button type="submit" class="btn btn-primary w-100">
+                                <i class="bi bi-check-circle-fill"></i> Save Location
+                            </button>
+                        </div>
+                    </div>
+                </form>
             </div>
-
-            <div class="map-wrapper" style="max-width: 100%; overflow: hidden;">
-                <div id="map"></div>
-            </div>
-
         </div>
-
-        <button type="submit" class="btn btn-primary mt-3">Save</button>
-        <a asp-action="Index" class="btn btn-secondary mt-3">Back</a>
-    </form>
+    </div>
 </div>
 
 @section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css" />
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
     <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
-    <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css" />
 
     <script>
-        const latInput = document.getElementById("Latitude");
-        const lngInput = document.getElementById("Longitude");
-
-        const defaultLat = parseFloat(latInput.value) || 42.6975;
-        const defaultLng = parseFloat(lngInput.value) || 23.3242;
-
-        const map = L.map('map').setView([defaultLat, defaultLng], 13);
-        const marker = L.marker([defaultLat, defaultLng], { draggable: true }).addTo(map);
+        var defaultLat = 42.7339;
+        var defaultLng = 25.4858;
+        var map = L.map('map').setView([defaultLat, defaultLng], 7);
 
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '© OpenStreetMap contributors'
+            maxZoom: 19,
         }).addTo(map);
 
-        L.Control.geocoder({
-            defaultMarkGeocode: false
-        })
-        .on('markgeocode', function(e) {
-            const center = e.geocode.center;
-            map.setView(center, 16);
-            marker.setLatLng(center);
-            latInput.value = center.lat.toFixed(6);
-            lngInput.value = center.lng.toFixed(6);
-            reverseGeocode(center.lat, center.lng);
-        })
-        .addTo(map);
+        var marker;
 
-        marker.on('dragend', async function () {
-            const position = marker.getLatLng();
-            latInput.value = position.lat.toFixed(6);
-            lngInput.value = position.lng.toFixed(6);
-            await reverseGeocode(position.lat, position.lng);
-        });
-
-        async function reverseGeocode(lat, lon) {
-            const url = `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json`;
-            try {
-                const response = await fetch(url, { headers: { 'Accept-Language': 'en' } });
-                const data = await response.json();
-
-                if (data && data.address) {
-                    document.getElementById("Address").value = data.display_name || '';
-                    document.getElementById("CityName").value = data.address.city || data.address.town || data.address.village || '';
-                    document.getElementById("CountryName").value = data.address.country || '';
-                    document.getElementById("ZipCode").value = data.address.postcode || '';
-                }
-            } catch (error) {
-                console.error("Reverse geocoding failed:", error);
+        async function reverseGeocode(lat, lng) {
+            const url = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`;
+            const response = await fetch(url);
+            if (!response.ok) return;
+            const data = await response.json();
+            if (data && data.address) {
+                const addr = data.address;
+                document.getElementById("Address").value = addr.road || addr.pedestrian || addr.neighbourhood || addr.building || "";
+                document.getElementById("CityName").value = addr.city || addr.town || addr.village || addr.hamlet || "";
+                document.getElementById("CountryName").value = addr.country || "";
+                document.getElementById("ZipCode").value = addr.postcode || "";
+                document.getElementById("Latitude").value = lat;
+                document.getElementById("Longitude").value = lng;
             }
         }
 
-        // Initial reverse geocode if valid coordinates
-        if (!isNaN(defaultLat) && !isNaN(defaultLng)) {
-            reverseGeocode(defaultLat, defaultLng);
-        }
+        map.on('click', function (e) {
+            var lat = e.latlng.lat.toFixed(6);
+            var lng = e.latlng.lng.toFixed(6);
+
+            if (marker) {
+                marker.setLatLng(e.latlng);
+            } else {
+                marker = L.marker(e.latlng, { draggable: true }).addTo(map);
+                marker.on('dragend', function (event) {
+                    var pos = event.target.getLatLng();
+                    reverseGeocode(pos.lat.toFixed(6), pos.lng.toFixed(6));
+                });
+            }
+
+            reverseGeocode(lat, lng);
+        });
+
+        var geocoder = L.Control.geocoder({
+            defaultMarkGeocode: false,
+            placeholder: "Search for address..."
+        })
+        .on('markgeocode', function(e) {
+            const latlng = e.geocode.center;
+
+            if (marker) {
+                marker.setLatLng(latlng);
+            } else {
+                marker = L.marker(latlng, { draggable: true }).addTo(map);
+                marker.on('dragend', function(event) {
+                    var pos = event.target.getLatLng();
+                    reverseGeocode(pos.lat.toFixed(6), pos.lng.toFixed(6));
+                });
+            }
+
+            map.setView(latlng, 16);
+            reverseGeocode(latlng.lat.toFixed(6), latlng.lng.toFixed(6));
+        })
+        .addTo(map);
+
+        // Ensure all inputs have IDs for JS targeting
+        ["CountryName", "CityName", "Address", "ZipCode", "Latitude", "Longitude"].forEach(name => {
+            const input = document.getElementsByName(name)[0];
+            if (input) input.id = name;
+        });
     </script>
 }
-@section Styles {
-    <style>
-        html, body {
-            height: auto !important;
-            overflow: visible !important;
-        }
-
-        .leaflet-container {
-            height: 100% !important;
-            max-height: 400px;
-            width: 100% !important;
-            max-width: 100%;
-        }
-
-        .map-wrapper {
-            width: 100%;
-            height: 400px;
-            max-width: 100%;
-            overflow: hidden;
-        }
-
-        #map {
-            height: 100% !important;
-            width: 100% !important;
-        }
-
-    </style>
-}
-
-
