@@ -15,5 +15,8 @@ namespace BookShopApplication.Services.Contracts
         public Task<IEnumerable<Genre>> GetAllGenresAsync();
 
         public Task<bool> AddNewGenreAsync(CreateGenreViewModel model);
+
+        public Task<EditGenreViewModel> GetGenreToEditAsync(Guid genreId);
+        public Task<bool> EditGenreAsync(EditGenreViewModel model);
     }
 }

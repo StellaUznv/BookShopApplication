@@ -65,5 +65,30 @@ namespace BookShopApplication.Services
             return await _genreRepository.AddAsync(genreToAdd);
             
         }
+
+        public async Task<EditGenreViewModel> GetGenreToEditAsync(Guid genreId)
+        {
+            var genre = await _genreRepository.GetByIdAsync(genreId);
+
+            var model = new EditGenreViewModel
+            {
+                Id = genreId,
+                Description = genre.Description,
+                Name = genre.Name
+            };
+
+            return model;
+        }
+
+        public async Task<bool> EditGenreAsync(EditGenreViewModel model)
+        {
+            var genre = new Genre
+            {
+                Id = model.Id,
+                Description = model.Description,
+                Name = model.Name,
+            };
+           return  await _genreRepository.UpdateAsync(genre);
+        }
     }
 }
