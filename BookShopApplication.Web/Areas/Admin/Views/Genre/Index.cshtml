@@ -1,0 +1,56 @@
+﻿@model IEnumerable<BookShopApplication.Web.ViewModels.Genre.GenreViewModel>
+
+@{
+    ViewData["Title"] = "Genres";
+}
+
+<div class="container mt-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="text-primary"><i class="bi bi-tags"></i> Genre List</h2>
+        <a asp-action="Create" class="btn btn-success">
+            <i class="bi bi-plus-circle-fill"></i> Add Genre
+        </a>
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info">
+            No genres found. You can add one by clicking the "Add Genre" button.
+        </div>
+    }
+    else
+    {
+        <table class="table table-bordered table-striped table-hover">
+            <thead class="table-dark">
+                <tr>
+                    <th>Name</th>
+                    <th>Description</th>
+                    <th style="width: 180px;">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var genre in Model)
+                {
+                    <tr>
+                        <td>@genre.Name</td>
+                        <td>@genre.Description</td>
+                        <td>
+                            <div class="btn-group" role="group">
+                                <a asp-action="Edit" asp-route-id="@genre.Id" class="btn btn-sm btn-warning">
+                                    <i class="bi bi-pencil-square"></i> Edit
+                                </a>
+                                <a asp-action="Details" asp-route-id="@genre.Id" class="btn btn-sm btn-info">
+                                    <i class="bi bi-info-circle"></i> Details
+                                </a>
+                                <a asp-action="Delete" asp-route-id="@genre.Id" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure you want to delete this genre?');">
+                                    <i class="bi bi-trash"></i> Delete
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+</div>
+
