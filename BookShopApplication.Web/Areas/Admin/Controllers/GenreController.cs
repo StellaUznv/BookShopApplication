@@ -50,5 +50,33 @@ namespace BookShopApplication.Web.Areas.Admin.Controllers
             return RedirectToAction("Index", "Genre", new { area = "Admin" });
 
         }
+
+        [HttpGet]
+        public async Task<IActionResult> Edit(Guid id)
+        {
+            var model = await _genreService.GetGenreToEditAsync(id);
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Edit(EditGenreViewModel model)
+        {
+            bool isUpdated = false;
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            isUpdated = await _genreService.EditGenreAsync(model);
+            if(!isUpdated)
+            {
+                TempData["ErrorMessage"] = "Something went wrong!";
+                return View(model);
+            }
+
+            TempData["SuccessMessage"] = "Successfully updated genre!";
+            return RedirectToAction("Index", "Genre", new { area = "Admin" });
+
+        }
     }
 }
