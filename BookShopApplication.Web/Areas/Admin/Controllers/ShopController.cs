@@ -14,11 +14,18 @@ namespace BookShopApplication.Web.Areas.Admin.Controllers
         {
             _shopService = shopService;
         }
-
+        [HttpGet]
         public async Task<IActionResult> Index()
         {
             var models = await _shopService.GetAllShopsWithBooksAsync();
             return View(models);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Details(Guid id)
+        {
+            var shop = await _shopService.DisplayShopAsync(id,null);
+            return View(shop);
         }
     }
 }
