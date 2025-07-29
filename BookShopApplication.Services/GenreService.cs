@@ -14,10 +14,12 @@ namespace BookShopApplication.Services
     public class GenreService : IGenreService
     {
         private readonly IGenreRepository _genreRepository;
+        private readonly IBookRepository _bookRepository;
 
-        public GenreService(IGenreRepository genreRepository)
+        public GenreService(IGenreRepository genreRepository, IBookRepository bookRepository)
         {
             _genreRepository = genreRepository;
+            _bookRepository = bookRepository;
         }
 
         public async Task<IEnumerable<GenreViewModel>> GetGenreListAsync()
@@ -89,6 +91,18 @@ namespace BookShopApplication.Services
                 Name = model.Name,
             };
            return  await _genreRepository.UpdateAsync(genre);
+        }
+
+        public async Task<bool> DeleteGenreAsync(Guid genreId)
+        {
+            var genre = await _genreRepository.GetByIdAsync(genreId);
+
+            if (await _bookRepository.AnyAsync(b=>b.GenreId == genreId))
+            {
+                return false;
+            }
+
+            return await _genreRepository.SoftDeleteAsync(genre);
         }
     }
 }

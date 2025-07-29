@@ -78,5 +78,18 @@ namespace BookShopApplication.Web.Areas.Admin.Controllers
             return RedirectToAction("Index", "Genre", new { area = "Admin" });
 
         }
+
+        [HttpPost]
+        public async Task<IActionResult> Delete(Guid id)
+        {
+            bool isDeleted = await _genreService.DeleteGenreAsync(id);
+            if (!isDeleted)
+            {
+                TempData["ErrorMessage"] = "The Genre is used by a book!";
+                return RedirectToAction("Index", "Genre", new { area = "Admin" });
+            }
+            TempData["SuccessMessage"] = "Successfully deleted genre!";
+            return RedirectToAction("Index", "Genre", new { area = "Admin" });
+        }
     }
 }

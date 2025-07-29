@@ -18,5 +18,6 @@ namespace BookShopApplication.Services.Contracts
 
         public Task<EditGenreViewModel> GetGenreToEditAsync(Guid genreId);
         public Task<bool> EditGenreAsync(EditGenreViewModel model);
+        public Task<bool> DeleteGenreAsync(Guid genreId);
     }
 }
