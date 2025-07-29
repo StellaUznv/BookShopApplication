@@ -22,14 +22,17 @@ namespace BookShopApplication.Services
         private readonly ICartRepository _cartRepository;
         private readonly IBookInShopRepository _bookInShopRepository;
         private readonly IBookRepository _bookRepository;
+        private readonly ILocationRepository _locationRepository;
 
-        public ShopService(IShopRepository shopRepository, IWishlistRepository wishlistRepository, ICartRepository cartRepository, IBookInShopRepository bookInShopRepository, IBookRepository bookRepository)
+        public ShopService(IShopRepository shopRepository, IWishlistRepository wishlistRepository, ICartRepository cartRepository, 
+            IBookInShopRepository bookInShopRepository, IBookRepository bookRepository, ILocationRepository locationRepository)
         {
             _shopRepository = shopRepository;
             _wishlistRepository = wishlistRepository;
             _cartRepository = cartRepository;
             _bookInShopRepository = bookInShopRepository;
             _bookRepository = bookRepository;
+            _locationRepository = locationRepository;
         }
 
 
@@ -233,6 +236,7 @@ namespace BookShopApplication.Services
             
                 var shop = await _shopRepository
                     .GetAllAttached()
+                    .Include(s=>s.Location)
                     .Include(s => s.BooksInShop)
                     .ThenInclude(bs => bs.Book)
                     .FirstOrDefaultAsync(s => s.Id == shopId);
@@ -247,14 +251,14 @@ namespace BookShopApplication.Services
                 }
 
             
-                return await _shopRepository.DeleteAsync(shop);
+                return await _locationRepository.SoftDeleteAsync(shop.Location) && await _shopRepository.SoftDeleteAsync(shop);
 
 
         }
 
         public async Task<bool> HasUserAnyShopsAsync(Guid userId)
         {
-            if (await _shopRepository.AnyAsync(s=>s.ManagerId == userId))
+            if (await _shopRepository.AnyAsync(s=>s.ManagerId == userId && !s.IsDeleted))
             {
                 return true;
             }
