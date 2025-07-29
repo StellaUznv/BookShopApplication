@@ -68,6 +68,37 @@ namespace BookShopApplication.Services
             return await _shopRepository.AddAsync(shop);
         }
 
+        public async Task<bool> CreateShopAsAdminAsync(CreateShopAsAdminViewModel model)
+        {
+            var location = new Location
+            {
+                Id = model.Location.Id,
+                Address = model.Location.Address,
+                CityName = model.Location.CityName,
+                CountryName = model.Location.CountryName,
+                Latitude = model.Location.Latitude,
+                Longitude = model.Location.Longitude,
+                ZipCode = model.Location.ZipCode
+            };
+            bool locationCreated = await _locationRepository.AddAsync(location);
+
+            if (locationCreated)
+            {
+                var shop = new Shop
+                {
+                    Name = model.Name,
+                    Description = model.Description,
+                    LocationId = location.Id,
+                    ManagerId = model.SelectedManagerId
+                };
+                
+                var shopCreated = await _shopRepository.AddAsync(shop);
+                return shopCreated;
+            }
+
+            return false;
+        }
+
         public async Task<IEnumerable<ShopWithBooksViewModel>> GetAllShopsWithBooksAsync()
         {
             var shops = await _shopRepository.GetAllAttached()

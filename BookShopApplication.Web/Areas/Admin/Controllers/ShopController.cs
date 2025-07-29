@@ -79,24 +79,8 @@ namespace BookShopApplication.Web.Areas.Admin.Controllers
                 return View(model);
             }
 
-            bool locationCreated = false;
-            
-            locationCreated = await _locationService.CreateLocationAsync(model.Location);
+            var shopCreated = await _shopService.CreateShopAsAdminAsync(model);
 
-            var shopModel = new CreateShopViewModel
-            {
-                Description = model.Description,
-                Name = model.Name
-            };
-
-            bool shopCreated = false;
-
-            if (locationCreated)
-            {
-                shopCreated = await _shopService.CreateShopAsync(shopModel, model.SelectedManagerId, model.Location.Id);
-            }
-
-            // Step 3: Assign Manager
             if (shopCreated)
             {
                 var user = await _userManager.FindByIdAsync(model.SelectedManagerId.ToString());
