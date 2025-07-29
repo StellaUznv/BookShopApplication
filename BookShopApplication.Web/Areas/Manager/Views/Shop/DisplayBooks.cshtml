@@ -6,6 +6,14 @@
 <h2 class="text-center mb-4">Manage Books in Shop</h2>
 
 <a asp-controller="Book" asp-action="Create" asp-route-shopId="@Model.ShopId" class="btn btn-success mb-3">Add Book</a>
+@if (!Model.Books.Any())
+{
+    <div class="alert alert-info text-center">
+        No books available.
+    </div>
+}
+else
+{
 
 <table class="table table-bordered table-hover rounded-3">
     <thead>
@@ -38,4 +46,4 @@
     }
     </tbody>
 </table>
-
+}
