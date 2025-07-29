@@ -20,7 +20,11 @@ namespace BookShopApplication.Services.Contracts
 
         public Task<EditShopViewModel> GetShopToEditAsync(Guid shopId);
 
+        public Task<EditShopAsAdminViewModel> GetShopToEditAsAdminAsync(Guid id);
+
         public Task<bool> EditShopAsync(EditShopViewModel model);
+
+        public Task<bool> EditShopAsAdminAsync(EditShopAsAdminViewModel model);
 
         public Task<ShopBooksViewModel> GetBooksByShopIdAsync(Guid shopId);
 

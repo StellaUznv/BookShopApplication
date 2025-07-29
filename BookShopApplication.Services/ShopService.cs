@@ -11,6 +11,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using BookShopApplication.Web.ViewModels.Location;
 using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace BookShopApplication.Services
@@ -163,7 +164,7 @@ namespace BookShopApplication.Services
 
         public async Task<EditShopViewModel> GetShopToEditAsync(Guid id)
         {
-            var shop = await _shopRepository.FirstOrDefaultAsync(s => s.Id == id);
+            var shop = await _shopRepository.GetByIdAsync(id);
 
             var model = new EditShopViewModel
             {
@@ -176,6 +177,31 @@ namespace BookShopApplication.Services
             return model;
         }
 
+        public async Task<EditShopAsAdminViewModel> GetShopToEditAsAdminAsync(Guid id)
+        {
+            var shop = await _shopRepository.GetByIdAsync(id);
+            var location = await _locationRepository.GetByIdAsync(shop.LocationId);
+
+            var model = new EditShopAsAdminViewModel
+            {
+                Name = shop.Name,
+                Id = shop.Id,
+                Description = shop.Description,
+                SelectedManagerId = shop.ManagerId,
+                Location = new EditLocationViewModel
+                {
+                    Address = location.Address,
+                    CityName = location.CityName,
+                    CountryName = location.CountryName,
+                    Id = location.Id,
+                    Latitude = location.Latitude,
+                    Longitude = location.Longitude,
+                    ZipCode = location.ZipCode
+                }
+            };
+            return model;
+        }
+
         public async Task<bool> EditShopAsync(EditShopViewModel model)
         {
             var shop = await _shopRepository.FirstOrDefaultAsync(s => s.Id == model.Id);
@@ -184,6 +210,30 @@ namespace BookShopApplication.Services
             shop.Name = model.Name;
 
             return await _shopRepository.UpdateAsync(shop);
+        }
+
+        public async Task<bool> EditShopAsAdminAsync(EditShopAsAdminViewModel model)
+        {
+            var location = await _locationRepository.GetByIdAsync(model.Location.Id);
+            location.Address = model.Location.Address;
+            location.CityName = model.Location.CityName;
+            location.Latitude = model.Location.Latitude;
+            location.Longitude = model.Location.Longitude;
+            location.ZipCode = model.Location.ZipCode;
+            location.CountryName = model.Location.CountryName;
+
+            bool locationUpdated = await _locationRepository.UpdateAsync(location);
+
+            var shop = await _shopRepository.GetByIdAsync(model.Id);
+            shop.Description = model.Description;
+            shop.Name = model.Name;
+            shop.ManagerId = model.SelectedManagerId;
+            shop.LocationId = location.Id;
+
+            bool shopUpdated = await _shopRepository.UpdateAsync(shop);
+
+            return locationUpdated && shopUpdated;
+
         }
 
         public async Task<ShopBooksViewModel> GetBooksByShopIdAsync(Guid shopId)
