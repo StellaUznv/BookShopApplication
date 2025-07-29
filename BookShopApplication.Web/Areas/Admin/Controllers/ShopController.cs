@@ -118,5 +118,59 @@ namespace BookShopApplication.Web.Areas.Admin.Controllers
 
         }
 
+        [HttpGet]
+        public async Task<IActionResult> Edit(Guid id)
+        {
+            var model = await _shopService.GetShopToEditAsAdminAsync(id);
+            var managers = await _userManager.Users.Select(u => new
+            {
+                Id = u.Id,
+                Email = u.Email
+            }).ToListAsync();
+            model.Managers = managers.Select(m => new SelectListItem
+            {
+                Value = m.Id.ToString(),
+                Text = m.Email
+            });
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Edit(EditShopAsAdminViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                var managers = await _userManager.Users.Select(u => new
+                {
+                    Id = u.Id,
+                    Email = u.Email
+                }).ToListAsync();
+                model.Managers = managers.Select(m => new SelectListItem
+                {
+                    Value = m.Id.ToString(),
+                    Text = m.Email
+                });
+                return View(model);
+            }
+
+            if (await _shopService.EditShopAsAdminAsync(model))
+            {
+                var user = await _userManager.FindByIdAsync(model.SelectedManagerId.ToString());
+                if (user != null && !await _userManager.IsInRoleAsync(user, "Manager"))
+                {
+                    await _userManager.AddToRoleAsync(user, "Manager");
+
+                    await _signInManager.RefreshSignInAsync(user);
+                    TempData["SuccessMessage"] = "Successfully updated your shop and assigned manager!";
+                }
+            }
+            else
+            {
+                TempData["ErrorMessage"] = "Something went wrong!";
+            }
+
+            return RedirectToAction("Index", "Shop", new { area = "Admin" });
+
+        }
     }
 }
