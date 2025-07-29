@@ -7,7 +7,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
-using IApplicationLifetime = Microsoft.AspNetCore.Hosting.IApplicationLifetime;
+using System.Security.Claims;
+
 
 namespace BookShopApplication.Web.Areas.Admin.Controllers
 {
@@ -154,6 +155,45 @@ namespace BookShopApplication.Web.Areas.Admin.Controllers
             }
 
             return RedirectToAction("Index", "Shop", new { area = "Admin" });
+
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Delete(Guid id)
+        {
+            var user = await _userManager.Users.FirstAsync(u => u.ManagedShops.Any(ms=>ms.Id == id));
+            var success = await _shopService.DeleteShopAsync(id);
+
+            if (!success)
+            {
+                TempData["Error"] = "Failed to delete the shop.";
+                return RedirectToAction("ManagedShops");
+            }
+
+            bool hasRemainingShops = await _shopService.HasUserAnyShopsAsync(user.Id);
+
+            if (!hasRemainingShops)
+            {
+                //var user = await _userManager.FindByIdAsync(userId.ToString());
+                if (user != null && await _userManager.IsInRoleAsync(user, "Manager"))
+                {
+                    await _userManager.RemoveFromRoleAsync(user, "Manager");
+
+                    // ✅ Refresh authentication cookie
+                    await _signInManager.RefreshSignInAsync(user);
+
+                    TempData["Success"] = "Shop deleted successfully.";
+                    //todo: Fix redirect!!!
+                    return RedirectToAction("Index", "Shop", new { area = "Admin" });
+
+                }
+            }
+            TempData["Success"] = "Shop deleted successfully.";
+
+            return RedirectToAction("Index", "Shop", new { area = "Admin" });
+
+
 
         }
     }
