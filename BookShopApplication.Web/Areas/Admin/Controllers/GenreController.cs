@@ -50,6 +50,24 @@ namespace BookShopApplication.Web.Areas.Admin.Controllers
             return RedirectToAction("Index", "Genre", new { area = "Admin" });
 
         }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CreateInline([FromBody] CreateGenreViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return Json(new { success = false, error = "Invalid input." });
+            }
+
+            var success = await _genreService.AddNewGenreAsync(model);
+
+            if (!success)
+            {
+                return Json(new { success = false, error = "Could not create genre." });
+            }
+
+            return Json(new { success = true, name = model.Name, id = model.Id });
+        }
 
         [HttpGet]
         public async Task<IActionResult> Edit(Guid id)

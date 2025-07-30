@@ -12,7 +12,7 @@ namespace BookShopApplication.Web.ViewModels.Book
     public class EditBookViewModel
     {
         [Required]
-        public Guid Id { get; set; } = Guid.NewGuid();
+        public Guid Id { get; set; }
 
         [Required]
         public string Title { get; set; } = null!;

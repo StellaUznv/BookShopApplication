@@ -63,7 +63,46 @@ namespace BookShopApplication.Web.Areas.Admin.Controllers
 
             await _bookService.CreateBookAsync(model);
 
-            return RedirectToAction("Details", "Shop", new { id = model.ShopId });
+            return RedirectToAction("Index", "Book", new { area = "Admin" });
+        }
+        [HttpGet]
+        public async Task<IActionResult> Edit(Guid id, Guid shopId)
+        {
+            var model = await _bookService.GetBookToEdit(id, shopId);
+
+            var genresModel = await _genreService.GetGenreListAsync();
+            model.Genres = genresModel.Select(g => new SelectListItem
+            {
+                Text = g.Name,
+                Value = g.Id.ToString()
+            }).ToList();
+
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Edit(EditBookViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                var genresModel = await _genreService.GetGenreListAsync();
+                model.Genres = genresModel.Select(g => new SelectListItem
+                {
+                    Text = g.Name,
+                    Value = g.Id.ToString()
+                }).ToList();
+
+                return View(model);
+            }
+
+            bool success = await _bookService.EditBookAsync(model);
+            if (!success)
+            {
+                ModelState.AddModelError("", "Failed to update the book.");
+                return View(model);
+            }
+            return RedirectToAction("Index", "Book", new { area = "Admin" });
         }
     }
 }
