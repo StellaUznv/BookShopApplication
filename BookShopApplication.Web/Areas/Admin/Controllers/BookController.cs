@@ -104,5 +104,19 @@ namespace BookShopApplication.Web.Areas.Admin.Controllers
             }
             return RedirectToAction("Index", "Book", new { area = "Admin" });
         }
+
+        [HttpPost]
+        public async Task<IActionResult> Delete(Guid id, Guid shopId)
+        {
+            var isDeleted = await _bookService.DeleteBookAsync(id);
+            if (!isDeleted)
+            {
+                TempData["Error"] = "Failed to delete the shop.";
+                return RedirectToAction("Index", "Book", new { area = "Admin" });
+            }
+
+            TempData["Success"] = "Shop deleted successfully.";
+            return RedirectToAction("Index", "Book", new { area = "Admin" });
+        }
     }
 }

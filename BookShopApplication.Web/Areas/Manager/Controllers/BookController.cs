@@ -110,6 +110,6 @@ namespace BookShopApplication.Web.Areas.Manager.Controllers
 
             TempData["Success"] = "Shop deleted successfully.";
             return RedirectToAction("DisplayBooks", "Shop", new {id = shopId });
-    }
+        }
     }
 }
