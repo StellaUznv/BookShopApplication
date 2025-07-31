@@ -34,15 +34,20 @@ namespace BookShopApplication.GCommon.ValidationConstraints
             public const int AuthorNameMinLength = 3;
 
             //Price
-            public const int PriceMinValue = 0;
-            public const int PriceMaxValue = int.MaxValue;
+            public const double PriceMinValue = 0;
+            public const double PriceMaxValue = int.MaxValue;
 
             //Pages
             public const int PagesMaxValue = int.MaxValue;
             public const int PagesMinValue = 0;
 
             //Image
-            public const int ImageMaxLength = 1000;
+            public const int ImagePathMaxLength = 1000;
+
+            //File
+            public const int FileMaxSize = 2 * 1024 * 1024;
+            public static readonly string[] AllowedExtensions = new[] { ".jpg", ".jpeg", ".png", ".webp" };
+
         }
 
         public static class GenreConstraints

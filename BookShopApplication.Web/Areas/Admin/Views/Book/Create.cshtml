@@ -1,4 +1,6 @@
 ﻿@model BookShopApplication.Web.ViewModels.Book.CreateBookViewModel
+@using static BookShopApplication.GCommon.ValidationConstraints.ModelValidationConstraints.BookConstraints
+@using static BookShopApplication.GCommon.ValidationErrorMessages.ModelErrorMessages.BookMessages
 @{
     ViewData["Title"] = "Add Book to Shop";
 }
@@ -39,9 +41,17 @@
             <span asp-validation-for="PagesNumber" class="text-danger"></span>
         </div>
 
-        <div class="col-md-4">
-            <label asp-for="ImageFile" class="form-label fw-bold">Book Image</label>
-            <input asp-for="ImageFile" class="form-control" type="file" accept="image/*" />
+        <div class="mb-3">
+            <label asp-for="ImageFile" class="form-label">Upload Book Image</label>
+            <input asp-for="ImageFile"
+                   class="form-control"
+                   type="file"
+                   accept="image/*"
+                   id="ImageFile"
+                   data-allowed-extensions="@string.Join(",", AllowedExtensions)"
+                   data-max-size="@FileMaxSize"
+                   data-extension-error="@FileExtensionErrorMessage"
+                   data-size-error="@FileSizeErrorMessage" />
             <span asp-validation-for="ImageFile" class="text-danger"></span>
         </div>
 
@@ -140,5 +150,34 @@
                 alert("An unexpected error occurred while adding the genre.");
             });
         });
+        //Image
+            document.getElementById("ImageFile").addEventListener("change", function () {
+        const fileInput = this;
+        const file = fileInput.files[0];
+
+        const allowedExtensions = fileInput.dataset.allowedExtensions?.split(',') || [];
+        const maxSizeInBytes = parseInt(fileInput.dataset.maxSize || "2097152");
+        const extensionErrorMsg = fileInput.dataset.extensionError || "Invalid file type.";
+        const sizeErrorMsg = fileInput.dataset.sizeError || "File too large.";
+
+        const errorSpan = document.querySelector("span[data-valmsg-for='ImageFile']");
+        errorSpan.textContent = "";
+
+        if (!file) return;
+
+        const fileName = file.name.toLowerCase();
+        const isValidExtension = allowedExtensions.some(ext => fileName.endsWith(ext));
+
+        if (!isValidExtension) {
+            errorSpan.textContent = extensionErrorMsg;
+            fileInput.value = ""; // Clear invalid file
+            return;
+        }
+
+        if (file.size > maxSizeInBytes) {
+            errorSpan.textContent = sizeErrorMsg;
+            fileInput.value = ""; // Clear too-large file
+        }
+            });
     </script>
 }

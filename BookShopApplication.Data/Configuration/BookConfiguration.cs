@@ -44,7 +44,7 @@ namespace BookShopApplication.Data.Configuration
 
             builder.Property(b => b.ImagePath)
                 .IsRequired(false)
-                .HasMaxLength(ImageMaxLength);
+                .HasMaxLength(ImagePathMaxLength);
 
             builder.HasOne(b => b.Genre)
                 .WithMany(g => g.Books)

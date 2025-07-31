@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static BookShopApplication.GCommon.ValidationConstraints.ModelValidationConstraints.BookConstraints;
 
 namespace BookShopApplication.GCommon.ValidationErrorMessages
 {
@@ -15,19 +16,16 @@ namespace BookShopApplication.GCommon.ValidationErrorMessages
         public static class BookMessages
         {
             //Title
-            public const string TitleRequiredMessage = "The book {0} is required.";
-            public const string TitleMaxLengthMessage = "The book {0} must not exceed {1} characters.";
-            public const string TitleMinLengthMessage = "The book {0} should be at least {1} characters.";
+            public const string TitleRequiredMessage = "The Book's  {0} is required.";
+            public const string TitleLengthMessage = "The Book's {0} must be between {2} and {1} characters.";
 
             //Description
-            public const string DescriptionRequiredMessage = "The book {0} is required.";
-            public const string DescriptionMaxLengthMessage = "The {0} must not exceed {1} characters.";
-            public const string DescriptionMinLengthMessage = "The {0} must be at least {1} characters.";
+            public const string DescriptionRequiredMessage = "The Book's {0} is required.";
+            public const string DescriptionLengthMessage = "The Book's {0} must be between {2} and {1} characters.";
 
             //Author
-            public const string AuthorRequiredMessage = "The book author name is required.";
-            public const string AuthorMaxLengthMessage = "Author name must not exceed {1} characters.";
-            public const string AuthorMinLengthMessage = "Author name must be at least {1} characters.";
+            public const string AuthorRequiredMessage = "The Book's {0} Name is required.";
+            public const string AuthorLengthMessage = "{0}'s Name must be between {2} and {1} characters.";
 
             //Price
             public const string PriceRequiredMessage = "{0} is required.";
@@ -36,6 +34,10 @@ namespace BookShopApplication.GCommon.ValidationErrorMessages
             //Pages
             public const string PagesRequiredMessage = "Number of {0} is required.";
             public const string PagesNotInRangeMessage = "{0} count must be a positive number.";
+
+            //File
+            public const string FileSizeErrorMessage = "Image must be less than 2MB.";
+            public const string FileExtensionErrorMessage = "Only JPG, JPEG, PNG, or WEBP images are allowed.";
 
         }
 

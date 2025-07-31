@@ -6,6 +6,9 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static BookShopApplication.GCommon.CustomValidationAttributes.CustomValidationAttributes;
+using static BookShopApplication.GCommon.ValidationConstraints.ModelValidationConstraints.BookConstraints;
+using static BookShopApplication.GCommon.ValidationErrorMessages.ModelErrorMessages.BookMessages;
 
 namespace BookShopApplication.Web.ViewModels.Book
 {
@@ -14,22 +17,31 @@ namespace BookShopApplication.Web.ViewModels.Book
         [Required]
         public Guid Id { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = TitleRequiredMessage)]
+        [StringLength(TitleMaxLength,ErrorMessage = TitleLengthMessage,MinimumLength = TitleMinLength)]
         public string Title { get; set; } = null!;
 
-        [Required]
+        [Required(ErrorMessage = DescriptionRequiredMessage)]
+        [StringLength(DescriptionMaxLength, ErrorMessage = DescriptionLengthMessage, MinimumLength = DescriptionMinLength)]
         public string Description { get; set; } = null!;
 
-        [Required]
+        [Required(ErrorMessage = AuthorRequiredMessage)]
+        [StringLength(AuthorNameMaxLength, ErrorMessage = AuthorLengthMessage, MinimumLength = AuthorNameMinLength)]
         public string Author { get; set; } = null!;
 
-        [Required]
+        [Required(ErrorMessage = PriceRequiredMessage)]
+        [Range(PriceMinValue,PriceMaxValue,ErrorMessage = PriceNotInRangeMessage)]
         public decimal Price { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = PagesRequiredMessage)]
+        [Range(PagesMinValue,PagesMaxValue,ErrorMessage = PagesNotInRangeMessage)]
         public int PagesNumber { get; set; }
 
+        [MaxFileSize(FileMaxSize)]
+        [AllowedExtensions(new[] { ".jpg", ".jpeg", ".png", ".webp" }, ErrorMessage = FileExtensionErrorMessage)]
         public IFormFile? ImageFile { get; set; }
+
+        [StringLength(ImagePathMaxLength)]
         public string? ImagePath { get; set; }
 
         [Required]
