@@ -42,14 +42,12 @@ namespace BookShopApplication.GCommon.ValidationErrorMessages
         public static class GenreMessages
         {
             //Name
-            public const string NameRequiredMessage = "The genre {0} is required.";
-            public const string NameMaxLengthMessage = "The genre {0} must not exceed {1} characters.";
-            public const string NameMinLengthMessage = "The genre {0} should be at least {1} characters.";
+            public const string NameRequiredMessage = "The Genre {0} is required.";
+            public const string NameLengthMessage = "The Genre's {0} must be between {2} and {1} characters.";
 
             //Description
-            public const string DescriptionRequiredMessage = "The genre {0} is required.";
-            public const string DescriptionMaxLengthMessage = "The {0} must not exceed {1} characters.";
-            public const string DescriptionMinLengthMessage = "The {0} must be at least {1} characters.";
+            public const string DescriptionRequiredMessage = "The Genre {0} is required.";
+            public const string DescriptionLengthMessage = "The Genre's {0} must be between {2} and {1} characters.";
 
         }
 

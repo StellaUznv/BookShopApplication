@@ -19,7 +19,14 @@ namespace BookShopApplication.Web.Areas.Manager.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return Json(new { success = false, error = "Invalid genre data." });
+                var errors = ModelState
+                    .Where(kvp => kvp.Value.Errors.Any())
+                    .ToDictionary(
+                        kvp => kvp.Key,
+                        kvp => kvp.Value.Errors.Select(e => e.ErrorMessage).ToArray()
+                    );
+
+                return BadRequest(new { success = false, errors });
             }
 
             var success = await _genreService.AddNewGenreAsync(model);
@@ -31,5 +38,6 @@ namespace BookShopApplication.Web.Areas.Manager.Controllers
 
             return Json(new { success = true, id = model.Id, name = model.Name });
         }
+
     }
 }

@@ -61,9 +61,11 @@
         <h5>Add New Genre</h5>
         <div class="mb-2">
             <input type="text" id="NewGenreName" class="form-control" placeholder="Genre Name" />
+            <span class="text-danger" id="NewGenreNameError"></span>
         </div>
         <div class="mb-2">
             <textarea id="NewGenreDescription" class="form-control" placeholder="Genre Description"></textarea>
+            <span class="text-danger" id="NewGenreDescriptionError"></span>
         </div>
         <button type="button" class="btn btn-outline-success" id="submitNewGenre">Add Genre</button>
         <div class="text-success mt-2 d-none" id="newGenreSuccess">Genre added successfully!</div>
@@ -84,10 +86,9 @@
             const description = document.getElementById("NewGenreDescription").value.trim();
             const token = document.querySelector('input[name="__RequestVerificationToken"]')?.value;
 
-            if (!name || !description) {
-                alert("Please fill out both name and description.");
-                return;
-            }
+            // Clear any previous errors
+            document.getElementById("NewGenreNameError").textContent = "";
+            document.getElementById("NewGenreDescriptionError").textContent = "";
 
             fetch('/Genre/Create', {
                 method: 'POST',
@@ -102,8 +103,24 @@
                     id: crypto.randomUUID()
                 })
             })
-            .then(res => res.json())
-            .then(data => {
+            .then(async res => {
+                const data = await res.json();
+
+                if (!res.ok) {
+                    if (data.errors) {
+                        if (data.errors.Name) {
+                            document.getElementById("NewGenreNameError").textContent = data.errors.Name[0];
+                        }
+                        if (data.errors.Description) {
+                            document.getElementById("NewGenreDescriptionError").textContent = data.errors.Description[0];
+                        }
+                    } else if (data.error) {
+                        alert(data.error);
+                    }
+                    return;
+                }
+
+                // Success - add to dropdown
                 if (data.success) {
                     const dropdown = document.querySelector("select[name='GenreId']");
                     const option = new Option(data.name, data.id, true, true);
@@ -119,9 +136,8 @@
                 }
             })
             .catch(() => {
-                alert("An error occurred while adding the genre.");
+                alert("An unexpected error occurred while adding the genre.");
             });
         });
     </script>
 }
-

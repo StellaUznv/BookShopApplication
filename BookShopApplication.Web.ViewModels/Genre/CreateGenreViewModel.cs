@@ -4,19 +4,22 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static BookShopApplication.GCommon.ValidationConstraints.ModelValidationConstraints.GenreConstraints;
+using static BookShopApplication.GCommon.ValidationErrorMessages.ModelErrorMessages.GenreMessages;
 
 namespace BookShopApplication.Web.ViewModels.Genre
 {
     public class CreateGenreViewModel
     {
+        [Required]
         public Guid Id = Guid.NewGuid();
 
-        [Required(ErrorMessage = "Name is required.")]
-        [StringLength(100)]
+        [Required(ErrorMessage = NameRequiredMessage)]
+        [StringLength(NameMaxLength, ErrorMessage = NameLengthMessage, MinimumLength = NameMinLength)]
         public string Name { get; set; } = null!;
 
-        [Required(ErrorMessage = "Description is required.")]
-        [StringLength(500)]
+        [Required(ErrorMessage = DescriptionRequiredMessage)]
+        [StringLength(DescriptionMaxLength, ErrorMessage = DescriptionLengthMessage, MinimumLength = DescriptionMinLength)]
         public string Description { get; set; } = null!;
     }
 }
