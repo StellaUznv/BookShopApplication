@@ -56,39 +56,47 @@ namespace BookShopApplication.GCommon.ValidationErrorMessages
         public static class LocationMessages
         {
             //CountryName
-            public const string CountryNameRequiredMessage = "The location's country name is required.";
-            public const string CountryNameMaxLengthMessage = "The location's country name must not exceed {1} characters.";
-            public const string CountryNameMinLengthMessage = "The location's country name should be at least {1} characters.";
+            public const string CountryNameRequiredMessage = "The Location's Country Name is required.";
+            public const string CountryNameLengthMessage = "The Location's Country Name must be between {2} and {1} characters.";
+            
 
             //CityName
-            public const string CityNameRequiredMessage = "The location's city name is required.";
-            public const string CityNameMaxLengthMessage = "The location's city name must not exceed {1} characters.";
-            public const string CityNameMinLengthMessage = "The location's city name should be at least {1} characters.";
+            public const string CityNameRequiredMessage = "The Location's City Name is required.";
+            public const string CityNameLengthMessage = "The Location's City Name must be between {2} and {1} characters.";
 
             //ZipCode
-            public const string ZipCodeRequiredMessage = "The location's ZIP Code is required.";
-            public const string ZipCodeMaxLengthMessage = "The location's ZIP Code must not exceed {1} characters.";
-            public const string ZipCodeMinLengthMessage = "The location's ZIP Code should be at least {1} characters.";
+            public const string ZipCodeRequiredMessage = "The Location's ZIP Code is required.";
+            public const string ZipCodeLengthMessage = "The Location's ZIP Code must be between {2} and {1} characters.";
+
+            //Address
+            public const string AddressRequiredMessage = "The Location's Address is required.";
+            public const string AddressLengthMessage = "The Location's Address must be between {2} and {1} characters.";
+
+            //Longitude
+            public const string LongitudeRequiredMessage = "The Location's Longitude is required.";
+
+            //Latitude
+            public const string LatitudeRequiredMessage = "The Location's Latitude is required.";
 
         }
 
         public static class ShopMessages
         {
             //Name
-            public const string NameRequiredMessage = "The shop {0} is required.";
-            public const string NameLengthMessage = "The shop {0} must be between {2} and {1} characters.";
+            public const string NameRequiredMessage = "The Shop {0} is required.";
+            public const string NameLengthMessage = "The Shop {0} must be between {2} and {1} characters.";
 
             //Description
-            public const string DescriptionRequiredMessage = "The shop {0} is required.";
-            public const string DescriptionLengthMessage = "The shop {0} must be between {2} and {1} characters.";
+            public const string DescriptionRequiredMessage = "The Shop {0} is required.";
+            public const string DescriptionLengthMessage = "The Shop {0} must be between {2} and {1} characters.";
 
         }
 
         public static class RoleMessages
         {
             //Name
-            public const string NameLengthMessage = "The role {0} must be between {2} and {1} characters.";
-            public const string NameRequiredMessage = "The role {0} is required.";
+            public const string NameLengthMessage = "The Role {0} must be between {2} and {1} characters.";
+            public const string NameRequiredMessage = "The Role {0} is required.";
         }
     }
 }

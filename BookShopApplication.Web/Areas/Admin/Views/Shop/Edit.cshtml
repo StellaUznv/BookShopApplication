@@ -72,10 +72,12 @@
                             <div class="col-md-6">
                                 <label asp-for="Location.Latitude" class="form-label">Latitude</label>
                                 <input asp-for="Location.Latitude" class="form-control" readonly />
+                                <span asp-validation-for="Location.Latitude" class="text-danger small"></span>
                             </div>
                             <div class="col-md-6">
                                 <label asp-for="Location.Longitude" class="form-label">Longitude</label>
                                 <input asp-for="Location.Longitude" class="form-control" readonly />
+                                <span asp-validation-for="Location.Longitude" class="text-danger small"></span>
                             </div>
                         </div>
 
