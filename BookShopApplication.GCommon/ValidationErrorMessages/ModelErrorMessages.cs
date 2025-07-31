@@ -15,74 +15,74 @@ namespace BookShopApplication.GCommon.ValidationErrorMessages
         public static class BookMessages
         {
             //Title
-            public const string TitleRequired = "The book {0} is required.";
-            public const string TitleMaxLength = "The book {0} must not exceed {1} characters.";
-            public const string TitleMinLength = "The book {0} should be at least {1} characters.";
+            public const string TitleRequiredMessage = "The book {0} is required.";
+            public const string TitleMaxLengthMessage = "The book {0} must not exceed {1} characters.";
+            public const string TitleMinLengthMessage = "The book {0} should be at least {1} characters.";
 
             //Description
-            public const string DescriptionRequired = "The book {0} is required.";
-            public const string DescriptionMaxLength = "The {0} must not exceed {1} characters.";
-            public const string DescriptionMinLength = "The {0} must be at least {1} characters.";
+            public const string DescriptionRequiredMessage = "The book {0} is required.";
+            public const string DescriptionMaxLengthMessage = "The {0} must not exceed {1} characters.";
+            public const string DescriptionMinLengthMessage = "The {0} must be at least {1} characters.";
 
             //Author
-            public const string AuthorRequired = "The book author name is required.";
-            public const string AuthorMaxLength = "Author name must not exceed {1} characters.";
-            public const string AuthorMinLength = "Author name must be at least {1} characters.";
+            public const string AuthorRequiredMessage = "The book author name is required.";
+            public const string AuthorMaxLengthMessage = "Author name must not exceed {1} characters.";
+            public const string AuthorMinLengthMessage = "Author name must be at least {1} characters.";
 
             //Price
-            public const string PriceRequired = "{0} is required.";
-            public const string PriceNotInRange = "{0} must be a positive number.";
+            public const string PriceRequiredMessage = "{0} is required.";
+            public const string PriceNotInRangeMessage = "{0} must be a positive number.";
 
             //Pages
-            public const string PagesRequired = "Number of {0} is required.";
-            public const string PagesNotInRange = "{0} count must be a positive number.";
+            public const string PagesRequiredMessage = "Number of {0} is required.";
+            public const string PagesNotInRangeMessage = "{0} count must be a positive number.";
 
         }
 
         public static class GenreMessages
         {
             //Name
-            public const string NameRequired = "The genre {0} is required.";
-            public const string NameMaxLength = "The genre {0} must not exceed {1} characters.";
-            public const string NameMinLength = "The genre {0} should be at least {1} characters.";
+            public const string NameRequiredMessage = "The genre {0} is required.";
+            public const string NameMaxLengthMessage = "The genre {0} must not exceed {1} characters.";
+            public const string NameMinLengthMessage = "The genre {0} should be at least {1} characters.";
 
             //Description
-            public const string DescriptionRequired = "The genre {0} is required.";
-            public const string DescriptionMaxLength = "The {0} must not exceed {1} characters.";
-            public const string DescriptionMinLength = "The {0} must be at least {1} characters.";
+            public const string DescriptionRequiredMessage = "The genre {0} is required.";
+            public const string DescriptionMaxLengthMessage = "The {0} must not exceed {1} characters.";
+            public const string DescriptionMinLengthMessage = "The {0} must be at least {1} characters.";
 
         }
 
         public static class LocationMessages
         {
             //CountryName
-            public const string CountryNameRequired = "The location's country name is required.";
-            public const string CountryNameMaxLength = "The location's country name must not exceed {1} characters.";
-            public const string CountryNameMinLength = "The location's country name should be at least {1} characters.";
+            public const string CountryNameRequiredMessage = "The location's country name is required.";
+            public const string CountryNameMaxLengthMessage = "The location's country name must not exceed {1} characters.";
+            public const string CountryNameMinLengthMessage = "The location's country name should be at least {1} characters.";
 
             //CityName
-            public const string CityNameRequired = "The location's city name is required.";
-            public const string CityNameMaxLength = "The location's city name must not exceed {1} characters.";
-            public const string CityNameMinLength = "The location's city name should be at least {1} characters.";
+            public const string CityNameRequiredMessage = "The location's city name is required.";
+            public const string CityNameMaxLengthMessage = "The location's city name must not exceed {1} characters.";
+            public const string CityNameMinLengthMessage = "The location's city name should be at least {1} characters.";
 
             //ZipCode
-            public const string ZipCodeRequired = "The location's ZIP Code is required.";
-            public const string ZipCodeMaxLength = "The location's ZIP Code must not exceed {1} characters.";
-            public const string ZipCodeMinLength = "The location's ZIP Code should be at least {1} characters.";
+            public const string ZipCodeRequiredMessage = "The location's ZIP Code is required.";
+            public const string ZipCodeMaxLengthMessage = "The location's ZIP Code must not exceed {1} characters.";
+            public const string ZipCodeMinLengthMessage = "The location's ZIP Code should be at least {1} characters.";
 
         }
 
         public static class ShopMessages
         {
             //Name
-            public const string NameRequired = "The shop {0} is required.";
-            public const string NameMaxLength = "The shop {0} must not exceed {1} characters.";
-            public const string NameMinLength = "The shop {0} should be at least {1} characters.";
+            public const string NameRequiredMessage = "The shop {0} is required.";
+            public const string NameMaxLengthMessage = "The shop {0} must not exceed {1} characters.";
+            public const string NameMinLengthMessage = "The shop {0} should be at least {1} characters.";
 
             //Description
-            public const string DescriptionRequired = "The shop {0} is required.";
-            public const string DescriptionMaxLength = "The {0} must not exceed {1} characters.";
-            public const string DescriptionMinLength = "The {0} must be at least {1} characters.";
+            public const string DescriptionRequiredMessage = "The shop {0} is required.";
+            public const string DescriptionMaxLengthMessage = "The {0} must not exceed {1} characters.";
+            public const string DescriptionMinLengthMessage= "The {0} must be at least {1} characters.";
 
         }
     }
