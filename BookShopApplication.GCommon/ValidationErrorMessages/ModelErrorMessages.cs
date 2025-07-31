@@ -76,14 +76,19 @@ namespace BookShopApplication.GCommon.ValidationErrorMessages
         {
             //Name
             public const string NameRequiredMessage = "The shop {0} is required.";
-            public const string NameMaxLengthMessage = "The shop {0} must not exceed {1} characters.";
-            public const string NameMinLengthMessage = "The shop {0} should be at least {1} characters.";
+            public const string NameLengthMessage = "The shop {0} must be between {2} and {1} characters.";
 
             //Description
             public const string DescriptionRequiredMessage = "The shop {0} is required.";
-            public const string DescriptionMaxLengthMessage = "The {0} must not exceed {1} characters.";
-            public const string DescriptionMinLengthMessage= "The {0} must be at least {1} characters.";
+            public const string DescriptionLengthMessage = "The shop {0} must be between {2} and {1} characters.";
 
+        }
+
+        public static class RoleMessages
+        {
+            //Name
+            public const string NameLengthMessage = "The role {0} must be between {2} and {1} characters.";
+            public const string NameRequiredMessage = "The role {0} is required.";
         }
     }
 }

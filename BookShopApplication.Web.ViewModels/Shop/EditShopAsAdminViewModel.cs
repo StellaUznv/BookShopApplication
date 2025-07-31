@@ -17,13 +17,11 @@ namespace BookShopApplication.Web.ViewModels.Shop
         public Guid Id { get; set; }
 
         [Required(ErrorMessage = NameRequiredMessage)]
-        [MaxLength(NameMaxLength, ErrorMessage = NameMaxLengthMessage)]
-        [MinLength(NameMinLength, ErrorMessage = NameMinLengthMessage)]
+        [StringLength(NameMaxLength, ErrorMessage = NameLengthMessage, MinimumLength = NameMinLength)]
         public string Name { get; set; } = null!;
 
         [Required(ErrorMessage = DescriptionRequiredMessage)]
-        [MaxLength(DescriptionMaxLength, ErrorMessage = DescriptionMaxLengthMessage)]
-        [MinLength(DescriptionMinLength, ErrorMessage = DescriptionMinLengthMessage)]
+        [StringLength(DescriptionMaxLength, ErrorMessage = DescriptionLengthMessage, MinimumLength = DescriptionMinLength)]
         public string Description { get; set; } = null!;
 
         [Required]

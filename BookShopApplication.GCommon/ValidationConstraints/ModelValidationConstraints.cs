@@ -86,5 +86,12 @@ namespace BookShopApplication.GCommon.ValidationConstraints
             public const int DescriptionMaxLength = 1000;
             public const int DescriptionMinLength = 3;
         }
+
+        public static class RoleConstraints
+        {
+            //Name
+            public const int NameMaxLength = 256;
+            public const int NameMinLength = 3;
+        }
     }
 }
