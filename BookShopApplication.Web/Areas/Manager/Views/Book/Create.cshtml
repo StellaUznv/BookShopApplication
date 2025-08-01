@@ -101,7 +101,7 @@
             document.getElementById("NewGenreNameError").textContent = "";
             document.getElementById("NewGenreDescriptionError").textContent = "";
 
-            fetch('/Genre/Create', {
+                fetch('@Url.Action("Create", "Genre", new { area = "Manager" })',{
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

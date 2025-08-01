@@ -17,7 +17,7 @@ namespace BookShopApplication.Web.Areas.Manager.Controllers
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        [Route("Manager/[controller]/[action]")]
         public async Task<IActionResult> Create([FromBody] CreateGenreViewModel model)
         {
             try

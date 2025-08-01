@@ -96,12 +96,13 @@
             const name = document.getElementById("NewGenreName").value.trim();
             const description = document.getElementById("NewGenreDescription").value.trim();
             const token = document.querySelector('input[name="__RequestVerificationToken"]')?.value;
+            const genreCreateUrl = '/Manager/Genre/Create';
 
             // Clear any previous errors
             document.getElementById("NewGenreNameError").textContent = "";
             document.getElementById("NewGenreDescriptionError").textContent = "";
 
-            fetch('/Genre/Create', {
+            fetch(genreCreateUrl, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
