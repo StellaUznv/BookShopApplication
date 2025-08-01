@@ -19,26 +19,72 @@ namespace BookShopApplication.Web.Areas.Admin.Controllers
         [HttpGet]
         public async Task<IActionResult> Index()
         {
-            var models = await _locationService.GetAllLocationsAsync();
-            return View(models);
+            try
+            {
+
+                var models = await _locationService.GetAllLocationsAsync();
+                return View(models);
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                Console.WriteLine(ex);
+                return RedirectToAction("HttpStatusCodeHandler", "Error", new { statusCode = 403 });
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                TempData["ErrorMessage"] = "An Error occured while trying to fetch your data.";
+                return RedirectToAction("HttpStatusCodeHandler", "Error");
+            }
         }
 
         [HttpGet]
         public async Task<IActionResult> Create()
         {
-            var model = new CreateLocationViewModel();
-            return View(model);
+            try
+            {
+
+                var model = new CreateLocationViewModel();
+                return View(model);
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                Console.WriteLine(ex);
+                return RedirectToAction("HttpStatusCodeHandler", "Error", new { statusCode = 403 });
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                TempData["ErrorMessage"] = "An Error occured while trying to process your data.";
+                return RedirectToAction("HttpStatusCodeHandler", "Error");
+            }
         }
 
         [HttpPost]
         public async Task<IActionResult> Create(CreateLocationViewModel model)
         {
-            if (!ModelState.IsValid)
+            try
             {
-                return View(model);
+
+                if (!ModelState.IsValid)
+                {
+                    return View(model);
+                }
+
+                await _locationService.CreateLocationAsync(model);
+                return RedirectToAction("Index", "Location", new { area = "Admin" });
             }
-            await _locationService.CreateLocationAsync(model);
-            return RedirectToAction("Index", "Location", new { area = "Admin" });
+            catch (UnauthorizedAccessException ex)
+            {
+                Console.WriteLine(ex);
+                return RedirectToAction("HttpStatusCodeHandler", "Error", new { statusCode = 403 });
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                TempData["ErrorMessage"] = "An Error occured while trying to process your data.";
+                return RedirectToAction("HttpStatusCodeHandler", "Error");
+            }
         }
         [HttpGet]
         public async Task<IActionResult> Edit(Guid id)
@@ -50,8 +96,24 @@ namespace BookShopApplication.Web.Areas.Admin.Controllers
 
             //var locationId = Guid.Parse(TempData["LocationId"].ToString());
 
-            var model = await _locationService.GetLocationToEditAsync(id);
-            return View(model);
+            try
+            {
+
+
+                var model = await _locationService.GetLocationToEditAsync(id);
+                return View(model);
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                Console.WriteLine(ex);
+                return RedirectToAction("HttpStatusCodeHandler", "Error", new { statusCode = 403 });
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                TempData["ErrorMessage"] = "An Error occured while trying to process your data.";
+                return RedirectToAction("HttpStatusCodeHandler", "Error");
+            }
 
         }
 
@@ -59,20 +121,35 @@ namespace BookShopApplication.Web.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(EditLocationViewModel model)
         {
-            if (!ModelState.IsValid)
+            try
             {
-                return View(model);
+
+                if (!ModelState.IsValid)
+                {
+                    return View(model);
+                }
+
+                var success = await _locationService.EditLocationAsync(model);
+
+                if (!success)
+                {
+                    ModelState.AddModelError("", "Failed to update the shop.");
+                    return View(model);
+                }
+
+                return RedirectToAction("Index", "Location", new { area = "Admin" });
             }
-
-            var success = await _locationService.EditLocationAsync(model);
-
-            if (!success)
+            catch (UnauthorizedAccessException ex)
             {
-                ModelState.AddModelError("", "Failed to update the shop.");
-                return View(model);
+                Console.WriteLine(ex);
+                return RedirectToAction("HttpStatusCodeHandler", "Error", new { statusCode = 403 });
             }
-
-            return RedirectToAction("Index", "Location", new { area = "Admin" });
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                TempData["ErrorMessage"] = "An Error occured while trying to process your data.";
+                return RedirectToAction("HttpStatusCodeHandler", "Error");
+            }
         }
     }
 }
