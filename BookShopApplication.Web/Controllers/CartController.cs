@@ -26,8 +26,9 @@ namespace BookShopApplication.Web.Controllers
             }
             catch (Exception ex)
             {
+                Console.WriteLine(ex);
                 TempData["ErrorMessage"] = "An Error occured while trying to fetch your cart data.";
-                return RedirectToAction("Error", "Error");
+                return RedirectToAction("HttpStatusCodeHandler", "Error");
             }
         }
         [HttpPost]
@@ -60,8 +61,9 @@ namespace BookShopApplication.Web.Controllers
             }
             catch (Exception ex)
             {
+                Console.WriteLine(ex);
                 TempData["ErrorMessage"] = "An Error occured while processing your data.";
-                return RedirectToAction("Error", "Error");
+                return RedirectToAction("HttpStatusCodeHandler", "Error");
             }
         }
         [HttpPost]
@@ -93,8 +95,9 @@ namespace BookShopApplication.Web.Controllers
             }
             catch (Exception ex)
             {
+                Console.WriteLine(ex);
                 TempData["ErrorMessage"] = "An Error occured while trying to process your data.";
-                return RedirectToAction("Error", "Error");
+                return RedirectToAction("HttpStatusCodeHandler", "Error");
             }
         }
 
@@ -128,8 +131,9 @@ namespace BookShopApplication.Web.Controllers
             }
             catch (Exception ex)
             {
+                Console.WriteLine(ex);
                 TempData["ErrorMessage"] = "An Error occured while trying to process your data.";
-                return RedirectToAction("Error", "Error");
+                return RedirectToAction("HttpStatusCodeHandler", "Error");
             }
         }
 
@@ -161,8 +165,9 @@ namespace BookShopApplication.Web.Controllers
             }
             catch (Exception ex)
             {
+                Console.WriteLine(ex);
                 TempData["ErrorMessage"] = "An Error occured while trying to process your data.";
-                return RedirectToAction("Error", "Error");
+                return RedirectToAction("HttpStatusCodeHandler", "Error");
             }
         }
 
@@ -194,8 +199,9 @@ namespace BookShopApplication.Web.Controllers
             }
             catch (Exception ex)
             {
+                Console.WriteLine(ex);
                 TempData["ErrorMessage"] = "An Error occured while trying to process your purchase.";
-                return RedirectToAction("Error", "Error");
+                return RedirectToAction("HttpStatusCodeHandler", "Error");
             }
         }
 

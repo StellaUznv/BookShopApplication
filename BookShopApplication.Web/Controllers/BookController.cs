@@ -34,8 +34,9 @@ namespace BookShopApplication.Web.Controllers
             }
             catch (Exception ex)
             {
+                Console.WriteLine(ex);
                 TempData["ErrorMessage"] = "An Error occured trying to fetch books data.";
-                return RedirectToAction("Error", "Error");
+                return RedirectToAction("HttpStatusCodeHandler", "Error");
             }
 
 
@@ -63,8 +64,9 @@ namespace BookShopApplication.Web.Controllers
             }
             catch (Exception ex)
             {
+                Console.WriteLine(ex);
                 TempData["ErrorMessage"] = "An Error occured while trying to fetch book's details.";
-                return RedirectToAction("Error", "Error");
+                return RedirectToAction("HttpStatusCodeHandler", "Error");
             }
 
 

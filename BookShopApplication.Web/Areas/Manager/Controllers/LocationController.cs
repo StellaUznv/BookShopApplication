@@ -21,36 +21,65 @@ namespace BookShopApplication.Web.Areas.Manager.Controllers
         [HttpGet]
         public async Task<IActionResult> Edit()
         {
-            if (!TempData.ContainsKey("LocationId"))
+            try
             {
-                return BadRequest("Missing Location ID.");
+
+                if (!TempData.ContainsKey("LocationId"))
+                {
+                    return BadRequest("Missing Location ID.");
+                }
+
+                var locationId = Guid.Parse(TempData["LocationId"].ToString());
+
+                var model = await _locationService.GetLocationToEditAsync(locationId);
+                return View(model);
             }
-
-            var locationId = Guid.Parse(TempData["LocationId"].ToString());
-
-            var model = await _locationService.GetLocationToEditAsync(locationId);
-            return View(model);
-            
+            catch (UnauthorizedAccessException ex)
+            {
+                Console.WriteLine(ex);
+                return RedirectToAction("HttpStatusCodeHandler", "Error", new { statusCode = 403 });
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                TempData["ErrorMessage"] = "An Error occured while trying to process your data.";
+                return RedirectToAction("HttpStatusCodeHandler", "Error");
+            }
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(EditLocationViewModel model)
         {
-            if (!ModelState.IsValid)
+            try
             {
-                return View(model);
+
+                if (!ModelState.IsValid)
+                {
+                    return View(model);
+                }
+
+                var success = await _locationService.EditLocationAsync(model);
+
+                if (!success)
+                {
+                    ModelState.AddModelError("", "Failed to update the shop.");
+                    return View(model);
+                }
+
+                return RedirectToAction("ManagedShops", "Shop");
             }
-
-            var success = await _locationService.EditLocationAsync(model);
-
-            if (!success)
+            catch (UnauthorizedAccessException ex)
             {
-                ModelState.AddModelError("", "Failed to update the shop.");
-                return View(model);
+                Console.WriteLine(ex);
+                return RedirectToAction("HttpStatusCodeHandler", "Error", new { statusCode = 403 });
             }
-
-            return RedirectToAction("ManagedShops", "Shop");
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                TempData["ErrorMessage"] = "An Error occured while trying to process your data.";
+                return RedirectToAction("HttpStatusCodeHandler", "Error");
+            }
         }
     }
 }

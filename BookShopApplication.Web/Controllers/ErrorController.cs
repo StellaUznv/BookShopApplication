@@ -5,7 +5,7 @@ namespace BookShopApplication.Web.Controllers
     public class ErrorController : Controller
     {
         [Route("Error/{statusCode}")]
-        public IActionResult HttpStatusCodeHandler(int statusCode)
+        public async Task<IActionResult> HttpStatusCodeHandler(int statusCode)
         {
             return statusCode switch
             {

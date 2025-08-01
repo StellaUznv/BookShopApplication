@@ -28,86 +28,161 @@ namespace BookShopApplication.Web.Areas.Manager.Controllers
         [HttpGet]
         public async Task<IActionResult> ManagedShops()
         {
-            var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
-            var models = await _shopService.GetManagedShopsAsync(userId);
-            return View(models);
+            try
+            {
+
+                var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+                var models = await _shopService.GetManagedShopsAsync(userId);
+                return View(models);
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                Console.WriteLine(ex);
+                return RedirectToAction("HttpStatusCodeHandler", "Error", new { statusCode = 403 });
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                TempData["ErrorMessage"] = "An Error occured while trying to fetch your page.";
+                return RedirectToAction("HttpStatusCodeHandler", "Error");
+            }
         }
 
         [HttpGet]
         public async Task<IActionResult> Edit(Guid id)
         {
-            var model = await _shopService.GetShopToEditAsync(id);
-            return View(model);
+            try
+            {
+
+                var model = await _shopService.GetShopToEditAsync(id);
+                return View(model);
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                Console.WriteLine(ex);
+                return RedirectToAction("HttpStatusCodeHandler", "Error", new { statusCode = 403 });
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                TempData["ErrorMessage"] = "An Error occured while trying to process your data.";
+                return RedirectToAction("HttpStatusCodeHandler", "Error");
+            }
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(EditShopViewModel model)
         {
-            if (!ModelState.IsValid)
+            try
             {
-                return View(model);
+
+                if (!ModelState.IsValid)
+                {
+                    return View(model);
+                }
+
+                var success = await _shopService.EditShopAsync(model);
+
+                if (!success)
+                {
+                    ModelState.AddModelError("", "Failed to update the shop.");
+                    return View(model);
+                }
+
+                // Store LocationId in TempData
+                TempData["LocationId"] = model.LocationId;
+
+                // Redirect to Location/Edit (no ID in URL)
+                return RedirectToAction("Edit", "Location", new { area = "Manager" });
             }
-
-            var success = await _shopService.EditShopAsync(model);
-
-            if (!success)
+            catch (UnauthorizedAccessException ex)
             {
-                ModelState.AddModelError("", "Failed to update the shop.");
-                return View(model);
+                Console.WriteLine(ex);
+                return RedirectToAction("HttpStatusCodeHandler", "Error", new { statusCode = 403 });
             }
-
-            // Store LocationId in TempData
-            TempData["LocationId"] = model.LocationId;
-
-            // Redirect to Location/Edit (no ID in URL)
-            return RedirectToAction("Edit", "Location", new { area = "Manager" });
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                TempData["ErrorMessage"] = "An Error occured while trying to process your data.";
+                return RedirectToAction("HttpStatusCodeHandler", "Error");
+            }
         }
 
         [HttpGet]
         public async Task<IActionResult> DisplayBooks(Guid id)
         {
-            var model = await _shopService.GetBooksByShopIdAsync(id);
-            return View(model);
+            try
+            {
+
+                var model = await _shopService.GetBooksByShopIdAsync(id);
+                return View(model);
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                Console.WriteLine(ex);
+                return RedirectToAction("HttpStatusCodeHandler", "Error", new { statusCode = 403 });
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                TempData["ErrorMessage"] = "An Error occured while trying to fetch your page.";
+                return RedirectToAction("HttpStatusCodeHandler", "Error");
+            }
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(Guid id)
         {
-            var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
-            var success = await _shopService.DeleteShopAsync(id);
-
-            if (!success)
+            try
             {
-                TempData["Error"] = "Failed to delete the shop.";
-                return RedirectToAction("ManagedShops");
-            }
 
-            bool hasRemainingShops = await _shopService.HasUserAnyShopsAsync(userId);
+                var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+                var success = await _shopService.DeleteShopAsync(id);
 
-            if (!hasRemainingShops)
-            {
-                var user = await _userManager.FindByIdAsync(userId.ToString());
-                if (user != null && await _userManager.IsInRoleAsync(user, "Manager"))
+                if (!success)
                 {
-                    await _userManager.RemoveFromRoleAsync(user, "Manager");
-
-                    // ✅ Refresh authentication cookie
-                    await _signInManager.RefreshSignInAsync(user);
-
-                    TempData["Success"] = "Shop deleted successfully.";
-                    //todo: Fix redirect!!!
-                    return RedirectToAction("Index", "Shop", new { area = "" });
-
+                    TempData["Error"] = "Failed to delete the shop.";
+                    return RedirectToAction("ManagedShops");
                 }
+
+                bool hasRemainingShops = await _shopService.HasUserAnyShopsAsync(userId);
+
+                if (!hasRemainingShops)
+                {
+                    var user = await _userManager.FindByIdAsync(userId.ToString());
+                    if (user != null && await _userManager.IsInRoleAsync(user, "Manager"))
+                    {
+                        await _userManager.RemoveFromRoleAsync(user, "Manager");
+
+                        // ✅ Refresh authentication cookie
+                        await _signInManager.RefreshSignInAsync(user);
+
+                        TempData["Success"] = "Shop deleted successfully.";
+                        //todo: Fix redirect!!!
+                        return RedirectToAction("Index", "Shop", new { area = "" });
+
+                    }
+                }
+
+                TempData["Success"] = "Shop deleted successfully.";
+
+                return RedirectToAction("ManagedShops");
+
             }
-            TempData["Success"] = "Shop deleted successfully.";
+            catch (UnauthorizedAccessException ex)
+            {
+                Console.WriteLine(ex);
+                return RedirectToAction("HttpStatusCodeHandler", "Error", new { statusCode = 403 });
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                TempData["ErrorMessage"] = "An Error occured while trying to process your data.";
+                return RedirectToAction("HttpStatusCodeHandler", "Error");
+            }
 
-            return RedirectToAction("ManagedShops");
-            
-
-            
         }
     }
 }

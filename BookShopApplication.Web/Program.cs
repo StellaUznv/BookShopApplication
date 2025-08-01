@@ -57,6 +57,13 @@ namespace BookShopApplication.Web
 
             builder.Services.AddTransient<IEmailSender, EmailSender>();
 
+            builder.Services.ConfigureApplicationCookie(options =>
+            {
+                options.AccessDeniedPath = "/Error/403";
+                options.LoginPath = "/Account/Login"; // optional
+            });
+
+
             var app = builder.Build();
 
             // SEED ROLES AND ADMIN USER HERE
@@ -87,6 +94,8 @@ namespace BookShopApplication.Web
             app.UseStaticFiles();
 
             app.UseRouting();
+            app.UseExceptionHandler("/Error"); // Generic Error() action
+            app.UseStatusCodePagesWithReExecute("/Error/{0}");
 
             app.UseAuthentication();
             app.UseAuthorization();
