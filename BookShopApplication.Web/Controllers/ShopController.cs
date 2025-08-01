@@ -22,73 +22,110 @@ namespace BookShopApplication.Web.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var models = await _shopService.DisplayAllShopsAsync();
-            return View(models);
+            try
+            {
+
+                var models = await _shopService.DisplayAllShopsAsync();
+                return View(models);
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = "An Error occured while trying to fetch the page.";
+                return RedirectToAction("Error", "Error");
+            }
         }
 
         [HttpGet]
         public IActionResult Create(Guid locationId)
         {
-            // Option 1: Use ViewBag to pass locationId to the view
-            ViewBag.LocationId = locationId;
-            return View();
+            try
+            {
+
+                ViewBag.LocationId = locationId;
+                return View();
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = "An Error occured while trying to fetch the page.";
+                return RedirectToAction("Error", "Error");
+            }
         }
 
         [HttpPost]
         public async Task<IActionResult> Create(CreateShopViewModel model, [FromForm] Guid locationId)
         {
-            bool isAdded = false;
-
-            var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
-
-            if (ModelState.IsValid)
+            try
             {
-                isAdded = await _shopService.CreateShopAsync(model, userId, locationId);
-            }
-            else
-            {
-                return View(model);
-            }
 
-            if (isAdded)
-            {
-                var user = await _userManager.FindByIdAsync(userId.ToString());
-                if (user != null && !await _userManager.IsInRoleAsync(user, "Manager"))
+                bool isAdded = false;
+
+                var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+
+                if (ModelState.IsValid)
                 {
-                    await _userManager.AddToRoleAsync(user, "Manager");
-
-                    await _signInManager.RefreshSignInAsync(user);
+                    isAdded = await _shopService.CreateShopAsync(model, userId, locationId);
                 }
-                TempData["SuccessMessage"] = "Successfully created your shop!";
-            }
-            else
-            {
-                TempData["ErrorMessage"] = "Something went wrong!";
-            }
+                else
+                {
+                    return View(model);
+                }
 
-            return RedirectToAction("Index");
+                if (isAdded)
+                {
+                    var user = await _userManager.FindByIdAsync(userId.ToString());
+                    if (user != null && !await _userManager.IsInRoleAsync(user, "Manager"))
+                    {
+                        await _userManager.AddToRoleAsync(user, "Manager");
+
+                        await _signInManager.RefreshSignInAsync(user);
+                    }
+
+                    TempData["SuccessMessage"] = "Successfully created your shop!";
+                }
+                else
+                {
+                    TempData["ErrorMessage"] = "Something went wrong!";
+                }
+
+                return RedirectToAction("Index");
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = "An Error occured while trying to process your data.";
+                return RedirectToAction("Error", "Error");
+            }
         }
         [HttpGet]
         public async Task<IActionResult> Details(Guid id)
         {
-            Guid? userId = null;
-
-            if (User.Identity?.IsAuthenticated == true)
+            try
             {
-                var userIdString = User.FindFirstValue(ClaimTypes.NameIdentifier);
-                if (Guid.TryParse(userIdString, out var parsedId))
+
+                Guid? userId = null;
+
+                if (User.Identity?.IsAuthenticated == true)
                 {
-                    userId = parsedId;
+                    var userIdString = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                    if (Guid.TryParse(userIdString, out var parsedId))
+                    {
+                        userId = parsedId;
+                    }
                 }
-            }
-            var viewModel = await _shopService.DisplayShopAsync(id, userId);
 
-            if (viewModel == null)
+                var viewModel = await _shopService.DisplayShopAsync(id, userId);
+
+                if (viewModel == null)
+                {
+                    return NotFound();
+                }
+
+                return View(viewModel);
+            }
+            catch (Exception ex)
             {
-                return NotFound();
+                TempData["ErrorMessage"] = "An Error occured while trying to fetch your shop data.";
+                return RedirectToAction("Error", "Error");
             }
-
-            return View(viewModel);
         }
     }
 }

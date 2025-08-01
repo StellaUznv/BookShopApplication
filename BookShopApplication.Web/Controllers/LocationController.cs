@@ -14,57 +14,70 @@ namespace BookShopApplication.Web.Controllers
             this._locationService = locationService;
         }
 
-        public async Task<IActionResult> Index()
-        {
-            return View();
-        }
         [HttpGet]
         public async Task<IActionResult> CreateToShop()
         {
-            return View();
+            try
+            {
+                return View();
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = "An Error occured while trying to get to the page.";
+                return RedirectToAction("Error", "Error");
+            }
         }
 
         [HttpPost]
         public async Task<IActionResult> CreateToShop(CreateLocationViewModel model)
         {
-            bool isAdded = false;
-
-            Guid? userId = null;
-
-            if (User.Identity != null && User.Identity.IsAuthenticated)
+            try
             {
-                var idValue = User.FindFirstValue(ClaimTypes.NameIdentifier);
-                if (!string.IsNullOrEmpty(idValue))
+
+                bool isAdded = false;
+
+                Guid? userId = null;
+
+                if (User.Identity != null && User.Identity.IsAuthenticated)
                 {
-                    userId = Guid.Parse(idValue);
+                    var idValue = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                    if (!string.IsNullOrEmpty(idValue))
+                    {
+                        userId = Guid.Parse(idValue);
+                    }
                 }
-            }
 
-            if (userId == null)
-            {
-                TempData["ErrorMessage"] = "Please login first!";
-                return RedirectToAction("Index", "Shop");
-            }
+                if (userId == null)
+                {
+                    TempData["ErrorMessage"] = "Please login first!";
+                    return RedirectToAction("Index", "Shop");
+                }
 
-            if (ModelState.IsValid)
-            {
-                isAdded = await _locationService.CreateLocationAsync(model);
-            }
-            else
-            {
-                return View(model);
-            }
-            
-            if (isAdded)
-            {
-                TempData["SuccessMessage"] = "Successfully created the location of your shop!";
-            }
-            else
-            {
-                TempData["ErrorMessage"] = "Something went wrong!";
-            }
+                if (ModelState.IsValid)
+                {
+                    isAdded = await _locationService.CreateLocationAsync(model);
+                }
+                else
+                {
+                    return View(model);
+                }
 
-            return RedirectToAction("Create", "Shop", new { locationId = model.Id });
+                if (isAdded)
+                {
+                    TempData["SuccessMessage"] = "Successfully created the location of your shop!";
+                }
+                else
+                {
+                    TempData["ErrorMessage"] = "Something went wrong!";
+                }
+
+                return RedirectToAction("Create", "Shop", new { locationId = model.Id });
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = "An Error occured while trying to process your data.";
+                return RedirectToAction("Error", "Error");
+            }
 
         }
     }

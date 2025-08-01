@@ -58,7 +58,7 @@ namespace BookShopApplication.Web.Controllers
                 // Fallback in case referrer is missing
                 return RedirectToAction("Index", "Book");
             }
-            catch
+            catch (Exception ex)
             {
                 TempData["ErrorMessage"] = "An Error occured while processing your data.";
                 return RedirectToAction("Error", "Error");
@@ -91,7 +91,7 @@ namespace BookShopApplication.Web.Controllers
                 return RedirectToAction("Index", "Book");
 
             }
-            catch
+            catch (Exception ex)
             {
                 TempData["ErrorMessage"] = "An Error occured while trying to process your data.";
                 return RedirectToAction("Error", "Error");
@@ -126,7 +126,7 @@ namespace BookShopApplication.Web.Controllers
                 // Fallback in case referrer is missing
                 return RedirectToAction("Index", "Book");
             }
-            catch
+            catch (Exception ex)
             {
                 TempData["ErrorMessage"] = "An Error occured while trying to process your data.";
                 return RedirectToAction("Error", "Error");
@@ -159,7 +159,7 @@ namespace BookShopApplication.Web.Controllers
                 // Fallback in case referrer is missing
                 return RedirectToAction("Index", "Book");
             }
-            catch
+            catch (Exception ex)
             {
                 TempData["ErrorMessage"] = "An Error occured while trying to process your data.";
                 return RedirectToAction("Error", "Error");
@@ -192,7 +192,7 @@ namespace BookShopApplication.Web.Controllers
                 // Fallback in case referrer is missing
                 return RedirectToAction("Index", "Book");
             }
-            catch
+            catch (Exception ex)
             {
                 TempData["ErrorMessage"] = "An Error occured while trying to process your purchase.";
                 return RedirectToAction("Error", "Error");
