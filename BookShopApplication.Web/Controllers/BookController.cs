@@ -16,37 +16,58 @@ namespace BookShopApplication.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> Index()
         {
-            Guid? userId = null;
-
-            if (User.Identity != null && User.Identity.IsAuthenticated)
+            try
             {
-                var idValue = User.FindFirstValue(ClaimTypes.NameIdentifier);
-                if (!string.IsNullOrEmpty(idValue))
+                Guid? userId = null;
+
+                if (User.Identity != null && User.Identity.IsAuthenticated)
                 {
-                    userId = Guid.Parse(idValue);
+                    var idValue = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                    if (!string.IsNullOrEmpty(idValue))
+                    {
+                        userId = Guid.Parse(idValue);
+                    }
                 }
+
+                var books = await _service.DisplayAllBooksAsync(userId);
+                return View(books);
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = "An Error occured trying to fetch books data.";
+                return RedirectToAction("Error", "Error");
             }
 
-            var books = await _service.DisplayAllBooksAsync(userId);
-            return View(books);
+
         }
 
         [HttpGet]
         public async Task<IActionResult> Details(Guid id)
         {
-            Guid? userId = null;
-
-            if (User.Identity != null && User.Identity.IsAuthenticated)
+            try
             {
-                var idValue = User.FindFirstValue(ClaimTypes.NameIdentifier);
-                if (!string.IsNullOrEmpty(idValue))
-                {
-                    userId = Guid.Parse(idValue);
-                }
-            }
-            var book = await _service.DisplayBookDetailsByIdAsync(userId, id);
+                Guid? userId = null;
 
-            return View(book);
+                if (User.Identity != null && User.Identity.IsAuthenticated)
+                {
+                    var idValue = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                    if (!string.IsNullOrEmpty(idValue))
+                    {
+                        userId = Guid.Parse(idValue);
+                    }
+                }
+
+                var book = await _service.DisplayBookDetailsByIdAsync(userId, id);
+
+                return View(book);
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = "An Error occured while trying to fetch book's details.";
+                return RedirectToAction("Error", "Error");
+            }
+
+
         }
         
     }
