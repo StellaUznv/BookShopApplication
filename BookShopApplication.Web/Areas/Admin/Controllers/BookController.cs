@@ -25,32 +25,96 @@ namespace BookShopApplication.Web.Areas.Admin.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var models = await _bookService.DisplayAllBooksAsync();
-            return View(models);
+            try
+            {
+                var models = await _bookService.DisplayAllBooksAsync();
+                return View(models);
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                Console.WriteLine(ex);
+                return RedirectToAction("HttpStatusCodeHandler", "Error", new { statusCode = 403 });
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                TempData["ErrorMessage"] = "An Error occured while trying to fetch your data.";
+                return RedirectToAction("HttpStatusCodeHandler", "Error");
+            }
         }
         [HttpGet]
         public async Task<IActionResult> Create(Guid shopId)
         {
-            var genresModel = await _genreService.GetGenreListAsync();
-
-            var model = new CreateBookViewModel
+            try
             {
-                Genres = genresModel.Select(g => new SelectListItem
+                var genresModel = await _genreService.GetGenreListAsync();
+
+                var model = new CreateBookViewModel
                 {
-                    Text = g.Name,
-                    Value = g.Id.ToString()
-                }).ToList(),
-                ShopId = shopId
-            };
-            return View(model);
+                    Genres = genresModel.Select(g => new SelectListItem
+                    {
+                        Text = g.Name,
+                        Value = g.Id.ToString()
+                    }).ToList(),
+                    ShopId = shopId
+                };
+                return View(model);
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                Console.WriteLine(ex);
+                return RedirectToAction("HttpStatusCodeHandler", "Error", new { statusCode = 403 });
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                TempData["ErrorMessage"] = "An Error occured while trying to process your data.";
+                return RedirectToAction("HttpStatusCodeHandler", "Error");
+            }
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(CreateBookViewModel model)
         {
-            if (!ModelState.IsValid)
+            try
             {
-                // Reload genres in case of validation failure
+
+                if (!ModelState.IsValid)
+                {
+                    // Reload genres in case of validation failure
+                    var genresModel = await _genreService.GetGenreListAsync();
+                    model.Genres = genresModel.Select(g => new SelectListItem
+                    {
+                        Text = g.Name,
+                        Value = g.Id.ToString()
+                    }).ToList();
+
+                    return View(model);
+                }
+
+                await _bookService.CreateBookAsync(model);
+
+                return RedirectToAction("Index", "Book", new { area = "Admin" });
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                Console.WriteLine(ex);
+                return RedirectToAction("HttpStatusCodeHandler", "Error", new { statusCode = 403 });
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                TempData["ErrorMessage"] = "An Error occured while trying to process your data.";
+                return RedirectToAction("HttpStatusCodeHandler", "Error");
+            }
+        }
+        [HttpGet]
+        public async Task<IActionResult> Edit(Guid id, Guid shopId)
+        {
+            try
+            {
+                var model = await _bookService.GetBookToEdit(id, shopId);
+
                 var genresModel = await _genreService.GetGenreListAsync();
                 model.Genres = genresModel.Select(g => new SelectListItem
                 {
@@ -58,65 +122,90 @@ namespace BookShopApplication.Web.Areas.Admin.Controllers
                     Value = g.Id.ToString()
                 }).ToList();
 
+
                 return View(model);
             }
-
-            await _bookService.CreateBookAsync(model);
-
-            return RedirectToAction("Index", "Book", new { area = "Admin" });
-        }
-        [HttpGet]
-        public async Task<IActionResult> Edit(Guid id, Guid shopId)
-        {
-            var model = await _bookService.GetBookToEdit(id, shopId);
-
-            var genresModel = await _genreService.GetGenreListAsync();
-            model.Genres = genresModel.Select(g => new SelectListItem
+            catch (UnauthorizedAccessException ex)
             {
-                Text = g.Name,
-                Value = g.Id.ToString()
-            }).ToList();
-
-
-            return View(model);
+                Console.WriteLine(ex);
+                return RedirectToAction("HttpStatusCodeHandler", "Error", new { statusCode = 403 });
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                TempData["ErrorMessage"] = "An Error occured while trying to process your data.";
+                return RedirectToAction("HttpStatusCodeHandler", "Error");
+            }
         }
 
         [HttpPost]
         public async Task<IActionResult> Edit(EditBookViewModel model)
         {
-            if (!ModelState.IsValid)
+            try
             {
-                var genresModel = await _genreService.GetGenreListAsync();
-                model.Genres = genresModel.Select(g => new SelectListItem
+
+                if (!ModelState.IsValid)
                 {
-                    Text = g.Name,
-                    Value = g.Id.ToString()
-                }).ToList();
+                    var genresModel = await _genreService.GetGenreListAsync();
+                    model.Genres = genresModel.Select(g => new SelectListItem
+                    {
+                        Text = g.Name,
+                        Value = g.Id.ToString()
+                    }).ToList();
 
-                return View(model);
+                    return View(model);
+                }
+
+                bool success = await _bookService.EditBookAsync(model);
+                if (!success)
+                {
+                    ModelState.AddModelError("", "Failed to update the book.");
+                    return View(model);
+                }
+
+                return RedirectToAction("Index", "Book", new { area = "Admin" });
             }
-
-            bool success = await _bookService.EditBookAsync(model);
-            if (!success)
+            catch (UnauthorizedAccessException ex)
             {
-                ModelState.AddModelError("", "Failed to update the book.");
-                return View(model);
+                Console.WriteLine(ex);
+                return RedirectToAction("HttpStatusCodeHandler", "Error", new { statusCode = 403 });
             }
-            return RedirectToAction("Index", "Book", new { area = "Admin" });
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                TempData["ErrorMessage"] = "An Error occured while trying to process your data.";
+                return RedirectToAction("HttpStatusCodeHandler", "Error");
+            }
         }
 
         [HttpPost]
         public async Task<IActionResult> Delete(Guid id, Guid shopId)
         {
-            var isDeleted = await _bookService.DeleteBookAsync(id);
-            if (!isDeleted)
+            try
             {
-                TempData["Error"] = "Failed to delete the shop.";
+
+
+                var isDeleted = await _bookService.DeleteBookAsync(id);
+                if (!isDeleted)
+                {
+                    TempData["Error"] = "Failed to delete the shop.";
+                    return RedirectToAction("Index", "Book", new { area = "Admin" });
+                }
+
+                TempData["Success"] = "Shop deleted successfully.";
                 return RedirectToAction("Index", "Book", new { area = "Admin" });
             }
-
-            TempData["Success"] = "Shop deleted successfully.";
-            return RedirectToAction("Index", "Book", new { area = "Admin" });
+            catch (UnauthorizedAccessException ex)
+            {
+                Console.WriteLine(ex);
+                return RedirectToAction("HttpStatusCodeHandler", "Error", new { statusCode = 403 });
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                TempData["ErrorMessage"] = "An Error occured while trying to process your data.";
+                return RedirectToAction("HttpStatusCodeHandler", "Error");
+            }
         }
     }
 }

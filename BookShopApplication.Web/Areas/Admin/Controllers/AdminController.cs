@@ -17,8 +17,23 @@ namespace BookShopApplication.Web.Areas.Admin.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var model = await _adminService.GetAdminDashboardData();
-            return View(model);
+            try
+            {
+
+                var model = await _adminService.GetAdminDashboardData();
+                return View(model);
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                Console.WriteLine(ex);
+                return RedirectToAction("HttpStatusCodeHandler", "Error", new { statusCode = 403 });
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                TempData["ErrorMessage"] = "An Error occured while trying to fetch your data.";
+                return RedirectToAction("HttpStatusCodeHandler", "Error");
+            }
         }
     }
 }
