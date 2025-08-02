@@ -5,7 +5,7 @@ namespace BookShopApplication.Web.Areas.Manager.Controllers
 {
     [Area("Manager")]
     [Authorize(Roles = "Manager")]
-    public class ManagerController : Controller
+    public class ManagerController : BaseController
     {
         public IActionResult Index()
         {

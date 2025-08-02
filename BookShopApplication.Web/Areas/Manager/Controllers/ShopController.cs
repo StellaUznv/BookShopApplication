@@ -12,7 +12,7 @@ namespace BookShopApplication.Web.Areas.Manager.Controllers
 {
     [Area("Manager")]
     [Authorize(Roles = "Manager")]
-    public class ShopController : Controller
+    public class ShopController : BaseController
     {
         private readonly IShopService _shopService;
         private readonly UserManager<ApplicationUser> _userManager;
@@ -31,7 +31,8 @@ namespace BookShopApplication.Web.Areas.Manager.Controllers
             try
             {
 
-                var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+                var userId = Guid.Parse(this.GetUserId()!);
+
                 var models = await _shopService.GetManagedShopsAsync(userId);
                 return View(models);
             }
@@ -138,7 +139,7 @@ namespace BookShopApplication.Web.Areas.Manager.Controllers
             try
             {
 
-                var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+                var userId = Guid.Parse(this.GetUserId()!);
                 var success = await _shopService.DeleteShopAsync(id);
 
                 if (!success)

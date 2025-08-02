@@ -9,7 +9,7 @@ namespace BookShopApplication.Web.Areas.Manager.Controllers
 {
     [Area("Manager")]
     [Authorize(Roles = "Manager")]
-    public class LocationController : Controller
+    public class LocationController : BaseController
     {
         private readonly ILocationService _locationService;
 
