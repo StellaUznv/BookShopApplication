@@ -1,4 +1,5 @@
 ﻿using BookShopApplication.Data.Models;
+using BookShopApplication.Services.Contracts;
 using BookShopApplication.Web.ViewModels.Role;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -14,22 +15,22 @@ namespace BookShopApplication.Web.Areas.Admin.Controllers
         private readonly RoleManager<ApplicationRole> _roleManager;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly IRoleService _roleService;
 
-        public RoleController(RoleManager<ApplicationRole> roleManager, UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager)
+        public RoleController(RoleManager<ApplicationRole> roleManager, UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager
+            , IRoleService roleService)
         {
             _roleManager = roleManager;
             _userManager = userManager;
             _signInManager = signInManager;
+            _roleService = roleService;
         }
 
         public async Task<IActionResult> Index()
         {
             try
             {
-
-                var roles = await _roleManager.Roles
-                    .Select(r => new RoleViewModel { Id = r.Id, Name = r.Name })
-                    .ToListAsync();
+                var roles = await _roleService.GetAllRolesAsync();
                 return View(roles);
             }
             catch (UnauthorizedAccessException ex)
@@ -50,7 +51,6 @@ namespace BookShopApplication.Web.Areas.Admin.Controllers
         {
             try
             {
-
                 var model = new CreateRoleViewModel();
                 return View(model);
             }
@@ -73,22 +73,20 @@ namespace BookShopApplication.Web.Areas.Admin.Controllers
         {
             try
             {
-
-
                 if (!ModelState.IsValid)
                     return View(model);
 
-                if (await _roleManager.RoleExistsAsync(model.Name))
+                if (await _roleService.RoleExistsAsync(model))
                 {
                     ModelState.AddModelError("", "Role already exists.");
                     return View(model);
                 }
 
-                var result = await _roleManager.CreateAsync(new ApplicationRole(model.Name));
-                if (result.Succeeded)
+                var isCreated = await _roleService.CreateRoleAsync(model);
+                if (isCreated.Succeeded)
                     return RedirectToAction(nameof(Index));
 
-                foreach (var error in result.Errors)
+                foreach (var error in isCreated.Errors)
                     ModelState.AddModelError("", error.Description);
 
                 return View(model);
@@ -110,26 +108,7 @@ namespace BookShopApplication.Web.Areas.Admin.Controllers
         {
             try
             {
-
-                var role = await _roleManager.FindByIdAsync(id.ToString());
-                if (role == null) return NotFound();
-
-                var model = new RoleEditViewModel
-                {
-                    Id = role.Id,
-                    Name = role.Name!
-                };
-
-                foreach (var user in _userManager.Users.ToList())
-                {
-                    model.Users.Add(new UserRoleAssignmentViewModel
-                    {
-                        UserId = user.Id,
-                        UserName = user.UserName!,
-                        IsAssigned = await _userManager.IsInRoleAsync(user, role.Name!)
-                    });
-                }
-
+                var model = await _roleService.GetRoleToEditAsync(id);
                 return View(model);
             }
             catch (UnauthorizedAccessException ex)
@@ -151,12 +130,7 @@ namespace BookShopApplication.Web.Areas.Admin.Controllers
         {
             try
             {
-
-                var role = await _roleManager.FindByIdAsync(model.Id.ToString());
-                if (role == null) return NotFound();
-
-                role.Name = model.Name;
-                var result = await _roleManager.UpdateAsync(role);
+                var result = await _roleService.EditRoleAsync(model);
 
                 if (!result.Succeeded)
                 {
@@ -167,25 +141,9 @@ namespace BookShopApplication.Web.Areas.Admin.Controllers
 
                 var currentUserId = _userManager.GetUserId(User);
 
-                foreach (var userModel in model.Users)
+                if (await _roleService.AssignRoleAsync(currentUserId!, model))
                 {
-                    var user = await _userManager.FindByIdAsync(userModel.UserId.ToString());
-                    if (user == null) continue;
-
-                    var isInRole = await _userManager.IsInRoleAsync(user, role.Name!);
-
-                    if (userModel.IsAssigned && !isInRole)
-                        await _userManager.AddToRoleAsync(user, role.Name!);
-                    else if (!userModel.IsAssigned && isInRole)
-                    {
-                        await _userManager.RemoveFromRoleAsync(user, role.Name!);
-                        if (user.Id.ToString() == currentUserId)
-                        {
-                            await _signInManager.RefreshSignInAsync(user);
-                            return RedirectToAction("Index", "Home", new { area = "" });
-                        }
-                    }
-
+                    return RedirectToAction("Index", "Home", new { area = "" });
                 }
 
                 return RedirectToAction(nameof(Index));
@@ -209,11 +167,7 @@ namespace BookShopApplication.Web.Areas.Admin.Controllers
         {
             try
             {
-
-                var role = await _roleManager.FindByIdAsync(id);
-                if (role == null) return NotFound();
-
-                var result = await _roleManager.DeleteAsync(role);
+                var result = await _roleService.DeleteRoleAsync(id);
 
                 if (!result.Succeeded)
                 {
