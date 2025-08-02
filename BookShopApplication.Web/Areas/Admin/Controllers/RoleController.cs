@@ -12,18 +12,13 @@ namespace BookShopApplication.Web.Areas.Admin.Controllers
     [Authorize(Roles = "Admin")]
     public class RoleController : Controller
     {
-        private readonly RoleManager<ApplicationRole> _roleManager;
         private readonly UserManager<ApplicationUser> _userManager;
-        private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly IRoleService _roleService;
 
-        public RoleController(RoleManager<ApplicationRole> roleManager, UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager
-            , IRoleService roleService)
+        public RoleController(IRoleService roleService, UserManager<ApplicationUser> userManager)
         {
-            _roleManager = roleManager;
-            _userManager = userManager;
-            _signInManager = signInManager;
             _roleService = roleService;
+            _userManager = userManager;
         }
 
         public async Task<IActionResult> Index()

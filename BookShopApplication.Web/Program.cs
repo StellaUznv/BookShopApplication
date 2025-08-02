@@ -55,6 +55,7 @@ namespace BookShopApplication.Web
             builder.Services.AddScoped<IGenreService, GenreService>();
             builder.Services.AddScoped<IAdminService, AdminService>();
             builder.Services.AddScoped<IRoleService, RoleService>();
+            builder.Services.AddScoped<IUserService, UserService>();
 
             builder.Services.AddTransient<IEmailSender, EmailSender>();
 

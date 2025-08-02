@@ -20,14 +20,16 @@ namespace BookShopApplication.Web.Areas.Admin.Controllers
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly ILocationService _locationService;
         private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly IUserService _userService;
 
         public ShopController(IShopService shopService, UserManager<ApplicationUser> userManager, ILocationService locationService,
-            SignInManager<ApplicationUser> signInManager)
+            SignInManager<ApplicationUser> signInManager, IUserService userService)
         {
             _shopService = shopService;
             _userManager = userManager;
             _locationService = locationService;
             _signInManager = signInManager;
+            _userService = userService;
         }
         [HttpGet]
         public async Task<IActionResult> Index()
@@ -78,19 +80,9 @@ namespace BookShopApplication.Web.Areas.Admin.Controllers
         {
             try
             {
-
-                var managers = await _userManager.Users.Select(u => new
-                {
-                    Id = u.Id,
-                    Email = u.Email
-                }).ToListAsync();
                 var model = new CreateShopAsAdminViewModel
                 {
-                    Managers = managers.Select(m => new SelectListItem
-                    {
-                        Value = m.Id.ToString(),
-                        Text = m.Email
-                    })
+                    Managers = await _userService.GetUsersAsync()
                 };
 
                 return View(model);
@@ -116,16 +108,7 @@ namespace BookShopApplication.Web.Areas.Admin.Controllers
 
                 if (!ModelState.IsValid)
                 {
-                    var managers = await _userManager.Users.Select(u => new
-                    {
-                        Id = u.Id,
-                        Email = u.Email
-                    }).ToListAsync();
-                    model.Managers = managers.Select(m => new SelectListItem
-                    {
-                        Value = m.Id.ToString(),
-                        Text = m.Email
-                    });
+                    model.Managers = await _userService.GetUsersAsync();
                     return View(model);
                 }
 
@@ -172,16 +155,8 @@ namespace BookShopApplication.Web.Areas.Admin.Controllers
 
 
                 var model = await _shopService.GetShopToEditAsAdminAsync(id);
-                var managers = await _userManager.Users.Select(u => new
-                {
-                    Id = u.Id,
-                    Email = u.Email
-                }).ToListAsync();
-                model.Managers = managers.Select(m => new SelectListItem
-                {
-                    Value = m.Id.ToString(),
-                    Text = m.Email
-                });
+
+                model.Managers = await _userService.GetUsersAsync();
                 return View(model);
             }
             catch (UnauthorizedAccessException ex)
@@ -206,16 +181,7 @@ namespace BookShopApplication.Web.Areas.Admin.Controllers
 
                 if (!ModelState.IsValid)
                 {
-                    var managers = await _userManager.Users.Select(u => new
-                    {
-                        Id = u.Id,
-                        Email = u.Email
-                    }).ToListAsync();
-                    model.Managers = managers.Select(m => new SelectListItem
-                    {
-                        Value = m.Id.ToString(),
-                        Text = m.Email
-                    });
+                    model.Managers = await _userService.GetUsersAsync();
                     return View(model);
                 }
 
