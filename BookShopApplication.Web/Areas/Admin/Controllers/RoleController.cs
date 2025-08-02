@@ -10,15 +10,13 @@ namespace BookShopApplication.Web.Areas.Admin.Controllers
 {
     [Area("Admin")]
     [Authorize(Roles = "Admin")]
-    public class RoleController : Controller
+    public class RoleController : BaseController
     {
-        private readonly UserManager<ApplicationUser> _userManager;
         private readonly IRoleService _roleService;
 
-        public RoleController(IRoleService roleService, UserManager<ApplicationUser> userManager)
+        public RoleController(IRoleService roleService)
         {
             _roleService = roleService;
-            _userManager = userManager;
         }
 
         public async Task<IActionResult> Index()
@@ -134,7 +132,7 @@ namespace BookShopApplication.Web.Areas.Admin.Controllers
                     return View(model);
                 }
 
-                var currentUserId = _userManager.GetUserId(User);
+                var currentUserId = this.GetUserId();
 
                 if (await _roleService.AssignRoleAsync(currentUserId!, model))
                 {

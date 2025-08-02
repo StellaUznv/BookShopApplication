@@ -7,7 +7,7 @@ namespace BookShopApplication.Web.Areas.Admin.Controllers
 {
     [Area("Admin")]
     [Authorize(Roles = "Admin")]
-    public class LocationController : Controller
+    public class LocationController : BaseController
     {
         private readonly ILocationService _locationService;
 

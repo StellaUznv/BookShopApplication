@@ -14,7 +14,7 @@ namespace BookShopApplication.Web.Areas.Admin.Controllers
 {
     [Area("Admin")]
     [Authorize(Roles = "Admin")]
-    public class ShopController : Controller
+    public class ShopController : BaseController
     {
         private readonly IShopService _shopService;
         private readonly UserManager<ApplicationUser> _userManager;

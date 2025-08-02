@@ -12,7 +12,7 @@ namespace BookShopApplication.Web.Areas.Admin.Controllers
 {
     [Area("Admin")]
     [Authorize(Roles = "Admin")]
-    public class BookController : Controller
+    public class BookController : BaseController
     {
         private readonly IBookService _bookService;
         private readonly IGenreService _genreService;

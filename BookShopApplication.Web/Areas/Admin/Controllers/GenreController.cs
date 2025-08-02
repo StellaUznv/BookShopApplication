@@ -7,7 +7,7 @@ namespace BookShopApplication.Web.Areas.Admin.Controllers
 {
     [Area("Admin")]
     [Authorize(Roles = "Admin")]
-    public class GenreController : Controller
+    public class GenreController : BaseController
     {
         private readonly IGenreService _genreService;
 
