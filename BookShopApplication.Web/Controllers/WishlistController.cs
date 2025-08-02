@@ -1,10 +1,12 @@
 ﻿using BookShopApplication.Services.Contracts;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 
 namespace BookShopApplication.Web.Controllers
 {
-    public class WishlistController : Controller
+    [Authorize]
+    public class WishlistController : BaseController
     {
 
         private readonly IWishlistService _service;
@@ -19,8 +21,8 @@ namespace BookShopApplication.Web.Controllers
         {
             try
             {
+                var userId = Guid.Parse(this.GetUserId()!);
 
-                var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
                 var model = await _service.DisplayWishlistItemsAsync(userId);
                 return View(model);
             }
@@ -38,7 +40,7 @@ namespace BookShopApplication.Web.Controllers
             try
             {
 
-                var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+                var userId = Guid.Parse(this.GetUserId()!);
 
                 var isAdded = await _service.AddToWishlistAsync(userId, bookId);
 
@@ -109,7 +111,7 @@ namespace BookShopApplication.Web.Controllers
             try
             {
 
-                var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+                var userId = Guid.Parse(this.GetUserId()!);
 
                 var isRemoved = await _service.RemoveFromWishlistAsync(userId, bookId);
 

@@ -18,18 +18,18 @@ namespace BookShopApplication.Web.Areas.Admin.Controllers
     {
         private readonly IShopService _shopService;
         private readonly UserManager<ApplicationUser> _userManager;
-        private readonly ILocationService _locationService;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly IUserService _userService;
+        private readonly IRoleService _roleService;
 
-        public ShopController(IShopService shopService, UserManager<ApplicationUser> userManager, ILocationService locationService,
-            SignInManager<ApplicationUser> signInManager, IUserService userService)
+        public ShopController(IShopService shopService, UserManager<ApplicationUser> userManager, 
+            SignInManager<ApplicationUser> signInManager, IUserService userService, IRoleService roleService)
         {
             _shopService = shopService;
             _userManager = userManager;
-            _locationService = locationService;
             _signInManager = signInManager;
             _userService = userService;
+            _roleService = roleService;
         }
         [HttpGet]
         public async Task<IActionResult> Index()
@@ -116,12 +116,8 @@ namespace BookShopApplication.Web.Areas.Admin.Controllers
 
                 if (shopCreated)
                 {
-                    var user = await _userManager.FindByIdAsync(model.SelectedManagerId.ToString());
-                    if (user != null && !await _userManager.IsInRoleAsync(user, "Manager"))
+                    if (await _roleService.AssignManagerRoleAsync(model.SelectedManagerId.ToString()))
                     {
-                        await _userManager.AddToRoleAsync(user, "Manager");
-
-                        await _signInManager.RefreshSignInAsync(user);
                         TempData["SuccessMessage"] = "Successfully created your shop and assigned manager!";
                     }
 
@@ -152,8 +148,6 @@ namespace BookShopApplication.Web.Areas.Admin.Controllers
         {
             try
             {
-
-
                 var model = await _shopService.GetShopToEditAsAdminAsync(id);
 
                 model.Managers = await _userService.GetUsersAsync();
@@ -187,12 +181,8 @@ namespace BookShopApplication.Web.Areas.Admin.Controllers
 
                 if (await _shopService.EditShopAsAdminAsync(model))
                 {
-                    var user = await _userManager.FindByIdAsync(model.SelectedManagerId.ToString());
-                    if (user != null && !await _userManager.IsInRoleAsync(user, "Manager"))
+                    if (await _roleService.AssignManagerRoleAsync(model.SelectedManagerId.ToString()))
                     {
-                        await _userManager.AddToRoleAsync(user, "Manager");
-
-                        await _signInManager.RefreshSignInAsync(user);
                         TempData["SuccessMessage"] = "Successfully updated your shop and assigned manager!";
                     }
                 }

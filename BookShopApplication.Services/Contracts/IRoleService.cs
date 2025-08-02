@@ -23,5 +23,6 @@ namespace BookShopApplication.Services.Contracts
         public Task<bool> AssignRoleAsync(string currentUserId,RoleEditViewModel model);
 
         public Task<IdentityResult> DeleteRoleAsync(string id);
+        public Task<bool> AssignManagerRoleAsync(string id);
     }
 }

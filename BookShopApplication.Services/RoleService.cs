@@ -120,5 +120,19 @@ namespace BookShopApplication.Services
 
             return await _roleManager.DeleteAsync(role);
         }
+
+        public async Task<bool> AssignManagerRoleAsync(string id)
+        {
+            var user = await _userManager.FindByIdAsync(id);
+            if (user != null && !await _userManager.IsInRoleAsync(user, "Manager"))
+            {
+                await _userManager.AddToRoleAsync(user, "Manager");
+
+                await _signInManager.RefreshSignInAsync(user);
+                return true;
+            }
+
+            return false;
+        }
     }
 }

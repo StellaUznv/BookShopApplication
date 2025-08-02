@@ -5,7 +5,7 @@ using System.Security.Claims;
 
 namespace BookShopApplication.Web.Controllers
 {
-    public class BookController : Controller
+    public class BookController : BaseController
     {
         private readonly IBookService _service;
 
