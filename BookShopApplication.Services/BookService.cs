@@ -31,11 +31,11 @@ namespace BookShopApplication.Services
             this._bookInShopRepository = bookInShopRepository;
         }
 
-        public async Task<IEnumerable<BookViewModel>> DisplayAllBooksAsync()
+        public async Task<PaginatedList<BookViewModel>> DisplayAllBooksAsync(int page, int pageSize)
         {
             //Todo: Fix!!!
             var books = await GetAllBooksToDisplayAsync(_bookRepository);
-            return await books.ToListAsync();
+            return await PaginatedList<BookViewModel>.CreateAsync(books, page, pageSize);
         }
 
         public async Task<PaginatedList<BookViewModel>> DisplayAllBooksAsync(Guid? userId,int page, int pageSize)

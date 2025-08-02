@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using BookShopApplication.Web.ViewModels;
 using BookShopApplication.Web.ViewModels.Location;
 
 namespace BookShopApplication.Services.Contracts
@@ -14,6 +15,6 @@ namespace BookShopApplication.Services.Contracts
         public Task<EditLocationViewModel> GetLocationToEditAsync(Guid locationId);
 
         public Task<bool> EditLocationAsync(EditLocationViewModel model);
-        public Task<IEnumerable<LocationViewModel>> GetAllLocationsAsync();
+        public Task<PaginatedList<LocationViewModel>> GetAllLocationsAsync(int page, int pageSize);
     }
 }

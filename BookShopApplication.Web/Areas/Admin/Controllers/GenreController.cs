@@ -1,4 +1,5 @@
 ﻿using BookShopApplication.Services.Contracts;
+using BookShopApplication.Web.ViewModels;
 using BookShopApplication.Web.ViewModels.Genre;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -17,13 +18,14 @@ namespace BookShopApplication.Web.Areas.Admin.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int page = 1)
         {
             try
             {
-
+                int pageSize = 10;
                 var genres = await _genreService.GetGenreListAsync();
-                return View(genres);
+                var model = PaginatedList<GenreViewModel>.CreateFromList(genres, page, pageSize);
+                return View(model);
             }
             catch (UnauthorizedAccessException ex)
             {

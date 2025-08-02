@@ -23,11 +23,12 @@ namespace BookShopApplication.Web.Areas.Admin.Controllers
             _genreService = genreService;
         }
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int page = 1)
         {
             try
             {
-                var models = await _bookService.DisplayAllBooksAsync();
+                int pageSize = 10;
+                var models = await _bookService.DisplayAllBooksAsync(page,pageSize);
                 return View(models);
             }
             catch (UnauthorizedAccessException ex)
@@ -177,7 +178,30 @@ namespace BookShopApplication.Web.Areas.Admin.Controllers
                 return RedirectToAction("HttpStatusCodeHandler", "Error");
             }
         }
+        [HttpGet]
+        public async Task<IActionResult> Details(Guid id)
+        {
+            try
+            {
+                Guid? userId = null;
+                if (this.GetUserId() != null)
+                {
+                    userId = Guid.Parse(this.GetUserId()!);
+                }
 
+                var book = await _bookService.DisplayBookDetailsByIdAsync(userId, id);
+
+                return View(book);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                TempData["ErrorMessage"] = "An Error occured while trying to fetch book's details.";
+                return RedirectToAction("HttpStatusCodeHandler", "Error");
+            }
+
+
+        }
         [HttpPost]
         public async Task<IActionResult> Delete(Guid id, Guid shopId)
         {

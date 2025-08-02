@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using BookShopApplication.Web.ViewModels;
 using BookShopApplication.Web.ViewModels.Role;
 using Microsoft.AspNetCore.Identity;
 
@@ -10,7 +11,7 @@ namespace BookShopApplication.Services.Contracts
 {
     public interface IRoleService
     {
-        public Task<IEnumerable<RoleViewModel>> GetAllRolesAsync();
+        public Task<PaginatedList<RoleViewModel>> GetAllRolesAsync(int page, int pageSize);
 
         public Task<bool> RoleExistsAsync(CreateRoleViewModel role);
 

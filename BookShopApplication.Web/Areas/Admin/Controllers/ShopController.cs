@@ -32,12 +32,12 @@ namespace BookShopApplication.Web.Areas.Admin.Controllers
             _roleService = roleService;
         }
         [HttpGet]
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int page = 1)
         {
             try
             {
-
-                var models = await _shopService.GetAllShopsWithBooksAsync();
+                int pageSize = 10;
+                var models = await _shopService.GetAllShopsWithBooksAsync(page, pageSize);
                 return View(models);
             }
             catch (UnauthorizedAccessException ex)

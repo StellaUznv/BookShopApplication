@@ -19,11 +19,12 @@ namespace BookShopApplication.Web.Areas.Admin.Controllers
             _roleService = roleService;
         }
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int page = 1)
         {
             try
             {
-                var roles = await _roleService.GetAllRolesAsync();
+                int pageSize = 10;
+                var roles = await _roleService.GetAllRolesAsync(page,pageSize);
                 return View(roles);
             }
             catch (UnauthorizedAccessException ex)

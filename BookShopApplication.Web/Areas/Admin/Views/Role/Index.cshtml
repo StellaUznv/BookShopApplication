@@ -1,5 +1,5 @@
 ﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
-@model IEnumerable<BookShopApplication.Web.ViewModels.Role.RoleViewModel>
+@model PaginatedList<BookShopApplication.Web.ViewModels.Role.RoleViewModel>
 @{
     ViewData["Title"] = "Roles";
 }
@@ -10,26 +10,48 @@
 
     <table class="table table-bordered table-hover">
         <thead class="table-dark">
-            <tr>
-                <th>Role Name</th>
-                <th style="width: 180px">Actions</th>
-            </tr>
+        <tr>
+            <th>Role Name</th>
+            <th style="width: 180px">Actions</th>
+        </tr>
         </thead>
         <tbody>
-            @foreach (var role in Model)
-            {
-                <tr>
-                    <td>@role.Name</td>
-                    <td>
-                        <div class="btn-group">
-                            <a asp-action="Edit" asp-route-id="@role.Id" class="btn btn-sm btn-warning">Edit</a>
-                            <form asp-action="Delete" asp-route-id="@role.Id" method="post" onsubmit="return confirm('Delete this role?');">
-                                <button type="submit" class="btn btn-sm btn-danger">Delete</button>
-                            </form>
-                        </div>
-                    </td>
-                </tr>
-            }
+        @foreach (var role in Model)
+        {
+            <tr>
+                <td>@role.Name</td>
+                <td>
+                    <div class="btn-group">
+                        <a asp-action="Edit" asp-route-id="@role.Id" class="btn btn-sm btn-warning">Edit</a>
+                        <form asp-action="Delete" asp-route-id="@role.Id" method="post" onsubmit="return confirm('Delete this role?');">
+                            <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                        </form>
+                    </div>
+                </td>
+            </tr>
+        }
         </tbody>
     </table>
+    <nav class="mt-5">
+        <ul class="pagination justify-content-center">
+            @if (Model.HasPreviousPage)
+            {
+                <li class="page-item">
+                    <a class="page-link" asp-route-page="@(Model.PageIndex - 1)">Previous</a>
+                </li>
+            }
+            @for (int i = 1; i <= Model.TotalPages; i++)
+            {
+                <li class="page-item @(i == Model.PageIndex ? "active" : "")">
+                    <a class="page-link" asp-route-page="@i">@i</a>
+                </li>
+            }
+            @if (Model.HasNextPage)
+            {
+                <li class="page-item">
+                    <a class="page-link" asp-route-page="@(Model.PageIndex + 1)">Next</a>
+                </li>
+            }
+        </ul>
+    </nav>
 </div>

@@ -29,6 +29,12 @@ namespace BookShopApplication.Web.ViewModels
             var items = await source.Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();
             return new PaginatedList<T>(items, count, pageIndex, pageSize);
         }
+        public static PaginatedList<T> CreateFromList(IEnumerable<T> source, int pageIndex, int pageSize)
+        {
+            var count = source.Count();
+            var items = source.Skip((pageIndex - 1) * pageSize).Take(pageSize).ToList();
+            return new PaginatedList<T>(items, count, pageIndex, pageSize);
+        }
     }
 
 }

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using BookShopApplication.Data.Models;
 using BookShopApplication.Data.Repository.Contracts;
 using BookShopApplication.Services.Contracts;
+using BookShopApplication.Web.ViewModels;
 using BookShopApplication.Web.ViewModels.Location;
 
 namespace BookShopApplication.Services
@@ -74,7 +75,7 @@ namespace BookShopApplication.Services
             return await _locationRepository.UpdateAsync(location);
         }
 
-        public async Task<IEnumerable<LocationViewModel>> GetAllLocationsAsync()
+        public async Task<PaginatedList<LocationViewModel>> GetAllLocationsAsync(int page, int pageSize)
         {
             var locations = await _locationRepository.GetAllAsync();
 
@@ -89,7 +90,7 @@ namespace BookShopApplication.Services
                 Id = l.Id
             }).ToList();
 
-            return models;
+            return PaginatedList<LocationViewModel>.CreateFromList(models,page,pageSize);
         }
     }
 }

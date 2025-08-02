@@ -17,12 +17,12 @@ namespace BookShopApplication.Web.Areas.Admin.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int page = 1)
         {
             try
             {
-
-                var models = await _locationService.GetAllLocationsAsync();
+                int pageSize = 10;
+                var models = await _locationService.GetAllLocationsAsync(page, pageSize);
                 return View(models);
             }
             catch (UnauthorizedAccessException ex)

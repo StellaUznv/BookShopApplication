@@ -1,0 +1,66 @@
+﻿@model BookShopApplication.Web.ViewModels.Book.BookDetailsViewModel
+
+@{
+    ViewData["Title"] = "Book Details";
+}
+
+<div class="container-fluid mt-4 px-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="card shadow border-0">
+                <div class="row g-0">
+                    <!-- Image Section -->
+                    <div class="col-md-5">
+                        @if (!string.IsNullOrEmpty(Model.ImagePath))
+                        {
+                            <div class="overflow-hidden" style="height: 400px;">
+                                <img src="@Model.ImagePath"
+                                     class="img-fluid w-100 h-100 object-fit-cover rounded-start"
+                                     alt="@Model.Title"
+                                     style="object-fit: cover;" />
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="d-flex align-items-center justify-content-center bg-secondary text-white h-100"
+                                 style="height: 400px;">
+                                <span>No Image Available</span>
+                            </div>
+                        }
+                    </div>
+
+                    <!-- Details Section -->
+                    <div class="col-md-7">
+                        <div class="card-body">
+                            <h2 class="card-title">@Model.Title</h2>
+                            <h5 class="text-muted mb-3">By @Model.Author</h5>
+
+                            <p class="card-text"><strong>Description:</strong><br />@Model.Description</p>
+
+                            <p class="card-text"><strong>Genre:</strong> @Model.Genre</p>
+                            <p class="card-text"><strong>Pages:</strong> @Model.PagesNumber</p>
+                            <p class="card-text"><strong>Price:</strong> <span class="text-success">$@Model.Price</span></p>
+
+                            <div class="mb-3">
+                                <strong>Available In:</strong>
+                                <ul class="list-unstyled">
+                                    @foreach (var shop in Model.AvailableInShops)
+                                    {
+                                        <li>
+                                            <a asp-controller="Shop" asp-action="Details" asp-route-id="@shop.Id">📍 @shop.Name</a>
+                                        </li>
+                                    }
+                                </ul>
+                            </div>
+                                
+                                <form asp-controller="Book" asp-action="Index" method="get">
+                                    <button type="submit" class="btn btn-primary btn-sm">Back</button>
+                                </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

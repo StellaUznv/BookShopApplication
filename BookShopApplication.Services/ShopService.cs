@@ -99,36 +99,38 @@ namespace BookShopApplication.Services
             return false;
         }
 
-        public async Task<IEnumerable<ShopWithBooksViewModel>> GetAllShopsWithBooksAsync()
+        public async Task<PaginatedList<ShopWithBooksViewModel>> GetAllShopsWithBooksAsync(int page, int pageSize)
         {
-            var shops = await _shopRepository.GetAllAttached()
+            
+            var allShops = await _shopRepository.GetAllAttached()
                 .Include(s => s.Location)
                 .Include(s => s.BooksInShop)
                 .ThenInclude(bs => bs.Book)
-                .ThenInclude(b => b.Genre)
-                .ToListAsync();
+                .ThenInclude(b => b.Genre).ToListAsync();
 
-            var models = shops.Select(s => new ShopWithBooksViewModel
+            var shops = allShops.Select(s => new ShopWithBooksViewModel
             {
-                BooksInShop = s.BooksInShop.Select(bi => new BookViewModel
+                BooksInShop = s.BooksInShop.Select(bs => new BookViewModel
                 {
-                    Id = bi.BookId,
-                    Author = bi.Book.AuthorName,
-                    Genre = bi.Book.Genre.Name,
-                    ImagePath = bi.Book.ImagePath,
-                    Price = bi.Book.Price.ToString("f2"),
-                    Title = bi.Book.Title
+                    Author = bs.Book.AuthorName,
+                    Genre = bs.Book.Genre.Name,
+                    Id = bs.Book.Id,
+                    ImagePath = bs.Book.ImagePath,
+                    Price = bs.Book.Price.ToString("f2"),
+                    Title = bs.Book.Title
 
                 }).ToList(),
                 Description = s.Description,
-                Name = s.Name,
                 Id = s.Id,
                 Latitude = s.Location.Latitude,
                 Longitude = s.Location.Longitude,
                 LocationAddress = s.Location.Address,
-                LocationCity = s.Location.CityName
+                LocationCity = s.Location.CityName,
+                Name = s.Name
             }).ToList();
 
+            var models = PaginatedList<ShopWithBooksViewModel>.CreateFromList(shops, page, pageSize);
+            
             return models;
         }
 

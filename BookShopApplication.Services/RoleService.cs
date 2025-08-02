@@ -9,6 +9,7 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using BookShopApplication.Web.ViewModels;
 
 namespace BookShopApplication.Services
 {
@@ -25,13 +26,13 @@ namespace BookShopApplication.Services
             this._roleManager = roleManager;
         }
 
-        public async Task<IEnumerable<RoleViewModel>> GetAllRolesAsync()
+        public async Task<PaginatedList<RoleViewModel>> GetAllRolesAsync(int page, int pageSize)
         {
             var roles = await _roleManager.Roles
                 .Select(r => new RoleViewModel { Id = r.Id, Name = r.Name })
                 .ToListAsync();
 
-            return roles;
+            return PaginatedList<RoleViewModel>.CreateFromList(roles,page,pageSize);
         }
 
         public async Task<bool> RoleExistsAsync(CreateRoleViewModel role)

@@ -1,5 +1,5 @@
 ﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
-@model IEnumerable<BookShopApplication.Web.ViewModels.Book.BookViewModel>
+@model PaginatedList<BookShopApplication.Web.ViewModels.Book.BookViewModel>
 @{
     ViewData["Title"] = "Manage Books";
 }
@@ -51,6 +51,28 @@
             }
             </tbody>
         </table>
+        <nav class="mt-5">
+            <ul class="pagination justify-content-center">
+                @if (Model.HasPreviousPage)
+                {
+                    <li class="page-item">
+                        <a class="page-link" asp-route-page="@(Model.PageIndex - 1)">Previous</a>
+                    </li>
+                }
+                @for (int i = 1; i <= Model.TotalPages; i++)
+                {
+                    <li class="page-item @(i == Model.PageIndex ? "active" : "")">
+                        <a class="page-link" asp-route-page="@i">@i</a>
+                    </li>
+                }
+                @if (Model.HasNextPage)
+                {
+                    <li class="page-item">
+                        <a class="page-link" asp-route-page="@(Model.PageIndex + 1)">Next</a>
+                    </li>
+                }
+            </ul>
+        </nav>
     }
 </div>
 <!-- Book Delete Modal -->

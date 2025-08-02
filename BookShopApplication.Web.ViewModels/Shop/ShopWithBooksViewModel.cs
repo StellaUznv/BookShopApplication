@@ -17,6 +17,7 @@ namespace BookShopApplication.Web.ViewModels.Shop
         public string LocationCity { get; set; } = null!;
         public double Latitude { get; set; }
         public double Longitude { get; set; }
-        public List<BookViewModel> BooksInShop { get; set; } = new List<BookViewModel>();
+
+        public ICollection<BookViewModel> BooksInShop { get; set; } = new List<BookViewModel>();
     }
 }
