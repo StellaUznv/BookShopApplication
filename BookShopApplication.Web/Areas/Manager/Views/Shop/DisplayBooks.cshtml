@@ -44,6 +44,39 @@ else
             </td>
         </tr>
     }
+    <nav class="mt-4">
+        <ul class="pagination justify-content-center">
+            @if (Model.Books.HasPreviousPage)
+            {
+                <li class="page-item">
+                    <a class="page-link"
+                       asp-action="DisplayBooks"
+                       asp-route-id="@Model.ShopId"
+                       asp-route-page="@(Model.Books.PageIndex - 1)">Previous</a>
+                </li>
+            }
+
+            @for (int i = 1; i <= Model.Books.TotalPages; i++)
+            {
+                <li class="page-item @(i == Model.Books.PageIndex ? "active" : "")">
+                    <a class="page-link"
+                       asp-action="DisplayBooks"
+                       asp-route-id="@Model.ShopId"
+                       asp-route-page="@i">@i</a>
+                </li>
+            }
+
+            @if (Model.Books.HasNextPage)
+            {
+                <li class="page-item">
+                    <a class="page-link"
+                       asp-action="DisplayBooks"
+                       asp-route-id="@Model.ShopId"
+                       asp-route-page="@(Model.Books.PageIndex + 1)">Next</a>
+                </li>
+            }
+        </ul>
+    </nav>
     </tbody>
 </table>
 }

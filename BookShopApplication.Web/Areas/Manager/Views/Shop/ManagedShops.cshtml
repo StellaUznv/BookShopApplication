@@ -2,7 +2,7 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewData["Title"] = "Managed Shops";
 }
-@model IEnumerable<BookShopApplication.Web.ViewModels.Shop.ShopViewModel>
+@model PaginatedList<BookShopApplication.Web.ViewModels.Shop.ShopViewModel>
 
 @* Leaflet CSS *@
 <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
@@ -29,14 +29,37 @@
                                 Delete
                             </button>
                         </form>
-                        <a asp-action="DisplayBooks" asp-route-Id="@shop.Id" class="btn btn-sm btn-primary w-100">Manage Books</a>
+                        <a asp-action="DisplayBooks" asp-route-id="@shop.Id" class="btn btn-sm btn-primary w-100">Manage Books</a>
                     </div>
                 </div>
             </div>
         </div>
     }
 </div>
+<nav class="mt-4">
+    <ul class="pagination justify-content-center">
+        @if (Model.HasPreviousPage)
+        {
+            <li class="page-item">
+                <a class="page-link" asp-action="ManagedShops" asp-route-page="@(Model.PageIndex - 1)">Previous</a>
+            </li>
+        }
 
+        @for (int i = 1; i <= Model.TotalPages; i++)
+        {
+            <li class="page-item @(i == Model.PageIndex ? "active" : "")">
+                <a class="page-link" asp-action="ManagedShops" asp-route-page="@i">@i</a>
+            </li>
+        }
+
+        @if (Model.HasNextPage)
+        {
+            <li class="page-item">
+                <a class="page-link" asp-action="ManagedShops" asp-route-page="@(Model.PageIndex + 1)">Next</a>
+            </li>
+        }
+    </ul>
+</nav>
 @* Leaflet JS *@
 @section Scripts {
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>

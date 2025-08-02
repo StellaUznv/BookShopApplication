@@ -17,7 +17,7 @@ namespace BookShopApplication.Services.Contracts
 
         public Task<bool> CreateShopAsAdminAsync(CreateShopAsAdminViewModel model);
 
-        public Task<IEnumerable<ShopViewModel>> GetManagedShopsAsync(Guid userId);
+        public Task<PaginatedList<ShopViewModel>> GetManagedShopsAsync(Guid userId, int page, int pageSize);
 
         public Task<ShopWithBooksViewModel> DisplayShopAsync(Guid shopId, Guid? userId);
 
@@ -29,7 +29,7 @@ namespace BookShopApplication.Services.Contracts
 
         public Task<bool> EditShopAsAdminAsync(EditShopAsAdminViewModel model);
 
-        public Task<ShopBooksViewModel> GetBooksByShopIdAsync(Guid shopId);
+        public Task<ShopBooksViewModel> GetBooksByShopIdAsync(Guid shopId, int page,int pageSize);
 
         public Task<bool> DeleteShopAsync(Guid shopId);
 

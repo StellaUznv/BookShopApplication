@@ -267,36 +267,36 @@ namespace BookShopApplication.Services
 
         }
 
-        public async Task<ShopBooksViewModel> GetBooksByShopIdAsync(Guid shopId)
+        public async Task<ShopBooksViewModel> GetBooksByShopIdAsync(Guid shopId,int page,int pageSize)
         {
-            var shop = await _shopRepository
-                .GetAllAttached()
-                .Include(s => s.BooksInShop)
-                .ThenInclude(bs => bs.Book)
-                .ThenInclude(b => b.Genre)
-                .FirstOrDefaultAsync(s => s.Id == shopId);
 
-            var bookModels = shop.BooksInShop.Select(bs => new BookViewModel
-            {
-                Author = bs.Book.AuthorName,
-                Genre = bs.Book.Genre.Name,
-                Id = bs.BookId,
-                ImagePath = bs.Book.ImagePath,
-                Price = bs.Book.Price.ToString("f2"),
-                Title = bs.Book.Title
-            }).ToList();
+            var bookQuery = _shopRepository
+                .GetAllAttached()
+                .Where(s => s.Id == shopId)
+                .SelectMany(s => s.BooksInShop.Select(bs => new BookViewModel
+                {
+                    Author = bs.Book.AuthorName,
+                    Genre = bs.Book.Genre.Name,
+                    Id = bs.BookId,
+                    ImagePath = bs.Book.ImagePath,
+                    Price = bs.Book.Price.ToString("f2"),
+                    Title = bs.Book.Title
+                }));
+
+            var books = await PaginatedList<BookViewModel>.CreateAsync(bookQuery, page, pageSize);
 
             var model = new ShopBooksViewModel
             {
-                Books = bookModels,
+                Books = books,
                 ShopId = shopId
             };
             return model;
+
         }
 
-        public async Task<IEnumerable<ShopViewModel>> GetManagedShopsAsync(Guid userId)
+        public async Task<PaginatedList<ShopViewModel>> GetManagedShopsAsync(Guid userId, int page, int pageSize)
         {
-            var shops = await _shopRepository.GetAllAttached()
+            var shops = _shopRepository.GetAllAttached()
                 .Where(s => s.ManagerId == userId)
                 .Select(s => new ShopViewModel()
                 {
@@ -307,9 +307,9 @@ namespace BookShopApplication.Services
                     LocationAddress = s.Location.Address,
                     LocationCity = s.Location.CityName,
                     Name = s.Name,
-                    
-                }).ToListAsync();
-            return shops;
+
+                });
+            return await PaginatedList<ShopViewModel>.CreateAsync(shops, page, pageSize);
         }
 
         public async Task<bool> DeleteShopAsync(Guid shopId)

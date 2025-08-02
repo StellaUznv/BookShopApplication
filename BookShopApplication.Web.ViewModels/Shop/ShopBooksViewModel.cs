@@ -10,6 +10,6 @@ namespace BookShopApplication.Web.ViewModels.Shop
     public class ShopBooksViewModel
     {
         public Guid ShopId { get; set; }
-        public List<BookViewModel> Books { get; set; } = new List<BookViewModel>();
+        public PaginatedList<BookViewModel> Books { get; set; } = null!;
     }
 }

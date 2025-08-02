@@ -26,14 +26,15 @@ namespace BookShopApplication.Web.Areas.Manager.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> ManagedShops()
+        public async Task<IActionResult> ManagedShops(int page = 1)
         {
             try
             {
-
                 var userId = Guid.Parse(this.GetUserId()!);
 
-                var models = await _shopService.GetManagedShopsAsync(userId);
+                int pageSize = 8;
+
+                var models = await _shopService.GetManagedShopsAsync(userId,page,pageSize);
                 return View(models);
             }
             catch (UnauthorizedAccessException ex)
@@ -111,12 +112,13 @@ namespace BookShopApplication.Web.Areas.Manager.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> DisplayBooks(Guid id)
+        public async Task<IActionResult> DisplayBooks(Guid id, int page = 1)
         {
             try
             {
+                int pageSize = 10;
 
-                var model = await _shopService.GetBooksByShopIdAsync(id);
+                var model = await _shopService.GetBooksByShopIdAsync(id,page,pageSize);
                 return View(model);
             }
             catch (UnauthorizedAccessException ex)
