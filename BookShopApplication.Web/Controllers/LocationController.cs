@@ -2,10 +2,12 @@
 using BookShopApplication.Web.ViewModels.Location;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 
 namespace BookShopApplication.Web.Controllers
 {
-    public class LocationController : Controller
+    [Authorize]
+    public class LocationController : BaseController
     {
         private readonly ILocationService _locationService;
 
@@ -37,16 +39,7 @@ namespace BookShopApplication.Web.Controllers
 
                 bool isAdded = false;
 
-                Guid? userId = null;
-
-                if (User.Identity != null && User.Identity.IsAuthenticated)
-                {
-                    var idValue = User.FindFirstValue(ClaimTypes.NameIdentifier);
-                    if (!string.IsNullOrEmpty(idValue))
-                    {
-                        userId = Guid.Parse(idValue);
-                    }
-                }
+                Guid? userId = Guid.Parse(this.GetUserId());
 
                 if (userId == null)
                 {

@@ -3,21 +3,21 @@ using BookShopApplication.Services.Contracts;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using BookShopApplication.Web.ViewModels.Shop;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 
 namespace BookShopApplication.Web.Controllers
 {
-    public class ShopController : Controller
+    [AllowAnonymous]
+    public class ShopController : BaseController
     {
         private readonly IShopService _shopService;
-        private readonly UserManager<ApplicationUser> _userManager;
-        private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly IRoleService _roleService;
 
-        public ShopController(IShopService service, UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager)
+        public ShopController(IShopService service, IRoleService roleService)
         {
             this._shopService = service;
-            this._userManager = userManager;
-            this._signInManager = signInManager;
+            _roleService = roleService;
         }
 
         public async Task<IActionResult> Index()
@@ -59,7 +59,7 @@ namespace BookShopApplication.Web.Controllers
 
                 bool isAdded = false;
 
-                var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+                var userId = Guid.Parse(this.GetUserId()!);
 
                 if (ModelState.IsValid)
                 {
@@ -72,15 +72,10 @@ namespace BookShopApplication.Web.Controllers
 
                 if (isAdded)
                 {
-                    var user = await _userManager.FindByIdAsync(userId.ToString());
-                    if (user != null && !await _userManager.IsInRoleAsync(user, "Manager"))
+                    if ( await _roleService.AssignManagerRoleAsync(userId.ToString()))
                     {
-                        await _userManager.AddToRoleAsync(user, "Manager");
-
-                        await _signInManager.RefreshSignInAsync(user);
+                        TempData["SuccessMessage"] = "Successfully created your shop!";
                     }
-
-                    TempData["SuccessMessage"] = "Successfully created your shop!";
                 }
                 else
                 {
@@ -102,16 +97,7 @@ namespace BookShopApplication.Web.Controllers
             try
             {
 
-                Guid? userId = null;
-
-                if (User.Identity?.IsAuthenticated == true)
-                {
-                    var userIdString = User.FindFirstValue(ClaimTypes.NameIdentifier);
-                    if (Guid.TryParse(userIdString, out var parsedId))
-                    {
-                        userId = parsedId;
-                    }
-                }
+                Guid? userId = Guid.Parse(this.GetUserId());
 
                 var viewModel = await _shopService.DisplayShopAsync(id, userId);
 

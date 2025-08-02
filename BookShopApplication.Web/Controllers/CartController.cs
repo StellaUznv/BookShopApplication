@@ -2,10 +2,12 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using BookShopApplication.Web.ViewModels.Cart;
+using Microsoft.AspNetCore.Authorization;
 
 namespace BookShopApplication.Web.Controllers
 {
-    public class CartController : Controller
+    [Authorize]
+    public class CartController : BaseController
     {
         private readonly ICartService _service;
 
@@ -19,7 +21,7 @@ namespace BookShopApplication.Web.Controllers
         {
             try
             {
-                var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+                var userId = Guid.Parse(this.GetUserId()!);
 
                 var model = await _service.DisplayAllCartItemsAsync(userId);
                 return View(model);
@@ -36,7 +38,7 @@ namespace BookShopApplication.Web.Controllers
         {
             try
             {
-                var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+                var userId = Guid.Parse(this.GetUserId()!);
 
                 var isAdded = await _service.AddToCartAsync(userId, bookId);
 
@@ -107,7 +109,7 @@ namespace BookShopApplication.Web.Controllers
             try
             {
 
-                var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+                var userId = Guid.Parse(this.GetUserId()!);
 
                 var isRemoved = await _service.RemoveFromCartAsync(userId, bookId);
 

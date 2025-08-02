@@ -5,6 +5,7 @@ using System.Security.Claims;
 
 namespace BookShopApplication.Web.Controllers
 {
+    [AllowAnonymous]
     public class BookController : BaseController
     {
         private readonly IBookService _service;
@@ -18,16 +19,7 @@ namespace BookShopApplication.Web.Controllers
         {
             try
             {
-                Guid? userId = null;
-
-                if (User.Identity != null && User.Identity.IsAuthenticated)
-                {
-                    var idValue = User.FindFirstValue(ClaimTypes.NameIdentifier);
-                    if (!string.IsNullOrEmpty(idValue))
-                    {
-                        userId = Guid.Parse(idValue);
-                    }
-                }
+                Guid? userId = Guid.Parse(this.GetUserId());
 
                 var books = await _service.DisplayAllBooksAsync(userId);
                 return View(books);
@@ -47,16 +39,7 @@ namespace BookShopApplication.Web.Controllers
         {
             try
             {
-                Guid? userId = null;
-
-                if (User.Identity != null && User.Identity.IsAuthenticated)
-                {
-                    var idValue = User.FindFirstValue(ClaimTypes.NameIdentifier);
-                    if (!string.IsNullOrEmpty(idValue))
-                    {
-                        userId = Guid.Parse(idValue);
-                    }
-                }
+                Guid? userId = Guid.Parse(this.GetUserId());
 
                 var book = await _service.DisplayBookDetailsByIdAsync(userId, id);
 
