@@ -15,13 +15,19 @@ namespace BookShopApplication.Web.Controllers
             this._service = service;
         }
         [HttpGet]
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int page = 1)
         {
             try
             {
-                Guid? userId = Guid.Parse(this.GetUserId());
+                Guid? userId = null;
+                if (this.GetUserId() != null)
+                {
+                    userId = Guid.Parse(this.GetUserId()!);
+                }
 
-                var books = await _service.DisplayAllBooksAsync(userId);
+                const int pageSize = 10;
+
+                var books = await _service.DisplayAllBooksAsync(userId, page,pageSize);
                 return View(books);
             }
             catch (Exception ex)
@@ -39,7 +45,11 @@ namespace BookShopApplication.Web.Controllers
         {
             try
             {
-                Guid? userId = Guid.Parse(this.GetUserId());
+                Guid? userId = null;
+                if (this.GetUserId() != null)
+                {
+                    userId = Guid.Parse(this.GetUserId()!);
+                }
 
                 var book = await _service.DisplayBookDetailsByIdAsync(userId, id);
 

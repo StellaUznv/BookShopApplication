@@ -97,7 +97,11 @@ namespace BookShopApplication.Web.Controllers
             try
             {
 
-                Guid? userId = Guid.Parse(this.GetUserId());
+                Guid? userId = null;
+                if (this.GetUserId() != null)
+                {
+                    userId = Guid.Parse(this.GetUserId()!);
+                }
 
                 var viewModel = await _shopService.DisplayShopAsync(id, userId);
 

@@ -4,13 +4,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using BookShopApplication.Data.Models;
+using BookShopApplication.Web.ViewModels;
 using BookShopApplication.Web.ViewModels.Book;
 
 namespace BookShopApplication.Services.Contracts
 {
     public interface IBookService 
     {
-        public Task<IEnumerable<BookViewModel>> DisplayAllBooksAsync(Guid? userId);
+        public Task<PaginatedList<BookViewModel>> DisplayAllBooksAsync(Guid? userId , int page, int pageSize);
 
         public Task<BookDetailsViewModel> DisplayBookDetailsByIdAsync(Guid? userId, Guid bookId);
 

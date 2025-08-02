@@ -4,6 +4,7 @@ using BookShopApplication.Data.Models;
 using BookShopApplication.Data.Repository;
 using BookShopApplication.Data.Repository.Contracts;
 using BookShopApplication.Services.Contracts;
+using BookShopApplication.Web.ViewModels;
 using BookShopApplication.Web.ViewModels.Book;
 using BookShopApplication.Web.ViewModels.Shop;
 using Microsoft.EntityFrameworkCore;
@@ -32,18 +33,20 @@ namespace BookShopApplication.Services
 
         public async Task<IEnumerable<BookViewModel>> DisplayAllBooksAsync()
         {
-            return await GetAllBooksToDisplayAsyncAsNoTracking(_bookRepository);
+            //Todo: Fix!!!
+            var books = await GetAllBooksToDisplayAsync(_bookRepository);
+            return await books.ToListAsync();
         }
 
-        public async Task<IEnumerable<BookViewModel>> DisplayAllBooksAsync(Guid? userId)
+        public async Task<PaginatedList<BookViewModel>> DisplayAllBooksAsync(Guid? userId,int page, int pageSize)
         {
 
             if (userId.HasValue)
             {
-                return await GetAllBooksForUserByUserIdAsNoTracking(userId.Value, _bookRepository, _wishlistRepository, _cartRepository);
+                return await PaginatedList<BookViewModel>.CreateAsync(await GetAllBooksForUserByUserId(userId.Value, _bookRepository, _wishlistRepository, _cartRepository),page,pageSize);
             }
 
-            return await GetAllBooksToDisplayAsyncAsNoTracking(_bookRepository);
+            return await PaginatedList<BookViewModel>.CreateAsync( await GetAllBooksToDisplayAsync(_bookRepository), page, pageSize); 
 
         }
 
@@ -187,28 +190,25 @@ namespace BookShopApplication.Services
 
         //Private helping methods...
 
-        private static async Task<IEnumerable<BookViewModel>> GetAllBooksToDisplayAsyncAsNoTracking(IBookRepository bookRepository)
+        private static async Task<IQueryable<BookViewModel>> GetAllBooksToDisplayAsync(IBookRepository bookRepository)
         {
-            var books = await bookRepository
+            var books = bookRepository
                 .GetAllAttached()
-                .Include(b => b.Genre)
-                .AsNoTracking()
-                .ToListAsync();
+                .Include(b => b.Genre).Select(b => new BookViewModel
+                {
+                    Id = b.Id,
+                    Author = b.AuthorName,
+                    Genre = b.Genre.Name,
+                    ImagePath = b.ImagePath,
+                    Price = b.Price.ToString("f2"),
+                    Title = b.Title
+                });
 
-            var booksModels = books.Select(b => new BookViewModel
-            {
-                Id = b.Id,
-                Author = b.AuthorName,
-                Genre = b.Genre.Name,
-                ImagePath = b.ImagePath,
-                Price = b.Price.ToString("f2"),
-                Title = b.Title
-            }).ToList();
 
-            return booksModels;
+            return books;
         }
 
-        private static async Task<IEnumerable<BookViewModel>> GetAllBooksForUserByUserIdAsNoTracking(Guid userId,  IBookRepository repository 
+        private static async Task<IQueryable<BookViewModel>> GetAllBooksForUserByUserId(Guid userId,  IBookRepository repository 
             ,IWishlistRepository wishlistRepository , ICartRepository cartRepository)
         {
 
@@ -217,21 +217,20 @@ namespace BookShopApplication.Services
             var wishlistItems = await wishlistRepository.GetWishListedItemsIdsAsNoTrackingAsync(userId);
             var cartItems = await cartRepository.GetCartItemsIdsAsNoTrackingAsync(userId);
 
-            var userBooks = await repository.GetAllAttached().Include(g=>g.Genre).AsNoTracking()
-                .ToListAsync();
+            var userBooks = repository.GetAllAttached()
+                .Include(g => g.Genre).Select(ub => new BookViewModel
+                {
+                    Id = ub.Id,
+                    Author = ub.AuthorName,
+                    Genre = ub.Genre.Name,
+                    ImagePath = ub.ImagePath,
+                    Price = ub.Price.ToString("f2"),
+                    Title = ub.Title,
+                    IsInCart = cartItems.Contains(ub.Id),
+                    IsInWishlist = wishlistItems.Contains(ub.Id)
+                });
 
-            var userBooksModels = userBooks.Select(ub=> new BookViewModel
-            {
-                Id = ub.Id,
-                Author = ub.AuthorName,
-                Genre = ub.Genre.Name,
-                ImagePath = ub.ImagePath,
-                Price = ub.Price.ToString("f2"),
-                Title = ub.Title,
-                IsInCart = cartItems.Contains(ub.Id),
-                IsInWishlist = wishlistItems.Contains(ub.Id)
-            }).ToList();
-            return userBooksModels;
+            return userBooks;
         }
 
         private static async Task<BookDetailsViewModel> GetBookDetailsViewModelByBookIdAsyncAsNoTracking(Guid bookId, IBookRepository repository)
