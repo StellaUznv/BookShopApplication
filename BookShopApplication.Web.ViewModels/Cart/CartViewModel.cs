@@ -8,7 +8,7 @@ namespace BookShopApplication.Web.ViewModels.Cart
 {
     public class CartViewModel
     {
-        public ICollection<CartItemViewModel> Items { get; set; } = new List<CartItemViewModel>();
+        public PaginatedList<CartItemViewModel> Items { get; set; } = null!;
 
         public decimal Total { get; set; }
     }

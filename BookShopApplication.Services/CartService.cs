@@ -7,6 +7,7 @@ using BookShopApplication.Data;
 using BookShopApplication.Data.Models;
 using BookShopApplication.Data.Repository.Contracts;
 using BookShopApplication.Services.Contracts;
+using BookShopApplication.Web.ViewModels;
 using BookShopApplication.Web.ViewModels.Cart;
 using Microsoft.EntityFrameworkCore;
 
@@ -26,10 +27,10 @@ namespace BookShopApplication.Services
         }
 
 
-        public async Task<CartViewModel> DisplayAllCartItemsAsync(Guid userId)
+        public async Task<CartViewModel> DisplayAllCartItemsAsync(Guid userId,int page, int pageSize)
         {
             var cart = new CartViewModel();
-            var cartItems = await _cartRepository.GetAllAttached()
+            var cartItems =  _cartRepository.GetAllAttached()
                 .Where(c => c.UserId == userId)
                 .Select(c => new CartItemViewModel
                 {
@@ -40,12 +41,14 @@ namespace BookShopApplication.Services
                     Quantity = c.Quantity,
                     Title = c.Book.Title,
                     UserId = c.UserId
-                }).ToListAsync();
+                });
+
+            var items = await PaginatedList<CartItemViewModel>.CreateAsync(cartItems, page, pageSize);
             foreach (var item in cartItems)
             {
                 cart.Total += decimal.Parse(item.Price) * item.Quantity;
             }
-            cart.Items = cartItems;
+            cart.Items = items;
             
             return cart;
         }
