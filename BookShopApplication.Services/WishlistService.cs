@@ -8,6 +8,7 @@ using BookShopApplication.Data;
 using BookShopApplication.Data.Models;
 using BookShopApplication.Data.Repository.Contracts;
 using BookShopApplication.Services.Contracts;
+using BookShopApplication.Web.ViewModels;
 using BookShopApplication.Web.ViewModels.Wishlist;
 using Microsoft.EntityFrameworkCore;
 
@@ -21,9 +22,9 @@ namespace BookShopApplication.Services
             this._wishlistRepository = _wishlistRepository;
         }
 
-        public async Task<IEnumerable<WishlistItemViewModel>> DisplayWishlistItemsAsync(Guid userId)
+        public async Task<PaginatedList<WishlistItemViewModel>> DisplayWishlistItemsAsync(Guid userId, int page, int pSize)
         {
-            var items = await _wishlistRepository.GetAllAttached()
+            var items = _wishlistRepository.GetAllAttached()
                 .Where(w => w.UserId == userId)
                 .Select(w => new WishlistItemViewModel
                 {
@@ -33,9 +34,9 @@ namespace BookShopApplication.Services
                     Price = w.Book.Price.ToString("f2"),
                     Title = w.Book.Title,
                     UserId = w.UserId
-                }).ToListAsync();
+                });
 
-            return items;
+            return await PaginatedList<WishlistItemViewModel>.CreateAsync(items,page,pSize);
         }
 
         public async Task<bool> AddToWishlistAsync(Guid userId, Guid bookId)

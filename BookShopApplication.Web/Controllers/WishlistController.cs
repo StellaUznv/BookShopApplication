@@ -17,13 +17,15 @@ namespace BookShopApplication.Web.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int page = 1)
         {
             try
             {
                 var userId = Guid.Parse(this.GetUserId()!);
 
-                var model = await _service.DisplayWishlistItemsAsync(userId);
+                int pageSize = 8;
+
+                var model = await _service.DisplayWishlistItemsAsync(userId , page, pageSize);
                 return View(model);
             }
             catch (Exception ex)
