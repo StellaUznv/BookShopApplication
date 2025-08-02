@@ -11,6 +11,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using BookShopApplication.Web.ViewModels;
 using BookShopApplication.Web.ViewModels.Location;
 using Microsoft.AspNetCore.Http.HttpResults;
 
@@ -37,9 +38,9 @@ namespace BookShopApplication.Services
         }
 
 
-        public async Task<IEnumerable<ShopViewModel>> DisplayAllShopsAsync()
+        public async Task<PaginatedList<ShopViewModel>> DisplayAllShopsAsync(int page, int pageSize)
         {
-            var shopsModels = await _shopRepository.GetAllAttached().Select(s => new ShopViewModel
+            var shopsModels = _shopRepository.GetAllAttached().Select(s => new ShopViewModel
             {
                 Id = s.Id,
                 Description = s.Description,
@@ -48,10 +49,9 @@ namespace BookShopApplication.Services
                 Longitude = s.Location.Longitude,
                 LocationAddress = s.Location.Address,
                 LocationCity = s.Location.CityName
-            }).AsNoTracking()
-                .ToListAsync();
+            });
 
-            return shopsModels;
+            return await PaginatedList<ShopViewModel>.CreateAsync(shopsModels, page, pageSize);
         }
 
         public async Task<bool> CreateShopAsync(CreateShopViewModel model, Guid userId, Guid locationId)

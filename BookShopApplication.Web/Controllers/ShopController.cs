@@ -20,12 +20,12 @@ namespace BookShopApplication.Web.Controllers
             _roleService = roleService;
         }
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int page = 1)
         {
             try
             {
-
-                var models = await _shopService.DisplayAllShopsAsync();
+                int pageSize = 6;
+                var models = await _shopService.DisplayAllShopsAsync(page,pageSize);
                 return View(models);
             }
             catch (Exception ex)
