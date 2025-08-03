@@ -30,5 +30,27 @@ namespace BookShopApplication.Services
 
             return users;
         }
+        public async Task<ApplicationUser?> GetUserByIdAsync(string userId)
+        {
+            return await _userManager.FindByIdAsync(userId);
+        }
+
+        public async Task<IdentityResult> UpdateUserNameAsync(string userId, string firstName, string lastName)
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null) return IdentityResult.Failed(new IdentityError { Description = "User not found" });
+
+            user.FirstName = firstName;
+            user.LastName = lastName;
+            return await _userManager.UpdateAsync(user);
+        }
+        public async Task<string?> GetFullNameAsync(string userId)
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null) return null;
+            return $"{user.FirstName} {user.LastName}";
+        }
+
+
     }
 }
