@@ -2,11 +2,13 @@
 using BookShopApplication.Data.Models;
 using BookShopApplication.Services.Contracts;
 using BookShopApplication.Web.ViewModels.User;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BookShopApplication.Web.Controllers
 {
+    [Authorize]
     public class UserController : BaseController
     {
         
@@ -20,40 +22,60 @@ namespace BookShopApplication.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> EditProfile()
         {
-            var userId = this.GetUserId();
-            var user = await _userService.GetUserByIdAsync(userId);
-            if (user == null) return NotFound();
-
-            var model = new UpdateProfileViewModel
+            try
             {
-                FirstName = user.FirstName,
-                LastName = user.LastName
-            };
 
-            return View(model);
+                var userId = this.GetUserId();
+                var user = await _userService.GetUserByIdAsync(userId);
+                if (user == null) return NotFound();
+
+                var model = new UpdateProfileViewModel
+                {
+                    FirstName = user.FirstName,
+                    LastName = user.LastName
+                };
+
+                return View(model);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                TempData["ErrorMessage"] = "An Error occured while trying to update your data.";
+                return RedirectToAction("HttpStatusCodeHandler", "Error");
+            }
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> EditProfile(UpdateProfileViewModel model)
         {
-            if (!ModelState.IsValid) return View(model);
-
-            var userId = this.GetUserId();
-            var user = await _userService.GetUserByIdAsync(userId);
-            if (user == null) return NotFound();
-
-            var result = await _userService.UpdateUserNameAsync(userId, model.FirstName, model.LastName);
-            if (!result.Succeeded)
+            try
             {
-                foreach (var error in result.Errors)
-                    ModelState.AddModelError("", error.Description);
 
-                return View(model);
+                if (!ModelState.IsValid) return View(model);
+
+                var userId = this.GetUserId();
+                var user = await _userService.GetUserByIdAsync(userId);
+                if (user == null) return NotFound();
+
+                var result = await _userService.UpdateUserNameAsync(userId, model.FirstName, model.LastName);
+                if (!result.Succeeded)
+                {
+                    foreach (var error in result.Errors)
+                        ModelState.AddModelError("", error.Description);
+
+                    return View(model);
+                }
+
+                TempData["SuccessMessage"] = "Profile updated successfully.";
+                return RedirectToAction("Index", "Home");
             }
-
-            TempData["SuccessMessage"] = "Profile updated successfully.";
-            return RedirectToAction("Index","Home");
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                TempData["ErrorMessage"] = "An Error occured while trying to update your data.";
+                return RedirectToAction("HttpStatusCodeHandler", "Error");
+            }
         }
     }
 }

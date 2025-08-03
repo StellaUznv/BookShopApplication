@@ -167,6 +167,7 @@ namespace BookShopApplication.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(EditShopAsAdminViewModel model)
         {
             try

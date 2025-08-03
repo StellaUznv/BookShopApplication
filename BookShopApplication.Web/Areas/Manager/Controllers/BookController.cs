@@ -120,6 +120,7 @@ namespace BookShopApplication.Web.Areas.Manager.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(EditBookViewModel model)
         {
             try
@@ -160,6 +161,7 @@ namespace BookShopApplication.Web.Areas.Manager.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(Guid id, Guid shopId)
         {
             try
