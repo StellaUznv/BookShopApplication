@@ -19,7 +19,6 @@ namespace BookShopApplication.Web.Areas.Admin.Controllers
         {
             try
             {
-
                 var model = await _adminService.GetAdminDashboardData();
                 return View(model);
             }

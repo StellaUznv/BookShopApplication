@@ -26,10 +26,21 @@
                     <li class="nav-item">
                         <a class="nav-link text-dark" asp-area="" asp-controller="Book" asp-action="Index">Books</a>
                     </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Shop" asp-action="Index">Shops</a>
-                        </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-dark" asp-area="" asp-controller="Shop" asp-action="Index">Shops</a>
+                    </li>
                 </ul>
+                    <form id="search-form" class="d-flex">
+                        <input id="search-query" class="form-control me-2" placeholder="Search..." />
+                        <select id="search-type" class="form-select me-2">
+                            <option value="all">All</option>
+                            <option value="book">Books</option>
+                            <option value="shop">Shops</option>
+                            <option value="genre">Genres</option>
+                            <option value="location">Locations</option>
+                        </select>
+                        <button type="submit" class="btn btn-outline-light">Search</button>
+                    </form>
                 <partial name="_LoginPartial"/>
             </div>
         </div>
@@ -38,7 +49,29 @@
 @await Html.PartialAsync("_Alerts")
 <div class="container">
     <main role="main" class="pb-3">
+            <div id="searchContainer" class="container mt-4 ">
+            <div class="card shadow-sm border-0">
+                <div class="card-header d-flex align-items-center justify-content-between">
+                    
+                        <h5 class="mb-0">Search Results</h5>
+                        <button type="button" id="hideSearchResults" class="btn btn-sm btn-outline-secondary">
+                            Hide
+                        </button>
+                    
+                    <!-- You could add filters or actions here later -->
+                </div>
+
+                <div class="card-body">
+                    <div id="result-count" class="mb-2 fw-semibold text-muted"></div>
+                    <div id="search-results" class="mb-3"></div>
+                    <div id="search-pagination" class="d-flex flex-wrap gap-2"></div>
+                </div>
+            </div>
+        </div>
         @RenderBody()
+
+
+
     </main>
 </div>
 
@@ -51,5 +84,122 @@
 <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 <script src="~/js/site.js" asp-append-version="true"></script>
 @await RenderSectionAsync("Scripts", required: false)
+<style>
+        #searchContainer {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.3s ease, transform 0.3s ease, max-height 0.3s ease;
+            max-height: 0;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+            #searchContainer.show {
+                opacity: 1;
+                transform: translateY(0);
+                max-height: 1000px; /* Large enough for your content */
+                pointer-events: auto;
+            }
+
+</style>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+          const form = document.getElementById('search-form');
+          const queryInput = document.getElementById('search-query');
+          const typeSelect = document.getElementById('search-type');
+          const resultsContainer = document.getElementById('search-results');
+          const resultCount = document.getElementById('result-count');
+          const paginationContainer = document.getElementById('search-pagination');
+
+          let currentPage = 1;
+
+          form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            currentPage = 1;
+            await performSearch();
+          });
+                  document.getElementById('hideSearchResults').addEventListener('click', () => {
+          document.getElementById('searchContainer').classList.remove('show');
+        });
+          paginationContainer.addEventListener('click', async (e) => {
+            if (e.target.tagName === 'A') {
+              e.preventDefault();
+              const page = parseInt(e.target.dataset.page);
+              if (!isNaN(page)) {
+                currentPage = page;
+                await performSearch();
+              }
+            }
+          });
+
+          async function performSearch() {
+            const query = queryInput.value.trim();
+            const filter = typeSelect.value;
+
+            if (!query) {
+              resultsContainer.innerHTML = '<p>Please enter a search term.</p>';
+              resultCount.textContent = '';
+              paginationContainer.innerHTML = '';
+              return;
+            }
+                    const container = document.getElementById('searchContainer');
+        container.classList.add('show');
+            document.getElementById('searchContainer').classList.remove('d-none');
+            const url = `/api/search?query=${encodeURIComponent(query)}&filter=${encodeURIComponent(filter)}&page=${currentPage}&pageSize=10`;
+
+            try {
+              const response = await fetch(url);
+              if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+
+              const data = await response.json();
+              renderResults(data);
+            } catch (err) {
+              resultsContainer.innerHTML = `<p class="text-danger">Error: ${err.message}</p>`;
+              resultCount.textContent = '';
+              paginationContainer.innerHTML = '';
+            }
+          }
+
+          function renderResults(data) {
+            const results = data.results || [];
+
+            resultCount.textContent = `Results found: ${data.totalResults}`;
+
+            if (results.length === 0) {
+              resultsContainer.innerHTML = '<p>No results found.</p>';
+              paginationContainer.innerHTML = '';
+              return;
+            }
+
+            resultsContainer.innerHTML = results.map(item => `
+              <div class="result-item border-bottom py-2">
+                <strong><a href="${item.url}">${item.title}</a></strong><br />
+                <small>${item.subtitle}</small>
+                <span class="badge bg-secondary">${item.type}</span>
+              </div>
+            `).join('');
+
+            let paginationHtml = '';
+
+            if (data.currentPage > 1) {
+              paginationHtml += `<a href="#" data-page="${data.currentPage - 1}" class="btn btn-sm btn-primary me-1">Prev</a>`;
+            }
+
+            for (let i = 1; i <= data.totalPages; i++) {
+              paginationHtml += `<a href="#" data-page="${i}" class="btn btn-sm me-1 ${i === data.currentPage ? 'btn-secondary' : 'btn-outline-primary'}">${i}</a>`;
+            }
+
+            if (data.currentPage < data.totalPages) {
+              paginationHtml += `<a href="#" data-page="${data.currentPage + 1}" class="btn btn-sm btn-primary">Next</a>`;
+            }
+
+            paginationContainer.innerHTML = paginationHtml;
+          }
+        });
+    </script>
+
+
 </body>
 </html>
+
+

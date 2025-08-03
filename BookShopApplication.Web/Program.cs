@@ -56,6 +56,7 @@ namespace BookShopApplication.Web
             builder.Services.AddScoped<IAdminService, AdminService>();
             builder.Services.AddScoped<IRoleService, RoleService>();
             builder.Services.AddScoped<IUserService, UserService>();
+            builder.Services.AddScoped<ISearchService, SearchService>();
 
             builder.Services.AddTransient<IEmailSender, EmailSender>();
 
@@ -102,6 +103,7 @@ namespace BookShopApplication.Web
             app.UseAuthentication();
             app.UseAuthorization();
 
+            app.MapControllers();
             app.MapControllerRoute(
                 name: "areas",
                 pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}"
