@@ -50,7 +50,7 @@ namespace BookShopApplication.Services
             var role = await _roleManager.FindByIdAsync(id.ToString());
             if (role == null)
             {
-                throw new ArgumentNullException(role.Name, "The role you're looking for is not found.");
+                throw new ArgumentNullException(nameof(id), "The role you're looking for is not found.");
             }
 
             var model = new RoleEditViewModel
@@ -77,7 +77,7 @@ namespace BookShopApplication.Services
             var role = await _roleManager.FindByIdAsync(model.Id.ToString());
             if (role == null)
             {
-                throw new ArgumentNullException(role.Name, "The role you're looking for is not found.");
+                throw new ArgumentNullException(model.Name, "The role you're looking for is not found.");
             }
             role.Name = model.Name;
             return  await _roleManager.UpdateAsync(role);
@@ -95,8 +95,11 @@ namespace BookShopApplication.Services
                 var isInRole = await _userManager.IsInRoleAsync(user, model.Name!);
 
                 if (userModel.IsAssigned && !isInRole)
+                {
                     await _userManager.AddToRoleAsync(user, model.Name!);
-                else if (!userModel.IsAssigned && isInRole)
+                    return true;
+                }
+                else if(!userModel.IsAssigned && isInRole)
                 {
                     await _userManager.RemoveFromRoleAsync(user, model.Name!);
                     if (user.Id.ToString() == currentUserId)
@@ -104,6 +107,8 @@ namespace BookShopApplication.Services
                         await _signInManager.RefreshSignInAsync(user);
                         return true;
                     }
+
+                    return true;
                 }
 
             }
@@ -113,10 +118,11 @@ namespace BookShopApplication.Services
 
         public async Task<IdentityResult> DeleteRoleAsync(string id)
         {
+            
             var role = await _roleManager.FindByIdAsync(id);
             if (role == null)
             {
-                throw new ArgumentNullException(role.Name, "The role you're looking for is not found.");
+                throw new ArgumentNullException(id ,"The role you're looking for is not found.");
             }
 
             return await _roleManager.DeleteAsync(role);
