@@ -482,5 +482,32 @@ public class ShopServiceTests
     Assert.AreEqual("City", result.Location.CityName);
     Assert.AreEqual("Country", result.Location.CountryName);
 }
+    [Test]
+    public async Task HasUserAnyShopsAsync_ReturnsTrue_WhenUserHasActiveShops()
+    {
+        // Arrange
+        var userId = Guid.NewGuid();
+
+        _shopRepoMock
+            .Setup(r => r.AnyAsync(It.IsAny<Expression<Func<Shop, bool>>>()))
+            .ReturnsAsync(true);
+
+        // Act
+        var result = await _service.HasUserAnyShopsAsync(userId);
+
+        // Assert
+        Assert.IsTrue(result);
+
+        // Optional: Verify the expression was passed correctly
+        _shopRepoMock.Verify(r => r.AnyAsync(It.Is<Expression<Func<Shop, bool>>>(
+            expr => ExpressionMatchesUserIdAndNotDeleted(expr, userId)
+        )), Times.Once);
+    }
+    private bool ExpressionMatchesUserIdAndNotDeleted(Expression<Func<Shop, bool>> expr, Guid userId)
+    {
+        var testShop = new Shop { ManagerId = userId, IsDeleted = false };
+        return expr.Compile().Invoke(testShop);
+    }
+
 
 }
