@@ -37,7 +37,7 @@ namespace BookShopApplication.Services
             _locationRepository = locationRepository;
         }
 
-
+        
         public async Task<PaginatedList<ShopViewModel>> DisplayAllShopsAsync(int page, int pageSize)
         {
             var shopsModels = _shopRepository.GetAllAttached().Select(s => new ShopViewModel
