@@ -49,28 +49,28 @@ A full-stack ASP.NET Core MVC application where users can browse, buy, and sell 
 - Control access and moderate content
 
 ## 🎥 Demo
-- Link: http://stellauznv-001-site1.mtempurl.com/
+- Deployed Demo Link: http://stellauznv-001-site1.mtempurl.com/
 
 ## 📷 Screenshots
 
-🏠 Home Page
-![Home Page](wwwroot/screenshots/home-page.png)
+### 🏠 Home Page
+![Home Page](BookShopApplication.Web/wwwroot/screenshots/home-page.png)
 
-🛒 Shops Page
-![Shops Page](wwwroot/screenshots/shops-page.png)
+### 🛒 Shops Page
+![Shops Page](BookShopApplication.Web/wwwroot/screenshots/shops-page.png)
 /Logged-in
-![Shops Page](wwwroot/screenshots/shops-page-logged.png)
+![Shops Page](BookShopApplication.Web/wwwroot/screenshots/shops-page-logged.png)
 
-📚 Books Page
-![Books Page](wwwroot/screenshots/books-page.png)
+### 📚 Books Page
+![Books Page](BookShopApplication.Web/wwwroot/screenshots/books-page.png)
 /Logged-in
-![Books Page](wwwroot/screenshots/books-page-logged.png)
+![Books Page](BookShopApplication.Web/wwwroot/screenshots/books-page-logged.png)
 
-🔐 Admin DashBoard Page
-![Admin DashBoard Page](wwwroot/screenshots/admin-dashboard-page.png)
+### 🔐 Admin DashBoard Page
+![Admin DashBoard Page](BookShopApplication.Web/wwwroot/screenshots/admin-dashboard-page.png)
 
-⚙️ Admin Manage Shops Page
-![Admin Manage Shops Page](wwwroot/screenshots/admin-manage-shops-page.png)
+### ⚙️ Admin Manage Shops Page
+![Admin Manage Shops Page](BookShopApplication.Web/wwwroot/screenshots/admin-manage-shops-page.png)
 
 ## 🪪 License
 This project is licensed under the MIT License. See the LICENSE file for details.
