@@ -4,9 +4,10 @@ A full-stack ASP.NET Core MVC application where users can browse, buy, and sell 
 ## 🧭 Table of Contents
 - [🛠️ Tech Stack](#-tech-stack)
 - [🚀 Features](#-Features)
-- [⚙️ Functionality](#Functionality)
-- [🎥 Demo](#Demo)
-- [🪪 License](#License)
+- [⚙️ Functionality](#-Functionality)
+- [🎥 Demo](#-Demo)
+- [🪪 License](#-License)
+- [📷 Screenshots](#-Screenshots)
 
 ## 🛠️ Tech Stack
 - Backend: ASP.NET Core MVC, Entity Framework Core
@@ -49,6 +50,23 @@ A full-stack ASP.NET Core MVC application where users can browse, buy, and sell 
 
 ## 🎥 Demo
 - Link: http://stellauznv-001-site1.mtempurl.com/
+
+## 📷 Screenshots
+
+🏠 Home Page
+![Home Page](wwwroot/screenshots/home-page.png)
+
+🛒 Shops Page
+![Shops Page](wwwroot/screenshots/shops-page.png)
+
+📚 Books Page
+![Books Page](wwwroot/screenshots/books-page.png)
+
+🔐 Admin DashBoard Page
+![Admin DashBoard Page](wwwroot/screenshots/admin-dashboard-page.png)
+
+⚙️ Admin Manage Shops Page
+![Admin Manage Shops Page](wwwroot/screenshots/admin-manage-shops-page.png)
 
 ## 🪪 License
 This project is licensed under the MIT License. See the LICENSE file for details.
