@@ -58,9 +58,13 @@ A full-stack ASP.NET Core MVC application where users can browse, buy, and sell 
 
 🛒 Shops Page
 ![Shops Page](wwwroot/screenshots/shops-page.png)
+/Logged-in
+![Shops Page](wwwroot/screenshots/shops-page-logged.png)
 
 📚 Books Page
 ![Books Page](wwwroot/screenshots/books-page.png)
+/Logged-in
+![Books Page](wwwroot/screenshots/books-page-logged.png)
 
 🔐 Admin DashBoard Page
 ![Admin DashBoard Page](wwwroot/screenshots/admin-dashboard-page.png)
