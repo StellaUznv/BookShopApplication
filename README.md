@@ -1,6 +1,9 @@
 # 📚 BookShopApplication
 A full-stack ASP.NET Core MVC application where users can browse, buy, and sell books or even create and manage their own bookshops. Built with eco-sustainability in mind — promoting the trade of used books to reduce waste and spread knowledge.
 
+## 🌱 Purpose
+This application encourages an eco-conscious lifestyle by giving users the opportunity to trade used books, thus spreading knowledge while reducing waste.
+
 ## 🧭 Table of Contents
 - [🛠️ Tech Stack](#-tech-stack)
 - [🚀 Features](#-Features)
